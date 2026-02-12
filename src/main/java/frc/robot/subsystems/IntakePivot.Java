@@ -9,7 +9,7 @@ public class IntakePivot extends SubsystemBase {
     //change id
     private final TalonFX m_motor;
     private final CANcoder m_encoder;
-    
+    private double m_demand;
     
     public IntakePivot() {
         m_motor = new TalonFX(0);
@@ -44,7 +44,8 @@ public class IntakePivot extends SubsystemBase {
             default:
                 // What happened!?
                 break;
+            
+	        m_motor.setVoltage(outputVoltage);
         }
 
     }
-}
