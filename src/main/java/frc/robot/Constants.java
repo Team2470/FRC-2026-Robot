@@ -8,6 +8,12 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 
 public class Constants {
     public static final double MINUTE_TO_SECONDS = 60.0;
+    public static class intakePivotConstants {
+        public static final double PIVOT_KP = 0;
+        public static final double PIVOT_KI = 0;
+        public static final double PIVOT_KD = 0;
+        public static final double PIVOT_KV = 0;
+    }
     public static class shooterConstants {
         public static final int FLYWHEEL_1_DEVICE_ID = 1;
         public static final int FLYWHEEL_2_DEVICE_ID = 2;
