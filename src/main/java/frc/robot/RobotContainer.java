@@ -76,11 +76,10 @@ public class RobotContainer {
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         //test intake
-        joystick.leftTrigger().whileTrue(intake.test_ForwardsCommand());
+        joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
         joystick.rightTrigger().whileTrue(intake.test_reverseCommand());
 
-        // test intake pivot, warning could be very crapped
-        joystick.x().whileTrue(inte)
+        
         // Reset the field-centric heading on left bumper press.
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
