@@ -38,7 +38,14 @@ public class Constants {
         public static final double TURRET_KV                            = 0.105;
         public static final double TURRET_MOTION_MAGIC_CRUISE_VELOCITY  = 80.0;
         public static final double TURRET_MOTION_MAGIC_ACCELERACTIION   = 160.0;
-
+        
+        public enum Targets {
+            HUB,
+            PASS_LEFT,
+            PASS_RIGHT
+        }
+        public static final int TARGET_HUB                              = 1;
+        public static final int TARGET_PASS                             = 2;
          // TODO: grab coordinates of Center of Turret compared to our robot's origin point (typically in the center of our bellypan)
         public static final Transform3d ROBOT_TO_TURRET = new Transform3d(-1.0, 0.0, 0.44, Rotation3d.kZero);
 

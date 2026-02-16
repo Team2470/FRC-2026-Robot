@@ -1,4 +1,45 @@
 package frc.robot.subsystems;
-public class Hopper {
-    
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class Hopper extends SubsystemBase {
+  private final TalonFX m_hopper;
+  //placeholder Hopper MotorID
+  public Hopper() {
+    m_hopper = new TalonFX(0);
+  }
+  public void hopper() {
+	m_hopper.setVoltage(4);
+  }
+  public void reverse_hopper () {
+  m_hopper.setVoltage(-6);
+
+  }
+  public void hopperPercet(double volt){
+    m_hopper.setVoltage(volt);
+  }
+  public void stop() {
+    m_hopper.stopMotor();
+  }
+  public Command test_forwardsCommand() {
+    return Commands.runEnd(
+      ()-> this.hopper(),
+      this::stop,
+      this);
+  }
+    public Command test_reverseCommand() {
+      return Commands.runEnd(
+      ()-> this.reverse_hopper(),
+      this::stop,
+      this);
+  }
+  public Command hopperPercentCommand(double volt){
+      return Commands.runEnd(
+      ()-> this.hopperPercet(volt),
+      this::stop,
+      this);	
+  }
 }
