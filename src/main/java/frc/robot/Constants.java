@@ -10,9 +10,13 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.util.Units;
 
 public class Constants {
     public static final double MINUTE_TO_SECONDS = 60.0;
+
+    public static final Translation2d RED_HUB_LOCATION = new Translation2d(12.000, 4.025);
+
     public static class QuestNavConstants{
         public static final Transform2d ROBOT_TO_QUEST = new Transform2d(
         new Translation2d(Inches.of((29.0 / 2) - 16.725), Inches.of((29.0 / 2.0) - 5.762)),
@@ -24,14 +28,16 @@ public class Constants {
         public static final double FLYWHEEL_KP = .2;
         public static final double FLYWHEEL_KI = 0;
         public static final double FLYWHEEL_KD = 0;
-        public static final double FLYWHEEL_KV = .125; 
+        public static final double FLYWHEEL_KV = .125;
         public static final MotorAlignmentValue FLYWHEEL_ALIGNMENT_VALUE = MotorAlignmentValue.Opposed;
-        
+
         // Turret Constants
         public static final int TURRET_DEVICE_ID                        = 0;
         public static final double TURRET_GEAR_RATIO                    = 50.0;
         public static final double MIN_TURRET_ANGLE                     = 0.0;
         public static final double MAX_TURRET_ANGLE                     = 180.0;
+        public static final double MIN_HOOD_ANGLE                       = 25.0;
+        public static final double MAX_HOOD_ANGLE                       = 45.0;
         public static final double MIN_TURRET_SOFT_LIMIT                = MIN_TURRET_ANGLE /
                                                                             360.0 * TURRET_GEAR_RATIO;
         public static final double MAX_TURRET_SOFT_LIMIT                = MAX_TURRET_ANGLE /
@@ -46,6 +52,12 @@ public class Constants {
          // TODO: grab coordinates of Center of Turret compared to our robot's origin point (typically in the center of our bellypan)
         public static final Transform3d ROBOT_TO_TURRET = new Transform3d(-1.0, 0.0, 0.44, Rotation3d.kZero);
 
+        public static final double MAX_HUB_DISTANCE = Units.inchesToMeters(255);
+        public static final double MIN_HUB_DISTANCE = Units.inchesToMeters(32);
+
+        public static final double MAX_PASS_DISTANCE = 11.000;
+        public static final double MIN_PASS_DISTANCE = 1.500;
+
         public static InterpolatingDoubleTreeMap HUB_RPM_MAP    = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap PASS_RPM_MAP   = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap HOOD_HUB_MAP   = new InterpolatingDoubleTreeMap();
@@ -53,39 +65,35 @@ public class Constants {
         public static InterpolatingDoubleTreeMap PASS_TOF_MAP   = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap HUB_TOF_MAP    = new InterpolatingDoubleTreeMap();
 
-         public void ShooterInterpolation() {
+         static {
             // TODO: Actually test for these values.
             // Initial values are based on using desmos Trajectory Calculator
             // And do not reflect real-world-values
 
-            // This map is for the Hood angle 
+            // This map is for the Hood angle
             // when we are shooting into hub
             // Distance (meters), Hood Angle (degrees)
-            HOOD_HUB_MAP.put(3.993, 52.000); 
-            HOOD_HUB_MAP.put(3.048, 67.000);
-            HOOD_HUB_MAP.put(2.438, 65.000);
-            HOOD_HUB_MAP.put(1.829, 72.000);
-            HOOD_HUB_MAP.put(1.219, 80.000);
-        
-            // This map is for the Hood angle 
+            HOOD_HUB_MAP.put(Units.inchesToMeters(32), 25.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(118), 40.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 40.000);
+
+            // This map is for the Hood angle
             // when we are passing into alliance zone
             // Distance (meters), Hood Angle (degrees)
-            HOOD_PASS_MAP.put(1.524, 40.0); 
-            HOOD_PASS_MAP.put(3.048, 30.0);
-            HOOD_PASS_MAP.put(6.096, 18.0);
-            HOOD_PASS_MAP.put(7.620, 23.0);
-            HOOD_PASS_MAP.put(9.144, 30.0);
-            HOOD_PASS_MAP.put(11.280, 35.0);
-        
+            HOOD_PASS_MAP.put(1.524, 45.0);
+            HOOD_PASS_MAP.put(3.048, 45.0);
+            HOOD_PASS_MAP.put(6.096, 45.0);
+            HOOD_PASS_MAP.put(7.620, 45.0);
+            HOOD_PASS_MAP.put(9.144, 45.0);
+            HOOD_PASS_MAP.put(11.280, 45.0);
+
             // This map is for the shooter flywheel
             // when we are shooting into hub
             // Distance (meters), Flywheel Speed (RPM)
-            HUB_RPM_MAP.put(3.993, 4247.640);
-            HUB_RPM_MAP.put(3.048, 4070.655);
-            HUB_RPM_MAP.put(2.438, 3716.685);
-            HUB_RPM_MAP.put(1.829, 3539.700);
-            HUB_RPM_MAP.put(1.219, 3716.685);
-        
+            HOOD_HUB_MAP.put(Units.inchesToMeters(32), 1700.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(118), 2100.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 2600.000);
+
             // This map is for the shooter flywheel
             // when we are passing into alliance zone
             // Distance (meters), Flywheel Speed (RPM)
@@ -93,7 +101,7 @@ public class Constants {
             PASS_RPM_MAP.put(3.048, 4601.610);
             PASS_RPM_MAP.put(6.096, 6902.415);
             PASS_RPM_MAP.put(7.620, 7079.400);
-            PASS_RPM_MAP.put(9.144, 6725.430);
+            PASS_RPM_MAP.put(9.144, 7100.000);
             PASS_RPM_MAP.put(11.280,7256.385);
 
             // This map is time of flight in seconds
@@ -105,7 +113,7 @@ public class Constants {
             PASS_TOF_MAP.put(7.620, 1.600);
             PASS_TOF_MAP.put(9.144, 1.900);
             PASS_TOF_MAP.put(11.280, 2.400);
-        
+
             // This map is time of flight in seconds
             // when we are shooting into hub
             // Distance (meters), Time of Flight (Seconds)
