@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import gg.questnav.questnav.QuestNav;
 
 public class RobotContainer {
     private double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -31,6 +32,8 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
+    
+    private QuestNav questNav = new QuestNav();
 
     private final CommandXboxController joystick = new CommandXboxController(0);
 
@@ -95,4 +98,9 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle)
         );
     }
+
+    public void periodic () {
+        questNav.commandPeriodic();
+    }
+
 }

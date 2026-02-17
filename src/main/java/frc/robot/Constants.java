@@ -1,13 +1,23 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 
 public class Constants {
     public static final double MINUTE_TO_SECONDS = 60.0;
+    public static class QuestNavConstants{
+        public static final Transform2d ROBOT_TO_QUEST = new Transform2d(
+        new Translation2d(Inches.of((29.0 / 2) - 16.725), Inches.of((29.0 / 2.0) - 5.762)),
+        Rotation2d.fromDegrees(180));
+    }
     public static class shooterConstants {
         public static final int FLYWHEEL_1_DEVICE_ID = 1;
         public static final int FLYWHEEL_2_DEVICE_ID = 2;
