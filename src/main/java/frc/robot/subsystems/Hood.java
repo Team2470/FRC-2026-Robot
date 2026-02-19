@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.shooterConstants;
 
 public class Hood extends SubsystemBase {
     private static final Distance kServoLength = Millimeters.of(100);
@@ -23,44 +24,64 @@ public class Hood extends SubsystemBase {
     private static final double kMinPosition = 0.01;
     private static final double kMaxPosition = 0.99;
     private static final double kPositionTolerance = 0.01;
-    private int Channel = 0;
-    private final Servo testServo;
-
-    private double currentPosition = 0.5;
-    private double targetPosition = 0.5;
+    private int leftChannel = 0;
+    private int rightChannel = 1;
+    private final Servo leftServo;
+    private final Servo rightServo;
+    private double leftCurrentPosition = 0.5;
+    private double rightCurrentPosition = 0.5;
+    private double currentAngle = 45;
+    private double targetAngle = 45;
+    private double leftTargetPosition = 0.5;
+    private double rightTargetPosition = 0.5;
     private Time lastUpdateTime = Seconds.of(0);
 
     public Hood() {
-        testServo = new Servo(Channel);
-        testServo.setBoundsMicroseconds(2000, 1800, 1500, 1200, 1000);
-        setPosition(currentPosition);
+        leftServo = new Servo(leftChannel);
+        rightServo = new Servo(rightChannel);
+        leftServo.setBoundsMicroseconds(2000, 1800, 1500, 1200, 1000);
+        rightServo.setBoundsMicroseconds(2000, 1800, 1500, 1200, 1000);
+        setAngle(currentAngle);
         SmartDashboard.putData(this);
     }
-
-    /** Expects a position between 0.0 and 1.0 */
-    public void setPosition(double position) {
-        final double clampedPosition = MathUtil.clamp(position, kMinPosition, kMaxPosition);
-        testServo.set(clampedPosition);
-        targetPosition = clampedPosition;
+    
+    /** Expects an angle between 25 and 65*/
+    public void setAngle (double angle) {
+        double clamped      = Math.max(shooterConstants.MIN_HOOD_ANGLE,
+                                Math.min(shooterConstants.MAX_HOOD_ANGLE, angle));
+        
+        double angleAsRadians = Math.toRadians(Math.abs(clamped -90) + 42.23);
+        // Calculation derived from CAD model to convert angle to actuator extention  
+        double leftLength = (Math.sqrt(6.63 * 6.63 + 5.078 * 5.078 - 2 * 6.63 * 5.078 * Math.cos(angleAsRadians)));
+        double leftPosition = (leftLength - 6.61)/(10.48-6.61);
+        double rightLength = Math.sqrt(103.25-99.727*(Math.cos(Math.acos( (69.756 - leftLength * leftLength)/ 67.3444) -0.243)));
+        double rightPosition = (rightLength - 6.61)/(10.48-6.61);
+        final double leftClampedPosition = MathUtil.clamp(leftPosition, kMinPosition, kMaxPosition);
+        final double rightClampedPosition = MathUtil.clamp(rightPosition, kMinPosition, kMaxPosition);
+        leftServo.set(leftClampedPosition);
+        rightServo.set(rightClampedPosition);
+        leftTargetPosition = leftClampedPosition;
+        rightTargetPosition = rightClampedPosition;
+        targetAngle = angleAsRadians;
     }
 
     
-    public void extendActuator() {
+    /* public void extendActuator() {
         setPosition(currentPosition + 0.05);
     }
 
     public void retractActuator() {
         setPosition(currentPosition - 0.05);
-    }
+    } */
 
     /** Expects a position between 0.0 and 1.0 */
-    public Command positionCommand(double position) {
-        return runOnce(() -> setPosition(position))
+    public Command angleCommand(double angle) {
+        return runOnce(() -> setAngle(angle))
             .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
     }
 
     public boolean isPositionWithinTolerance() {
-        return MathUtil.isNear(targetPosition, currentPosition, kPositionTolerance);
+        return MathUtil.isNear(leftTargetPosition, leftCurrentPosition, kPositionTolerance) && MathUtil.isNear(rightTargetPosition, rightCurrentPosition, kPositionTolerance) ;
     }
 
     private void updateCurrentPosition() {
@@ -69,16 +90,22 @@ public class Hood extends SubsystemBase {
         lastUpdateTime = currentTime;
 
         if (isPositionWithinTolerance()) {
-            currentPosition = targetPosition;
+            leftCurrentPosition = leftTargetPosition;
+            rightCurrentPosition = rightTargetPosition;
+            currentAngle = targetAngle;
             return;
         }
 
         final Distance maxDistanceTraveled = kMaxServoSpeed.times(elapsedTime);
         final double maxPercentageTraveled = maxDistanceTraveled.div(kServoLength).in(Value);
-        currentPosition = targetPosition > currentPosition
-            ? Math.min(targetPosition, currentPosition + maxPercentageTraveled)
-            : Math.max(targetPosition, currentPosition - maxPercentageTraveled);
+        leftCurrentPosition = leftTargetPosition > leftCurrentPosition
+            ? Math.min(leftTargetPosition, leftCurrentPosition + maxPercentageTraveled)
+            : Math.max(leftTargetPosition, leftCurrentPosition - maxPercentageTraveled);
+        rightCurrentPosition = rightTargetPosition > rightCurrentPosition
+            ? Math.min(rightTargetPosition, rightCurrentPosition + maxPercentageTraveled)
+            : Math.max(rightTargetPosition, rightCurrentPosition - maxPercentageTraveled);
     }
+
 
     @Override
     public void periodic() {
@@ -88,7 +115,11 @@ public class Hood extends SubsystemBase {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("Command", () -> getCurrentCommand() != null ? getCurrentCommand().getName() : "null", null);
-        builder.addDoubleProperty("Current Position", () -> currentPosition, null);
-        builder.addDoubleProperty("Target Position", () -> targetPosition, value -> setPosition(value));
+        builder.addDoubleProperty("Left Current Position", () -> leftCurrentPosition, null);
+        builder.addDoubleProperty("Left Target Position", () -> leftTargetPosition, value -> setAngle(value));
+        builder.addDoubleProperty("Right Current Position", () -> rightCurrentPosition, null);
+        builder.addDoubleProperty("Right Target Position", () -> rightTargetPosition, value -> setAngle(value));
+        builder.addDoubleProperty("Current Angle", () -> currentAngle, null);
+        builder.addDoubleProperty("Target Angle", () -> targetAngle, value -> setAngle(value));
     }
 }
