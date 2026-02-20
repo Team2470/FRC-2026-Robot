@@ -41,6 +41,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.Follower;
 import frc.robot.Constants;
 import frc.robot.Constants.shooterConstants;
+import frc.robot.Constants.shooterConstants.SHOOTER_PARAMETERS;
 import frc.robot.subsystems.Hood;
 // import frc.robot.Constants.shooterConstants.Targets;
 
@@ -59,7 +60,7 @@ public class Shooter extends SubsystemBase {
     // public shooterConstants.Targets targetNumber = shooterConstants.Targets.HUB;
     public double targetRPM = 500;
     public double targetAngle = 80;
-    public double distance = 1.219;
+    public double distance = 1.3;
     public double angle = 1.3;
     // private finasl PIDController m_pidController = new PIDController(shooterConstants.FLYWHEEL_KP, shooterConstants.FLYWHEEL_KI, shooterConstants.FLYWHEEL_KD);
     Hood hood = new Hood();
@@ -96,50 +97,36 @@ public class Shooter extends SubsystemBase {
         // SmartDashboard.putString("targetNumber", targetNumber.toString());
     }
 
+    public SHOOTER_PARAMETERS getHUBParameters(double distance) {
+        return shooterConstants.HUB_MAP.get(distance);
+    }
+
+    public SHOOTER_PARAMETERS getPassParameters(double distance) {
+        return shooterConstants.PASS_MAP.get(distance);
+    }
     public double getHubRPM(double distance) {
-        return shooterConstants.HUB_RPM_MAP.get(distance);
+        return shooterConstants.HUB_MAP.get(distance).rpm();
     }
 
     public double getPassRPM(double distance) {
-        return shooterConstants.PASS_RPM_MAP.get(distance);
+        return shooterConstants.PASS_MAP.get(distance).rpm();
     }
 
     public double getHubTOF(double distance) {
-        return shooterConstants.HUB_TOF_MAP.get(distance);
+        return shooterConstants.HUB_MAP.get(distance).timeOfFlight();
     }
 
     public double getPassTOF(double distance) {
-        return shooterConstants.PASS_TOF_MAP.get(distance);
+        return shooterConstants.PASS_MAP.get(distance).timeOfFlight();
     }
 
     public double getHoodHub(double distance) {
-        return shooterConstants.HOOD_HUB_MAP.get(distance);
+        return shooterConstants.HUB_MAP.get(distance).hoodPosition();
     }
 
     public double getHoodPass(double distance) {
-        return shooterConstants.HOOD_PASS_MAP.get(distance);
+        return shooterConstants.PASS_MAP.get(distance).hoodPosition();
     }
-
-
-    /*  public double getHubHoodAngle(double distance) {
-         return shooterConstants.HOOD_HUB_MAP.get(distance);
-     }
-
-     public double getPassHoodAngle(double distance) {
-         return shooterConstants.HOOD_PASS_MAP.get(distance);
-    }
-
-    public void runFeeder(double speed) {
-       m_feederMotor.set(speed);
-    } */
-
-/*  public void setHoodAngle(double degrees) {
-        double clamped      = Math.max(shooterConstants.MIN_HOOD_ANGLE,
-                                Math.min(shooterConstants.MAX_HOOD_ANGLE, degrees));
-        double rotations    = (clamped / 360.0) * shooterConstants.HOOD_GEAR_RATIO;
-
-        m_hoodMotor.setControl(new com.ctre.phoenix6.controls.PositionVoltage(rotations));
-    } */
 
     public void setRPM(double rpm) {
         // Phoenix sends values in Rotations Per Seconds (RPS)
@@ -156,156 +143,13 @@ public class Shooter extends SubsystemBase {
         return Math.abs(currentRPM - targetRPM) < tolerance;
     }
 
-    // public boolean isHoodOnTarget(double targetDegrees, double tolerance) {
-    //     double currentRot = m_hoodMotor.getPosition().getValueAsDouble();
-    //     double currentDeg = (currentRot / shooterConstants.HOOD_GEAR_RATIO) * 360.0;
-
-    //     // Tolerance: Is Current Angle = Target Angle +/- Tolerance (measured in Degrees)
-    //     return Math.abs(currentDeg - targetDegrees) < tolerance;
+    // public Command runShooterCommand(){
+    //     return Commands.runEnd(
+    //         () -> {
+    //             this.setRPM(targetRPM);
+    //         },
+    //         () -> { this.setRPM(0);}, this);
     // }
-
-    // Input: RPM of the main flywheel
-    // Output: Ball's velocity coming out of shooter
-    // public double getExpectedExitVelocity(double mainRPM) {
-    //     double mainRPS      = mainRPM / Constants.MINUTE_TO_SECONDS;
-    //     double topRPS       = mainRPS * shooterConstants.BACKSPIN_GEAR_RATIO;
-    //     double mainSurface  = mainRPS * Math.PI * shooterConstants.FLYWHEEL_DIAMETER_METERS;
-    //     double topSurface   = topRPS * Math.PI * shooterConstants.BACKSPIN_DIAMETER_METERS;
-
-    //     // The ball speed is roughly the average of the two contacting surfaces
-    //     // Multiplied by efficiency (slip)
-    //     return ((mainSurface + topSurface) / 2.0) * shooterConstants.SHOOTER_EFFICIENCY;
-    // }
-
-//     @Override
-//     public void periodic () {
-//         // Determine output voltage
-//     double outputVoltage = 0;
-// 	switch (m_controlMode) {
-//         case kOpenLoop:
-//             // Do openloop stuff here
-//             outputVoltage = m_demand;
-//             break;
-
-//         case kPID:
-//             m_pidController.setP(SmartDashboard.getNumber("kP", shooterConstants.FLYWHEEL_KP));
-//             m_pidController.setI(SmartDashboard.getNumber("kI", shooterConstants.FLYWHEEL_KI));
-//             m_pidController.setD(SmartDashboard.getNumber("kD", shooterConstants.FLYWHEEL_KD));
-//             double kF = SmartDashboard.getNumber("kF", shooterConstants.FLYWHEEL_KV);
-
-//             // Do PID stuff
-//             outputVoltage = kF * m_demand + m_pidController.calculate(getVelocity(), m_demand);
-
-//             break;
-//         default:
-//             // What happened!?
-//             break;
-//         }
-
-
-// 	// Do something with the motor
-// 	m_motor.setVoltage(outputVoltage);
-
-
-// 	// Publish to smart dashboard
-
-//     }
-
-
-
-// public double getErrorRPM(){
-// 	if (m_controlMode == ControlMode.kPID){
-// 	return m_pidController.getPositionError();
-// 	}
-// 	return 0;
-// }
-
-// public double getErrorPercent(){
-// 	if (m_controlMode == ControlMode.kPID) {
-// 	return (m_demand - m_encoder.getVelocity().getValueAsDouble()) / m_demand * 10;
-//   }
-
-//  	return 0;
-// }
-// public boolean isErrorInRange() {
-// 	return (-4 < this.getErrorPercent() && this.getErrorPercent() < 4);
-// }
-
-// public boolean isErrorBelow() {
-//     return (-5 > this.getErrorPercent());
-// }
-
-// public boolean isErrorAbove() {
-// 	return (this.getErrorPercent() > 5);
-// }
-
-// public Command waitUntilErrorInrange(){
-// return Commands.waitUntil(()-> this.isErrorInRange());
-// }
-
-// public boolean isErrorOutOfRange() {
-// 	return (this.getErrorPercent() > 15);
-// }
-
-// public Command waitUntilErrorOutOfRange(){
-// return Commands.waitUntil(() -> this.isErrorOutOfRange());
-
-// }
-
-
-// public void setPIDSetpoint(double rpm) {
-// 	m_controlMode = ControlMode.kPID;
-// 	m_demand = rpm;
-// }
-
-// public void stop() {
-// 	setOutputVoltage(0);
-// }
-// /**
-// * Example command factory method.
-// *
-// * @return a command
-// */
-// public Command openLoopCommand(DoubleSupplier OutputVoltageSupplier) {
-
-
-// 	// Inline construction of command goes here.
-// 	// Subsystem::RunOnce implicitly requires `this` subsystem.
-// 	return Commands.runEnd(
-// 		() -> this.setOutputVoltage(OutputVoltageSupplier.getAsDouble()), this::stop, this);
-
-// }
-
-// public Command openLoopCommand(double OutputVoltage) {
-// 	return openLoopCommand(()-> OutputVoltage);
-// }
-
-
-// public Command pidCommand(DoubleSupplier rpmSupplier){
-// 	return Commands.runEnd(
-// 	() -> this.setPIDSetpoint(rpmSupplier.getAsDouble()), this::stop, this);
-// }
-
-// public Command pidCommand(double rpm){
-// 	return pidCommand(() -> rpm);
-// }
-
-
-// public Command runShooterCommand(){
-//     return Commands.runEnd(
-//         () -> {
-//             this.setRPM(targetRPM);
-//         },
-//         () -> { this.setRPM(0);}, this);
-//     }
-
-    public Command runShooterCommand(){
-        return Commands.runEnd(
-            () -> {
-                this.setRPM(targetRPM);
-            },
-            () -> { this.setRPM(0);}, this);
-    }
 
     public Command increaseRPM(){
         return Commands.runOnce(
@@ -321,64 +165,22 @@ public class Shooter extends SubsystemBase {
             }, this);
     }
 
-    // public Command changeShootingTarget() {
-    //     return Commands.runOnce(
-    //         () -> {
-    //             switch(this.targetNumber) {
-    //                 case HUB:
-    //                     this.targetNumber = Targets.PASS_LEFT;
-    //                     break;
-    //                 case PASS_LEFT:
-    //                     this.targetNumber = Targets.PASS_RIGHT;
-    //                     break;
-    //                 case PASS_RIGHT:
-    //                     this.targetNumber = Targets.HUB;
-    //                     break;
-    //             }
-    //         }
-    //     , this);
-    // }
-
 
     public void increaseDistance(){
         double newDistance  = this.distance + 0.05;
-        // switch(this.targetNumber) {
-            // case HUB:
-                this.targetRPM      = getHubRPM(newDistance);
-                this.targetAngle    = getHoodHub(newDistance);
-                hood.setAngle(this.targetAngle);
-                // break;
-            // case PASS_LEFT:
-            //     this.targetAngle    = getPassRPM(newDistance);
-            //     this.targetAngle    = getHoodPass(newDistance);
-            //     break;
-            // case PASS_RIGHT:
-            //     this.targetAngle    = getPassRPM(newDistance);
-            //     this.targetAngle    = getHoodPass(newDistance);
-            //     break;
-        // }
+        // this.targetRPM      = getHubRPM(newDistance);
+        // this.targetAngle    = getHoodHub(newDistance);
+        // hood.setAngle(this.targetAngle);
+
         this.distance       = newDistance;
     }
 
     public void decreaseDistance(){
         double newDistance  = this.distance - 0.05;
-                // switch(this.targetNumber) {
-            // case HUB:
-                this.targetRPM      = getHubRPM(newDistance);
-                this.targetAngle    = getHoodHub(newDistance);
-                hood.setAngle(this.targetAngle);
-        //         break;
-        //     case PASS_LEFT:
-        //         this.targetAngle    = getPassRPM(newDistance);
-        //         this.targetAngle    = getHoodPass(newDistance);
-        //         break;
-        //     case PASS_RIGHT:
-        //         this.targetAngle    = getPassRPM(newDistance);
-        //         this.targetAngle    = getHoodPass(newDistance);
-        //         break;
-        // }
+        // this.targetRPM      = getHubRPM(newDistance);
+        // this.targetAngle    = getHoodHub(newDistance);
+        // hood.setAngle(this.targetAngle);
+        this.distance       = newDistance;
     }
-
-
 
 }
