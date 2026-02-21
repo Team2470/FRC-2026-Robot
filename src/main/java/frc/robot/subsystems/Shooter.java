@@ -41,6 +41,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.Follower;
 import frc.robot.Constants;
 import frc.robot.Constants.shooterConstants;
+import frc.robot.subsystems.Hood;
 // import frc.robot.Constants.shooterConstants.Targets;
 
 
@@ -61,7 +62,7 @@ public class Shooter extends SubsystemBase {
     public double distance = 1.219;
     public double angle = 1.3;
     // private finasl PIDController m_pidController = new PIDController(shooterConstants.FLYWHEEL_KP, shooterConstants.FLYWHEEL_KI, shooterConstants.FLYWHEEL_KD);
-
+    Hood hood = new Hood();
 
     private enum ControlMode {
         kOpenLoop, kPID
@@ -297,6 +298,7 @@ public class Shooter extends SubsystemBase {
 //         },
 //         () -> { this.setRPM(0);}, this);
 //     }
+
     public Command runShooterCommand(){
         return Commands.runEnd(
             () -> {
@@ -344,6 +346,7 @@ public class Shooter extends SubsystemBase {
             // case HUB:
                 this.targetRPM      = getHubRPM(newDistance);
                 this.targetAngle    = getHoodHub(newDistance);
+                hood.setAngle(this.targetAngle);
                 // break;
             // case PASS_LEFT:
             //     this.targetAngle    = getPassRPM(newDistance);
@@ -363,6 +366,7 @@ public class Shooter extends SubsystemBase {
             // case HUB:
                 this.targetRPM      = getHubRPM(newDistance);
                 this.targetAngle    = getHoodHub(newDistance);
+                hood.setAngle(this.targetAngle);
         //         break;
         //     case PASS_LEFT:
         //         this.targetAngle    = getPassRPM(newDistance);
