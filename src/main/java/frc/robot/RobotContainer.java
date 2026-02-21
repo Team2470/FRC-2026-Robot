@@ -79,8 +79,8 @@ public class RobotContainer {
 
         // joystick.x().whileTrue(shooter.increaseDistance());
         // joystick.y().whileTrue(shooter.decreaseDistance());
-        joystick.x().whileTrue(shooter.hood.angleCommand(25));
-        joystick.y().whileTrue(shooter.hood.angleCommand(45));
+        joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
+        joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
 
         // Reset the field-centric heading on left bumper press.
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));

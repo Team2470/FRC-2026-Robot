@@ -58,7 +58,7 @@ public class Shooter extends SubsystemBase {
     private double m_demand;
     // public shooterConstants.Targets targetNumber = shooterConstants.Targets.HUB;
     public double targetRPM = 500;
-    public double targetAngle = 80;
+    public double targetAngle = 25;
     public double distance = 1.219;
     public double angle = 1.3;
     // private finasl PIDController m_pidController = new PIDController(shooterConstants.FLYWHEEL_KP, shooterConstants.FLYWHEEL_KI, shooterConstants.FLYWHEEL_KD);

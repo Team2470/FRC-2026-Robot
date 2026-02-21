@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
@@ -62,10 +63,16 @@ public class Hood extends SubsystemBase {
         rightServo.set(rightClampedPosition);
         leftTargetPosition = leftClampedPosition;
         rightTargetPosition = rightClampedPosition;
-        targetAngle = angleAsRadians;
+        // targetAngle = Math.toDegrees(angleAsRadians);
     }
 
+    public void increaseAngle () {
+        targetAngle = targetAngle + 5;
+    }
     
+    public void decreaseAngle () {
+        targetAngle = targetAngle - 5;
+    }
     /* public void extendActuator() {
         setPosition(currentPosition + 0.05);
     }
@@ -79,7 +86,16 @@ public class Hood extends SubsystemBase {
         return runOnce(() -> setAngle(angle))
             .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
     }
+    
+    public Command increaseAngleCommand() {
+        return runOnce(() -> increaseAngle())
+            .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
+    }
 
+    public Command decreaseAngleCommand() {
+        return runOnce(() -> decreaseAngle())
+            .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
+    }
     public boolean isPositionWithinTolerance() {
         return MathUtil.isNear(leftTargetPosition, leftCurrentPosition, kPositionTolerance) && MathUtil.isNear(rightTargetPosition, rightCurrentPosition, kPositionTolerance) ;
     }
@@ -110,6 +126,7 @@ public class Hood extends SubsystemBase {
     @Override
     public void periodic() {
         updateCurrentPosition();
+        setAngle(targetAngle);
     }
 
     @Override
