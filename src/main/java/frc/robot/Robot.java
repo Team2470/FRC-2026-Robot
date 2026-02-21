@@ -6,14 +6,20 @@ package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import frc.robot.subsystems.LimelightHelpers;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
+
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -22,6 +28,18 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         m_robotContainer = new RobotContainer();
+    }
+
+    @Override
+    public void robotInit() {
+        if (RobotBase.isSimulation()) {
+            var nt = NetworkTableInstance.getDefault();
+            nt.stopClient();
+            nt.startClient4("sim");
+            //nt.setServer(new String[] {"172.28.0.1", "limelight.local"}); // Windows
+            nt.setServer(new String[] {"172.29.0.1", "limelight.local"});   // Mac
+            nt.startDSClient();
+        }
     }
 
     @Override
@@ -49,7 +67,23 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+        var alliance = DriverStation.getAlliance();
+        boolean isRed = alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
+        var poseEstimate = isRed
+                ? LimelightHelpers.getBotPoseEstimate_wpiRed("limelight")
+                : LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+        if (poseEstimate == null) {
+            System.out.println("Limelight pose estimate unavailable.");
+            return;
+        }
+        var pose = poseEstimate.pose;
+        System.out.printf(
+                "Limelight pose estimate: x=%.2f y=%.2f rot=%.1f deg%n",
+                pose.getX(),
+                pose.getY(),
+                pose.getRotation().getDegrees());
+    }
 
     @Override
     public void autonomousExit() {}
@@ -62,7 +96,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+        
+    }
 
     @Override
     public void teleopExit() {}
