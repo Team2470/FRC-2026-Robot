@@ -42,7 +42,7 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Shooter shooter = new Shooter();
     public final Turret turret = new Turret();
-    public final Hood hood = new Hood();
+    // public final Hood hood = new Hood();
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
 
@@ -81,18 +81,18 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
+        // joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
 
-        joystick.y().onTrue(shooter.increaseDistance());
-        joystick.x().onTrue(shooter.decreaseDistance());
+        joystick.rightBumper().onTrue(shooter.increaseDistance());
+        joystick.leftBumper().onTrue(shooter.decreaseDistance());
 
         // Reset the field-centric heading on left bumper press.
-        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, hood, transfer, hopper, false));
-        joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, hood, transfer, hopper, true));
+        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, false));
+        joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, true));
         
         joystick.b().whileTrue(turret.runTurretCommand(1));
         joystick.a().whileTrue(turret.runTurretCommand(-1));

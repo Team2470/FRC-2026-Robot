@@ -45,5 +45,11 @@ public class ShooterCommand extends Command{
             hopper.hopperPercent(12);
         }
     }
+
+    public void end(boolean interupted) {
+        shooter.setRPM(0);
+        transfer.transferPercent(0);
+        hopper.hopperPercent(0);
+  }
     
 }
