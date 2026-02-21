@@ -344,22 +344,22 @@ public class Shooter extends SubsystemBase {
                 () -> {
                     incDistance();
                 }, this);
-    } 
+    }
 
     public Command decreaseDistance(){
         return Commands.runOnce(
                 () -> {
                     decDistance();
                 }, this);
-    } 
+    }
 
     public void incDistance(){
         double newDistance  = this.distance + 0.05;
         // switch(this.targetNumber) {
             // case HUB:
-                this.targetRPM      = getHubRPM(newDistance);
-                this.targetAngle    = getHoodHub(newDistance);
-                hood.setAngle(this.targetAngle);
+                // this.targetRPM      = getHubRPM(newDistance);
+                // this.targetAngle    = getHoodHub(newDistance);
+                // hood.setAngle(this.targetAngle);
                 // break;
             // case PASS_LEFT:
             //     this.targetAngle    = getPassRPM(newDistance);
@@ -377,9 +377,9 @@ public class Shooter extends SubsystemBase {
         double newDistance  = this.distance - 0.05;
                 // switch(this.targetNumber) {
             // case HUB:
-                this.targetRPM      = getHubRPM(newDistance);
-                this.targetAngle    = getHoodHub(newDistance);
-                hood.setAngle(this.targetAngle);
+                // this.targetRPM      = getHubRPM(newDistance);
+                // this.targetAngle    = getHoodHub(newDistance);
+                // hood.setAngle(this.targetAngle);
                 this.distance = newDistance;
         //         break;
         //     case PASS_LEFT:
