@@ -52,4 +52,9 @@ public class ShooterCommand extends Command{
         }
     }
 
+    public void end(boolean interupted) {
+        shooter.setRPM(0);
+        transfer.transferPercent(0);
+        hopper.hopperPercent(0);
+  }
 }

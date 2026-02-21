@@ -42,7 +42,6 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Shooter shooter = new Shooter();
     public final Turret turret = new Turret();
-    public final Hood hood = new Hood();
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
 
@@ -91,8 +90,8 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, hood, transfer, hopper, false));
-        joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, hood, transfer, hopper, true));
+        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, false));
+        joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, true));
 
         joystick.b().whileTrue(turret.runTurretCommand(1));
         joystick.a().whileTrue(turret.runTurretCommand(-1));

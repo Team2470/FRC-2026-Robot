@@ -9,7 +9,7 @@ public class Transfer extends SubsystemBase {
   private final TalonFX m_transfer;
   //placeholder Transfer MotorID
   public Transfer() {
-    m_transfer = new TalonFX(9);
+    m_transfer = new TalonFX(7);
   }
   public void transfer() {
 	m_transfer.setVoltage(4);
