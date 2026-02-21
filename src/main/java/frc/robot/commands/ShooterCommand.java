@@ -10,24 +10,33 @@ public class ShooterCommand extends Command{
     private final Shooter   shooter;
     private final Hood      hood;
     private final Transfer  transfer;
-    private final Hopper    hopper;    
+    private final Hopper    hopper;  
+    private final boolean   isPassing;  
 
     public ShooterCommand(Shooter    shooter,
                          Hood        hood,
                          Transfer    transfer,
-                         Hopper      hopper){
+                         Hopper      hopper,
+                         boolean     isPassing){
 
         this.shooter    = shooter;
         this.hood       = hood;
         this.transfer   = transfer;
         this.hopper     = hopper;
+        this.isPassing  = isPassing;
     addRequirements(shooter, hood, transfer, hopper);
 }
     @Override  
     public void execute(){
-        double TargetRPM = shooter.getHubRPM(shooter.distance);
-        double TargetHoodAngle = shooter.getHoodHub(shooter.distance);
-
+        double TargetRPM; 
+        double TargetHoodAngle;
+        if(isPassing){
+            TargetRPM = shooter.getPassRPM(shooter.distance);
+            TargetHoodAngle = shooter.getHoodPass(shooter.distance);
+        } else {
+            TargetRPM = shooter.getHubRPM(shooter.distance);
+            TargetHoodAngle = shooter.getHoodHub(shooter.distance);
+        }
         hood.setAngle(TargetHoodAngle);
         shooter.setRPM(TargetRPM);
 

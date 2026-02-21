@@ -53,21 +53,21 @@ public class Constants {
             // This map is for the Hood angle 
             // when we are shooting into hub
             // Distance (meters), Hood Angle (degrees)
-            HOOD_HUB_MAP.put(3.993, 25.000); 
+            HOOD_HUB_MAP.put(4.000, 25.000); 
             // HOOD_HUB_MAP.put(3.048, 67.000);
             // HOOD_HUB_MAP.put(2.438, 65.000);
             // HOOD_HUB_MAP.put(1.829, .000);
-            HOOD_HUB_MAP.put(1.219, 45.000);
+            HOOD_HUB_MAP.put(1.219, 25.000);
         
             // This map is for the Hood angle 
             // when we are passing into alliance zone
             // Distance (meters), Hood Angle (degrees)
-            HOOD_PASS_MAP.put(1.524, 40.0); 
-            HOOD_PASS_MAP.put(3.048, 30.0);
-            HOOD_PASS_MAP.put(6.096, 18.0);
-            HOOD_PASS_MAP.put(7.620, 23.0);
-            HOOD_PASS_MAP.put(9.144, 30.0);
-            HOOD_PASS_MAP.put(11.280, 35.0);
+            HOOD_PASS_MAP.put(1.524, 45.0); 
+            HOOD_PASS_MAP.put(3.048, 45.0);
+            HOOD_PASS_MAP.put(6.096, 45.0);
+            HOOD_PASS_MAP.put(7.620, 45.0);
+            HOOD_PASS_MAP.put(9.144, 45.0);
+            HOOD_PASS_MAP.put(11.280, 45.0);
         
             // This map is for the shooter flywheel
             // when we are shooting into hub
@@ -76,7 +76,7 @@ public class Constants {
             HUB_RPM_MAP.put(3.048, 4070.655);
             HUB_RPM_MAP.put(2.438, 3716.685);
             HUB_RPM_MAP.put(1.829, 3539.700);
-            HUB_RPM_MAP.put(1.219, 3716.685);
+            HUB_RPM_MAP.put(1.219, 3200.000);
         
             // This map is for the shooter flywheel
             // when we are passing into alliance zone
@@ -85,7 +85,7 @@ public class Constants {
             PASS_RPM_MAP.put(3.048, 4601.610);
             PASS_RPM_MAP.put(6.096, 6902.415);
             PASS_RPM_MAP.put(7.620, 7079.400);
-            PASS_RPM_MAP.put(9.144, 6725.430);
+            PASS_RPM_MAP.put(9.144, 7100.000);
             PASS_RPM_MAP.put(11.280,7256.385);
 
             // This map is time of flight in seconds
