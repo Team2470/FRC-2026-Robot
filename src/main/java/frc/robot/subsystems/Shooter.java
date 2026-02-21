@@ -62,7 +62,7 @@ public class Shooter extends SubsystemBase {
     public double distance = 1.219;
     public double angle = 1.3;
     // private finasl PIDController m_pidController = new PIDController(shooterConstants.FLYWHEEL_KP, shooterConstants.FLYWHEEL_KI, shooterConstants.FLYWHEEL_KD);
-    Hood hood = new Hood();
+    public Hood hood = new Hood();
 
     private enum ControlMode {
         kOpenLoop, kPID

@@ -50,11 +50,11 @@ public class Hood extends SubsystemBase {
         double clamped      = Math.max(shooterConstants.MIN_HOOD_ANGLE,
                                 Math.min(shooterConstants.MAX_HOOD_ANGLE, angle));
         
-        double angleAsRadians = Math.toRadians(Math.abs(clamped - 90) + 42.23);
+        double angleAsRadians = Math.toRadians((clamped) + 42.23); // mirror clamped angle and add constant angle (from CAD) for trig
         // Calculation derived from CAD model to convert angle to actuator extention  
-        double leftLength = (Math.sqrt((6.63 * 6.63) + (5.078 * 5.078) - (2 * 6.63 * 5.078 * Math.cos(angleAsRadians))));
-        double leftPosition = (leftLength - 6.61)/(10.48-6.61);
-        double rightLength = Math.sqrt(103.25-99.727*(Math.cos(Math.acos( (69.756 - leftLength * leftLength)/ 67.3444) -0.243)));
+        double leftLength = (Math.sqrt((6.63*6.63) + (5.078*5.078) - (2*6.63*5.078 * Math.cos(angleAsRadians))));
+        double leftPosition = (leftLength - 6.61)/(10.48-6.61); // Convert total length of actuator to percentage of extention
+        double rightLength = Math.sqrt(103.25-99.727*(Math.cos(Math.acos((69.756 - leftLength*leftLength)/ 67.3444) - 0.243)));
         double rightPosition = (rightLength - 6.61)/(10.48-6.61);
         final double leftClampedPosition = MathUtil.clamp(leftPosition, kMinPosition, kMaxPosition);
         final double rightClampedPosition = MathUtil.clamp(rightPosition, kMinPosition, kMaxPosition);
