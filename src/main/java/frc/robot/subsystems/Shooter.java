@@ -339,8 +339,21 @@ public class Shooter extends SubsystemBase {
     //     , this);
     // }
 
+    public Command increaseDistance(){
+        return Commands.runOnce(
+                () -> {
+                    incDistance();
+                }, this);
+    } 
 
-    public void increaseDistance(){
+    public Command decreaseDistance(){
+        return Commands.runOnce(
+                () -> {
+                    decDistance();
+                }, this);
+    } 
+
+    public void incDistance(){
         double newDistance  = this.distance + 0.05;
         // switch(this.targetNumber) {
             // case HUB:
@@ -360,13 +373,14 @@ public class Shooter extends SubsystemBase {
         this.distance       = newDistance;
     }
 
-    public void decreaseDistance(){
+    public void decDistance(){
         double newDistance  = this.distance - 0.05;
                 // switch(this.targetNumber) {
             // case HUB:
                 this.targetRPM      = getHubRPM(newDistance);
                 this.targetAngle    = getHoodHub(newDistance);
                 hood.setAngle(this.targetAngle);
+                this.distance = newDistance;
         //         break;
         //     case PASS_LEFT:
         //         this.targetAngle    = getPassRPM(newDistance);

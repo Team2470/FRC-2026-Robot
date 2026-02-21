@@ -45,7 +45,7 @@ public class Constants {
         public static InterpolatingDoubleTreeMap PASS_TOF_MAP   = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap HUB_TOF_MAP    = new InterpolatingDoubleTreeMap();
 
-         public void ShooterInterpolation() {
+         static {
             // TODO: Actually test for these values.
             // Initial values are based on using desmos Trajectory Calculator
             // And do not reflect real-world-values
@@ -53,11 +53,11 @@ public class Constants {
             // This map is for the Hood angle 
             // when we are shooting into hub
             // Distance (meters), Hood Angle (degrees)
-            HOOD_HUB_MAP.put(3.993, 52.000); 
-            HOOD_HUB_MAP.put(3.048, 67.000);
-            HOOD_HUB_MAP.put(2.438, 65.000);
-            HOOD_HUB_MAP.put(1.829, 72.000);
-            HOOD_HUB_MAP.put(1.219, 80.000);
+            HOOD_HUB_MAP.put(3.993, 25.000); 
+            // HOOD_HUB_MAP.put(3.048, 67.000);
+            // HOOD_HUB_MAP.put(2.438, 65.000);
+            // HOOD_HUB_MAP.put(1.829, .000);
+            HOOD_HUB_MAP.put(1.219, 45.000);
         
             // This map is for the Hood angle 
             // when we are passing into alliance zone
