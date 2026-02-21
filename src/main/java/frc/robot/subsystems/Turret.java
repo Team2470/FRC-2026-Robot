@@ -47,8 +47,8 @@ public class Turret extends SubsystemBase {
     public Command runTurretCommand(Integer direction){
     return Commands.runEnd(
         () -> { 
-            this.setTargetAngle(turretAngle.plus(Rotation2d.fromRadians(Math.PI/60 * direction)));
-            turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/60 * direction));
+            this.setTargetAngle(turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction)));
+            turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction));
         },
         () -> { this.setTargetAngle(turretAngle);}, this);
     }
