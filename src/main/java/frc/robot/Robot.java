@@ -33,14 +33,15 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        if (RobotBase.isSimulation()) {
+        // if (RobotBase.isSimulation()) {
             var nt = NetworkTableInstance.getDefault();
             nt.stopClient();
-            nt.startClient4("sim");
-            // nt.setServer(new String[] {"172.28.0.1", "limelight.local"}); // Windows
-            nt.setServer(new String[] { "172.29.0.1", "limelight.local" }); // Mac
+            // nt.startClient4("sim");
+            nt.startClient4("turret_cam");
+            nt.setServer(new String[] {"172.28.0.1", "limelight.local"}); // Windows
+            // nt.setServer(new String[] { "172.29.0.1", "limelight.local" }); // Mac
             nt.startDSClient();
-        }
+        // }
     }
 
     @Override
