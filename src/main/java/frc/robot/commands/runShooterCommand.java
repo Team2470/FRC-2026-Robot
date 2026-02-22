@@ -41,7 +41,7 @@ public class runShooterCommand extends Command{
         }
 
         shooter.setRPM(shotParameters.rpm());
-        hood.setAngle(shotParameters.hoodPosition());
+        hood.setAngle(shotParameters.hoodAngle());
 
         if(shooter.isAtSpeed(shotParameters.rpm(), 50) &&
             hood.isPositionWithinTolerance()){

@@ -122,11 +122,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getHoodHub(double distance) {
-        return shooterConstants.HUB_MAP.get(distance).hoodPosition();
+        return shooterConstants.HUB_MAP.get(distance).hoodAngle();
     }
 
     public double getHoodPass(double distance) {
-        return shooterConstants.PASS_MAP.get(distance).hoodPosition();
+        return shooterConstants.PASS_MAP.get(distance).hoodAngle();
     }
 
     public void setRPM(double rpm) {

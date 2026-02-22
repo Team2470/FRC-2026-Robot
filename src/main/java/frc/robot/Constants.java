@@ -82,15 +82,15 @@ public class Constants {
         public static final double MAX_HUB_DISTANCE = 4.000;
         public static final double MIN_HUB_DISTANCE = 1.200;
 
-        public static final double MAX_PASS_DISTANCE = 11.000;
+        public static final double MAX_PASS_DISTANCE = 13.000;
         public static final double MIN_PASS_DISTANCE = 1.500;
 
-        public record SHOOTER_PARAMETERS(double rpm, double hoodPosition, double timeOfFlight){}
+        public record SHOOTER_PARAMETERS(double rpm, double hoodAngle, double timeOfFlight){}
 
         public static final Interpolator<SHOOTER_PARAMETERS> SHOOTER_PARAM_INTERPOLATOR =
             (start, end, t) -> {
                 double interpRPM = start.rpm() + (end.rpm() - start.rpm()) * t;
-                double interpHood = start.hoodPosition() + (end.hoodPosition() - start.hoodPosition()) * t;
+                double interpHood = start.hoodAngle() + (end.hoodAngle() - start.hoodAngle()) * t;
                 double interpTime = start.timeOfFlight() + (end.timeOfFlight() - start.timeOfFlight()) * t;
                 return new SHOOTER_PARAMETERS(interpRPM, interpHood, interpTime);
             };
@@ -106,8 +106,8 @@ public class Constants {
 
         static {
             // TODO: Get good values for passing
-            PASS_MAP.put( 1.000, new SHOOTER_PARAMETERS(1500.000, 0.000, 0.800));
-            PASS_MAP.put( 2.000, new SHOOTER_PARAMETERS(2000.000, 0.000, 0.900));
+            PASS_MAP.put(1.000, new SHOOTER_PARAMETERS(1500.000, 0.000, 0.800));
+            PASS_MAP.put(2.000, new SHOOTER_PARAMETERS(2000.000, 0.000, 0.900));
             // PASS_MAP.put( 1.000, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
             // PASS_MAP.put( 2.000, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
             // PASS_MAP.put( 3.000, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
@@ -123,11 +123,8 @@ public class Constants {
             // PASS_MAP.put(13.000, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
 
             // TODO: Get good values for the HUB
-            // Only values tested for so far: rpm at 7.5 and 13 feet (2.286 and 3.962 meters respectively)
-            //                                HOOD_ANGLE AND TIME_OF_FLIGHT NOT TESTED FOR
-            // Distance from front of shooter to front of HUB
-            HUB_MAP.put(2.286, new SHOOTER_PARAMETERS(2940.000, 0.000, 1.100));
-            HUB_MAP.put(3.962, new SHOOTER_PARAMETERS(3420.000, 0.000, 1.900));
+            HUB_MAP.put(1.000, new SHOOTER_PARAMETERS(1800.000, 25.000, 1.100));
+            HUB_MAP.put(4.000, new SHOOTER_PARAMETERS(2500.000, 25.000, 1.900));
             // 0.500 Meters ( 1.640 feet)
             // HUB_MAP.put(0.500, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
             // 1.000 Meters ( 3.281 feet)
