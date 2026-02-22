@@ -4,18 +4,19 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.transferConstants;
 
 public class Transfer extends SubsystemBase {
   private final TalonFX m_transfer;
   //placeholder Transfer MotorID
   public Transfer() {
-    m_transfer = new TalonFX(7);
+    m_transfer = new TalonFX(transferConstants.TRANSFER_DEVICE_ID);
   }
   public void transfer() {
-	m_transfer.setVoltage(4);
+	m_transfer.setVoltage(transferConstants.RUN_TRANSFER_VOLTAGE);
   }
   public void reverse_transfer () {
-  m_transfer.setVoltage(-6);
+  m_transfer.setVoltage(transferConstants.REVERSE_TRANSFER_VOLTAGE);
 
   }
   public void transferPercent(double volt){

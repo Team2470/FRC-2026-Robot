@@ -4,21 +4,22 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.hopperConstants;
 
 public class Hopper extends SubsystemBase {
   private final TalonFX m_hopper;
   //placeholder Hopper MotorID
   public Hopper() {
-    m_hopper = new TalonFX(9);
+    m_hopper = new TalonFX(hopperConstants.HOPPER_DEVICE_ID);
   }
-  public void hopper() {
-	m_hopper.setVoltage(4);
+  public void run() {
+	m_hopper.setVoltage(hopperConstants.RUN_HOPPER_VOLTAGE);
   }
   public void reverse_hopper () {
-  m_hopper.setVoltage(-6);
+  m_hopper.setVoltage(hopperConstants.REVERSE_HOPPER_VOLTAGE);
 
   }
-  public void hopperPercent(double volt){
+  public void run(double volt){
     m_hopper.setVoltage(volt);
   }
   public void stop() {
@@ -26,7 +27,7 @@ public class Hopper extends SubsystemBase {
   }
   public Command test_forwardsCommand() {
     return Commands.runEnd(
-      ()-> this.hopper(),
+      ()-> this.run(),
       this::stop,
       this);
   }
@@ -36,9 +37,9 @@ public class Hopper extends SubsystemBase {
       this::stop,
       this);
   }
-  public Command hopperPercentCommand(double volt){
+  public Command runCommand(double volt){
       return Commands.runEnd(
-      ()-> this.hopperPercent(volt),
+      ()-> this.run(volt),
       this::stop,
       this);
   }

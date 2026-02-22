@@ -36,6 +36,19 @@ public class Constants {
                                                                                                 RED_RIGHT_PASS_LOCATION;
     }
 
+    public static class transferConstants {
+        public static final int TRANSFER_DEVICE_ID = 7;
+        public static final double RUN_TRANSFER_VOLTAGE     = 12;
+        public static final double REVERSE_TRANSFER_VOLTAGE = -12;
+
+    }
+
+    public static class hopperConstants {
+        public static final int HOPPER_DEVICE_ID = 9;
+        public static final double RUN_HOPPER_VOLTAGE     = 12;
+        public static final double REVERSE_HOPPER_VOLTAGE = -12;
+    }
+
     public static class shooterConstants {
         public static final int FLYWHEEL_1_DEVICE_ID = 1;
         public static final int FLYWHEEL_2_DEVICE_ID = 2;

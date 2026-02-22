@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.runShooterCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
@@ -47,7 +47,7 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Shooter shooter = new Shooter();
     public final Turret turret = new Turret();
-    public final Feeder feeder = new Feeder();
+    public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
 
     public RobotContainer() {
@@ -87,14 +87,14 @@ public class RobotContainer {
 
         // joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
 
-        joystick.rightBumper().onTrue(shooter.increaseDistance());
-        joystick.leftBumper().onTrue(shooter.decreaseDistance());
+        joystick.rightBumper().onTrue(Commands.runOnce(() -> shooter.increaseDistance()));
+        joystick.leftBumper().onTrue(Commands.runOnce(() -> shooter.decreaseDistance()));
 
         // Reset the field-centric heading on left bumper press.
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        joystick.rightTrigger().whileTrue(new runShooterCommand(shooter, shooter.hood, feeder, hopper, true, shooter.distance));
-        joystick.leftTrigger().whileTrue(new runShooterCommand(shooter, shooter.hood, feeder, hopper, false, shooter.distance));
+        joystick.rightTrigger().whileTrue(new runShooterCommand(shooter, shooter.hood, transfer, hopper, true, shooter.distance));
+        joystick.leftTrigger().whileTrue(new runShooterCommand(shooter, shooter.hood, transfer, hopper, false, shooter.distance));
 
         joystick.x().whileTrue(Commands.runOnce(() -> shooter.increaseDistance()));
         joystick.y().whileTrue(Commands.runOnce(() -> shooter.decreaseDistance()));

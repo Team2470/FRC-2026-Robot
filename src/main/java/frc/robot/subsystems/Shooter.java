@@ -50,7 +50,7 @@ public class Shooter extends SubsystemBase {
 
     private final TalonFX m_topMotor_1 = new TalonFX(shooterConstants.FLYWHEEL_1_DEVICE_ID);
     private final TalonFX m_topMotor_2 = new TalonFX(shooterConstants.FLYWHEEL_2_DEVICE_ID);
-    // private final TalonFX m_feederMotor                     = new TalonFX(shooterConstants.FEEDER_DEVICE_ID);
+    // private final TalonFX m_transferMotor                     = new TalonFX(shooterConstants.FEEDER_DEVICE_ID);
     // private final TalonFX m_hoodMotor                       = new TalonFX(shooterConstants.HOOD_DEVICE_ID);
     private final VelocityVoltage m_velocityRequest         = new VelocityVoltage(0);
 
@@ -176,7 +176,7 @@ public class Shooter extends SubsystemBase {
         this.distance       = newDistance;
     }
 
-    public void decDistance(){
+    public void decreaseDistance(){
         double newDistance  = this.distance - 0.05;
         // this.targetRPM      = getHubRPM(newDistance);
         // this.targetAngle    = getHoodHub(newDistance);
