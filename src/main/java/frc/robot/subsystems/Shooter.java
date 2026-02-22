@@ -59,11 +59,11 @@ public class Shooter extends SubsystemBase {
     private double m_demand;
     // public shooterConstants.Targets targetNumber = shooterConstants.Targets.HUB;
     public double targetRPM = 500;
-    public double targetAngle = 80;
-    public double distance = 1.3;
+    public double targetAngle = 25;
+    public double distance = 1.219;
     public double angle = 1.3;
     // private finasl PIDController m_pidController = new PIDController(shooterConstants.FLYWHEEL_KP, shooterConstants.FLYWHEEL_KI, shooterConstants.FLYWHEEL_KD);
-    Hood hood = new Hood();
+    public Hood hood = new Hood();
 
     private enum ControlMode {
         kOpenLoop, kPID
@@ -85,6 +85,7 @@ public class Shooter extends SubsystemBase {
         config.Slot0.kI = shooterConstants.FLYWHEEL_KI;
         config.Slot0.kD = shooterConstants.FLYWHEEL_KD;
         config.Slot0.kV = shooterConstants.FLYWHEEL_KV;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         m_topMotor_1.getConfigurator().apply(config);
         m_topMotor_2.getConfigurator().apply(config);
         m_topMotor_2.optimizeBusUtilization();
@@ -175,7 +176,7 @@ public class Shooter extends SubsystemBase {
         this.distance       = newDistance;
     }
 
-    public void decreaseDistance(){
+    public void decDistance(){
         double newDistance  = this.distance - 0.05;
         // this.targetRPM      = getHubRPM(newDistance);
         // this.targetAngle    = getHoodHub(newDistance);

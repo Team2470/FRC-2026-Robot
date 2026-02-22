@@ -51,7 +51,7 @@ public class Constants {
         public static final double MIN_TURRET_ANGLE                     = 0.0;
         public static final double MAX_TURRET_ANGLE                     = 180.0;
         public static final double MIN_HOOD_ANGLE                       = 25.0;
-        public static final double MAX_HOOD_ANGLE                       = 65.0;
+        public static final double MAX_HOOD_ANGLE                       = 45.0;
         public static final double MIN_TURRET_SOFT_LIMIT                = MIN_TURRET_ANGLE /
                                                                             360.0 * TURRET_GEAR_RATIO;
         public static final double MAX_TURRET_SOFT_LIMIT                = MAX_TURRET_ANGLE /
@@ -65,6 +65,12 @@ public class Constants {
 
          // TODO: grab coordinates of Center of Turret compared to our robot's origin point (typically in the center of our bellypan)
         public static final Transform3d ROBOT_TO_TURRET = new Transform3d(-1.0, 0.0, 0.44, Rotation3d.kZero);
+
+        public static final double MAX_HUB_DISTANCE = 4.000;
+        public static final double MIN_HUB_DISTANCE = 1.200;
+
+        public static final double MAX_PASS_DISTANCE = 11.000;
+        public static final double MIN_PASS_DISTANCE = 1.500;
 
         public record SHOOTER_PARAMETERS(double rpm, double hoodPosition, double timeOfFlight){}
 

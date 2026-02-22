@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
@@ -28,12 +29,12 @@ public class Hood extends SubsystemBase {
     private int rightChannel = 1;
     private final Servo leftServo;
     private final Servo rightServo;
-    private double leftCurrentPosition = 0.5;
-    private double rightCurrentPosition = 0.5;
-    private double currentAngle = 45;
-    private double targetAngle = 45;
-    private double leftTargetPosition = 0.5;
-    private double rightTargetPosition = 0.5;
+    private double leftCurrentPosition = 0.0;
+    private double rightCurrentPosition = 0.0;
+    private double currentAngle = 25;
+    private double targetAngle = 25;
+    private double leftTargetPosition = 0.0;
+    private double rightTargetPosition = 0.0;
     private Time lastUpdateTime = Seconds.of(0);
 
     public Hood() {
@@ -50,11 +51,11 @@ public class Hood extends SubsystemBase {
         double clamped      = Math.max(shooterConstants.MIN_HOOD_ANGLE,
                                 Math.min(shooterConstants.MAX_HOOD_ANGLE, angle));
 
-        double angleAsRadians = Math.toRadians(Math.abs(clamped -90) + 42.23);
+        double angleAsRadians = Math.toRadians((clamped) + 42.23); // mirror clamped angle and add constant angle (from CAD) for trig
         // Calculation derived from CAD model to convert angle to actuator extention
-        double leftLength = (Math.sqrt(6.63 * 6.63 + 5.078 * 5.078 - 2 * 6.63 * 5.078 * Math.cos(angleAsRadians)));
-        double leftPosition = (leftLength - 6.61)/(10.48-6.61);
-        double rightLength = Math.sqrt(103.25-99.727*(Math.cos(Math.acos( (69.756 - leftLength * leftLength)/ 67.3444) -0.243)));
+        double leftLength = (Math.sqrt((6.63*6.63) + (5.078*5.078) - (2*6.63*5.078 * Math.cos(angleAsRadians))));
+        double leftPosition = (leftLength - 6.61)/(10.48-6.61); // Convert total length of actuator to percentage of extention
+        double rightLength = Math.sqrt(103.25-99.727*(Math.cos(Math.acos((69.756 - leftLength*leftLength)/ 67.3444) - 0.243)));
         double rightPosition = (rightLength - 6.61)/(10.48-6.61);
         final double leftClampedPosition = MathUtil.clamp(leftPosition, kMinPosition, kMaxPosition);
         final double rightClampedPosition = MathUtil.clamp(rightPosition, kMinPosition, kMaxPosition);
@@ -62,10 +63,16 @@ public class Hood extends SubsystemBase {
         rightServo.set(rightClampedPosition);
         leftTargetPosition = leftClampedPosition;
         rightTargetPosition = rightClampedPosition;
-        targetAngle = angleAsRadians;
+        // targetAngle = Math.toDegrees(angleAsRadians);
     }
 
+    public void increaseAngle () {
+        targetAngle = targetAngle + 5;
+    }
 
+    public void decreaseAngle () {
+        targetAngle = targetAngle - 5;
+    }
     /* public void extendActuator() {
         setPosition(currentPosition + 0.05);
     }
@@ -80,6 +87,15 @@ public class Hood extends SubsystemBase {
             .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
     }
 
+    public Command increaseAngleCommand() {
+        return runOnce(() -> increaseAngle())
+            .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
+    }
+
+    public Command decreaseAngleCommand() {
+        return runOnce(() -> decreaseAngle())
+            .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
+    }
     public boolean isPositionWithinTolerance() {
         return MathUtil.isNear(leftTargetPosition, leftCurrentPosition, kPositionTolerance) && MathUtil.isNear(rightTargetPosition, rightCurrentPosition, kPositionTolerance) ;
     }
@@ -110,6 +126,7 @@ public class Hood extends SubsystemBase {
     @Override
     public void periodic() {
         updateCurrentPosition();
+        setAngle(targetAngle);
     }
 
     @Override
