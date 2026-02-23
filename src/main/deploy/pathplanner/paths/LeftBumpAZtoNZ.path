@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.525,
-        "y": 0.65
+        "x": 3.3,
+        "y": 5.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.497468042562561,
-        "y": 0.6664577839179435
+        "x": 4.098076012133985,
+        "y": 5.508141593250025
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LeftBumpAZ"
     },
     {
       "anchor": {
-        "x": 0.45,
-        "y": 0.65
+        "x": 5.9,
+        "y": 5.5
       },
       "prevControl": {
-        "x": 1.1988774336036094,
-        "y": 0.6618340812389225
+        "x": 5.270952805258415,
+        "y": 5.487799984033224
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LeftBumpNZ"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 5.0,
+    "rotation": 135.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Transition",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 4.5,
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }
