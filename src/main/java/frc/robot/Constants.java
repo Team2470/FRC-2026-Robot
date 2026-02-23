@@ -152,4 +152,12 @@ public class Constants {
             // HUB_MAP.put(6.000, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
         }
     }
+
+    public static final class DashboardConstants {
+        public static final String DRIVE_MODE_KEY           = "Drive Mode";
+        public static final String AUTO_COMPILED_KEY        = "Auto Compiled";
+        public static final String AUTO_DESCRIPTION_KEY     = "Auto Description";
+        public static final String WAIT_SECONDS_SAVED_KEY   = "Wait Seconds Saved";
+        public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";
+    }
 }
