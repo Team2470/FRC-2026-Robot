@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.math.util.Units.degreesToRadians;
+import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
@@ -195,9 +196,15 @@ public class Constants {
 
     public static final class visionConstants{
         public static final String LIMELIGHT_SHOOTER = "limelight-shooter";
+        // Position of Limelight when Shooter points away from Hopper
         public static final Transform3d ROBOT_TO_LIMELIGHT_TRANSFORM3D = new Transform3d(
-            new Translation3d(0.1, .3, 4),
-            new Rotation3d(0.0, degreesToRadians(25), -Math.PI / 2.0));
+            new Translation3d(inchesToMeters(12.649), inchesToMeters(8.043), inchesToMeters(16.892)),
+            new Rotation3d(0.0, degreesToRadians(20), -Math.PI / 2.0));
+
+        // Position of Limelight when Shooter points towards Hopper
+        // public static final Transform3d ROBOT_TO_LIMELIGHT_TRANSFORM3D = new Transform3d(
+            // new Translation3d(inchesToMeters(2.111), inchesToMeters(5.075), inchesToMeters(16.892)),
+            // new Rotation3d(0.0, degreesToRadians(20), -Math.PI / 2.0));
 
         public static final Transform3d ROBOT_TO_QUEST_TRANSFORM3D = new Transform3d(
             new Translation3d(0.1, .3, 4),

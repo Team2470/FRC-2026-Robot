@@ -94,9 +94,10 @@ public class VisionSubsystem extends SubsystemBase {
      * @return true if the pose estimate meets basic validation criteria
      */
     private boolean isValidPoseEstimate(PoseEstimate poseEstimate) {
-      return poseEstimate != null && poseEstimate.tagCount > 0
-          && isValidFieldTranslation(poseEstimate.pose.getTranslation())
-          && poseEstimate.avgTagDist < visionConstants.TAG_DISTANCE_THRESHOLD.in(Meters);
+    //   return poseEstimate != null && poseEstimate.tagCount > 0
+        //   && isValidFieldTranslation(poseEstimate.pose.getTranslation())
+        //   && poseEstimate.avgTagDist < visionConstants.TAG_DISTANCE_THRESHOLD.in(Meters);
+      return poseEstimate != null && poseEstimate.tagCount > 0;
     }
 
     /**
@@ -146,10 +147,10 @@ public class VisionSubsystem extends SubsystemBase {
                                                             adjustedDeviations);
 
             // Track the best estimate for QuestNav comparison
-            if (bestDeviation > adjustedXYDeviation) {
+            // if (bestDeviation > adjustedXYDeviation) {
               bestEstimate = poseEstimate;
-              bestDeviation = adjustedXYDeviation;
-            }
+            //   bestDeviation = adjustedXYDeviation;
+            // }
         }
       return bestEstimate;
     }
