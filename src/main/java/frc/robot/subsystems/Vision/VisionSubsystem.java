@@ -7,7 +7,7 @@ import static frc.robot.Constants.fieldConstants.isValidFieldTranslation;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
+import edu.wpi.first.math.util.Units;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.Matrix;
@@ -83,6 +83,10 @@ public class VisionSubsystem extends SubsystemBase {
         }
         shotDistance = distanceToTarget(bestEstimate);
         SmartDashboard.putNumber("shotDistance", shotDistance);
+        SmartDashboard.putNumberArray("bestEstimate", new double []{
+            bestEstimate.pose.getX(),
+            bestEstimate.pose.getY(),
+            bestEstimate.pose.getRotation().getDegrees()});
     }
 
     /**
