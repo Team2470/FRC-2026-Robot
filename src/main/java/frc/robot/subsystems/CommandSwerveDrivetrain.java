@@ -12,8 +12,10 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -299,5 +301,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    // Inside CommandSwerveDrivetrain.java
+    public Pose2d getPose() {
+        return this.getState().Pose;
+    }
+
+    public ChassisSpeeds getFieldRelativeSpeeds() {
+        // Convert Robot-Relative speeds from the state to Field-Relative
+        return ChassisSpeeds.fromRobotRelativeSpeeds(this.getState().Speeds, getPose().getRotation());
+    }
+
+    public void addVision(Pose2d visionPose, double timestamp) {
+        // Phoenix 6 uses this method to inject vision
+        this.addVisionMeasurement(visionPose, timestamp);
+    }
+
+    public void addVisionMeasurement(Pose2d visionRobotPoseMeters,
+                                        double timestampSeconds,
+                                        Vector<N3> visionMeasurementStdDevs) {
+        super.addVisionMeasurement(
+            visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
+    }
+    public void addVisionMeasurement(Pose2d visionRobotPoseMeters,
+                                        Matrix<N3, N1> visionMeasurementStdDevs) {
+        addVisionMeasurement(
+            visionRobotPoseMeters, Utils.getCurrentTimeSeconds() - 0.02, visionMeasurementStdDevs);
     }
 }

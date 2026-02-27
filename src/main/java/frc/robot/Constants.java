@@ -1,16 +1,27 @@
 package frc.robot;
 
+import static edu.wpi.first.math.util.Units.degreesToRadians;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.shooterConstants.SHOOTER_PARAMETERS;
 
 public class Constants {
     public static final double MINUTE_TO_SECONDS = 60.0;
@@ -19,8 +30,9 @@ public class Constants {
                 || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
     }
 
-
     public static final class fieldConstants {
+        public static final Distance FIELD_LENGTH                       = Inches.of(651.2);
+        public static final Distance FIELD_WIDTH                        = Inches.of(317.7);
         // Target Locations
         public static final Translation2d BLUE_HUB_LOCATION             = new Translation2d(4.600, 4.025);
         public static final Translation2d RED_HUB_LOCATION              = new Translation2d(12.000, 4.025);
@@ -34,6 +46,26 @@ public class Constants {
                                                                                                 RED_LEFT_PASS_LOCATION;
         public static final Translation2d PASS_RIGHT_LOCATION           = isBlueAlliance() ? BLUE_RIGHT_PASS_LOCATION :
                                                                                                 RED_RIGHT_PASS_LOCATION;
+        /**
+         * Checks if a translation is within the field boundaries
+         *
+         * @param translation The translation to check
+         * @return true if the translation is within the field boundaries
+         */
+        public static boolean isValidFieldTranslation(Translation3d translation) {
+            return isValidFieldTranslation(translation.toTranslation2d());
+        }
+
+        /**
+         * Checks if a translation is within the field boundaries
+         *
+         * @param translation The translation to check
+         * @return true if the translation is within the field boundaries
+         */
+        public static boolean isValidFieldTranslation(Translation2d translation) {
+            return translation.getX() >= 0.0 && translation.getX() <= FIELD_LENGTH.in(Meters) && translation.getY() >= 0.0
+                && translation.getY() <= FIELD_WIDTH.in(Meters);
+        }
     }
 
     public static class transferConstants {
@@ -159,5 +191,38 @@ public class Constants {
         public static final String AUTO_DESCRIPTION_KEY     = "Auto Description";
         public static final String WAIT_SECONDS_SAVED_KEY   = "Wait Seconds Saved";
         public static final String WAIT_SECONDS_DISPLAY_KEY = "Wait Seconds Display";
+    }
+
+    public static final class visionConstants{
+        public static final String LIMELIGHT_SHOOTER = "limelight-shooter";
+        public static final Transform3d ROBOT_TO_LIMELIGHT_TRANSFORM3D = new Transform3d(
+            new Translation3d(0.1, .3, 4),
+            new Rotation3d(0.0, degreesToRadians(25), -Math.PI / 2.0));
+
+        public static final Transform3d ROBOT_TO_QUEST_TRANSFORM3D = new Transform3d(
+            new Translation3d(0.1, .3, 4),
+            new Rotation3d(0.0, degreesToRadians(25), -Math.PI / 2.0));
+        public static final double QUESTNAV_FAILURE_THRESHOLD = 6.0;
+        public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(
+            0.03, // X: Trust Quest to within 3cm (Trust more than odometry)
+            0.03, // Y: Trust Quest to within 3cm
+            0.5 // Theta: Trust Quest rotation LESS than Gyro (Trust Pigeon more)
+        );
+
+        public static final int LIMELIGHT_BLUE_PIPELINE = 0;
+        public static final int LIMELIGHT_RED_PIPELINE = 1;
+
+        // The standard deviations of our vision estimated poses, which affect correction rate
+        public static final double APRILTAG_STD_DEVS = 0.05;
+        public static final double QUESTNAV_ACTIVE_APRILTAG_STD_DEVS = 1.5;
+
+        /** The max average distance for AprilTag measurements to be considered valid */
+        public static final Distance TAG_DISTANCE_THRESHOLD = Meters.of(3.5);
+
+        /** The max distance from the starting pose for AprilTag measurements to be considered valid */
+        public static final Distance STARTING_DISTANCE_THRESHOLD = Meters.of(3.0);
+
+        /** The robot angular velocity threshold for accepting vision measurements */
+        public static final AngularVelocity ANGULAR_VELOCITY_THRESHOLD = DegreesPerSecond.of(720);
     }
 }

@@ -28,6 +28,8 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.commands.runShooterCommand;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -49,6 +51,11 @@ public class RobotContainer {
     public final Turret turret = new Turret();
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
+
+    public final VisionSubsystem visionSubsystem = new VisionSubsystem(
+        drivetrain::addVisionMeasurement,
+        drivetrain::resetPose,
+        () -> drivetrain.getState().Pose);
 
     public RobotContainer() {
         configureBindings();
