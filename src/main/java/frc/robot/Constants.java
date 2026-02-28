@@ -180,9 +180,8 @@ public class Constants {
             // HUB_MAP.put(5.000, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
             // 5.500 Meters (18.045 feet)
             // HUB_MAP.put(5.500, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
-            // 6.000 Meters (19.685 feet)
-            // Just past real max value of shooting inside alliance zone
-            // HUB_MAP.put(6.000, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
+            // 6.600 Meters (21.500 feet)
+            // HUB_MAP.put(6.600, new SHOOTER_PARAMETERS(RPM, HOOD_ANGLE, TIME_OF_FLIGHT));
         }
     }
 
