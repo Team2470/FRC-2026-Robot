@@ -96,8 +96,8 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, this.distanceToHub, false));
-        joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, this.distanceToHub, true));
+        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper,/* this.distanceToHub,*/ false));
+        joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, /*this.distanceToHub,*/ true));
 
         joystick.b().whileTrue(turret.runTurretCommand(1));
         joystick.a().whileTrue(turret.runTurretCommand(-1));
