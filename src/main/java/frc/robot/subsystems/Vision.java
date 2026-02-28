@@ -6,14 +6,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.LimelightHelpers;
-public class Vision {
+public class Vision extends SubsystemBase{
     double m_lastLimelightPrintTime;
     double poseX;
     double poseY; 
     double Rotation;
     public void findPose1(){
         double now = Timer.getFPGATimestamp();
-        if (now - m_lastLimelightPrintTime < (1.0 / 24.0)) {
+        if (now - m_lastLimelightPrintTime < (1.0 / 12.0)) {
             return;
         }
         m_lastLimelightPrintTime = now;
@@ -34,16 +34,17 @@ public class Vision {
         var poseY = pose.getY();
         var rotation = pose.getRotation().getDegrees();
 
-        if (poseX > 0 || poseY > 0 || rotation > 0) {
-            SmartDashboard.putNumber("poseX", poseX);
-            SmartDashboard.putNumber("poseY", poseY);
-            SmartDashboard.putNumber("rotation", rotation);
-            // System.out.printf(
-            //         "Limelight pose estimate: x=%.2f y=%.2f rot=%.1f deg%n",
-            //         poseX,
-            //         poseY,
-            //         rotation);
-        }
+        SmartDashboard.putNumber("poseX", poseX);
+        SmartDashboard.putNumber("poseY", poseY);
+        SmartDashboard.putNumber("rotation", rotation);
+        // System.out.printf(
+        //         "Limelight pose estimate: x=%.2f y=%.2f rot=%.1f deg%n",
+        //         poseX,
+        //         poseY,
+        //         rotation);
     }
-    
+    @Override public void periodic(){
+    findPose1();
+    }
+
 }
