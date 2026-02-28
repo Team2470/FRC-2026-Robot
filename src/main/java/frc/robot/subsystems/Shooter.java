@@ -84,6 +84,7 @@ public class Shooter extends SubsystemBase {
         config.Slot0.kI = shooterConstants.FLYWHEEL_KI;
         config.Slot0.kD = shooterConstants.FLYWHEEL_KD;
         config.Slot0.kV = shooterConstants.FLYWHEEL_KV;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         m_topMotor_1.getConfigurator().apply(config);
         m_topMotor_2.getConfigurator().apply(config);
         m_topMotor_2.optimizeBusUtilization();
@@ -344,22 +345,22 @@ public class Shooter extends SubsystemBase {
                 () -> {
                     incDistance();
                 }, this);
-    } 
+    }
 
     public Command decreaseDistance(){
         return Commands.runOnce(
                 () -> {
                     decDistance();
                 }, this);
-    } 
+    }
 
     public void incDistance(){
         double newDistance  = this.distance + 0.05;
         // switch(this.targetNumber) {
             // case HUB:
-                this.targetRPM      = getHubRPM(newDistance);
-                this.targetAngle    = getHoodHub(newDistance);
-                hood.setAngle(this.targetAngle);
+                // this.targetRPM      = getHubRPM(newDistance);
+                // this.targetAngle    = getHoodHub(newDistance);
+                // hood.setAngle(this.targetAngle);
                 // break;
             // case PASS_LEFT:
             //     this.targetAngle    = getPassRPM(newDistance);
@@ -377,9 +378,9 @@ public class Shooter extends SubsystemBase {
         double newDistance  = this.distance - 0.05;
                 // switch(this.targetNumber) {
             // case HUB:
-                this.targetRPM      = getHubRPM(newDistance);
-                this.targetAngle    = getHoodHub(newDistance);
-                hood.setAngle(this.targetAngle);
+                // this.targetRPM      = getHubRPM(newDistance);
+                // this.targetAngle    = getHoodHub(newDistance);
+                // hood.setAngle(this.targetAngle);
                 this.distance = newDistance;
         //         break;
         //     case PASS_LEFT:

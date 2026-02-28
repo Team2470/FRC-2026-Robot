@@ -45,14 +45,14 @@ public class Hood extends SubsystemBase {
         setAngle(currentAngle);
         SmartDashboard.putData(this);
     }
-    
+
     /** Expects an angle between 25 and 65*/
     public void setAngle (double angle) {
         double clamped      = Math.max(shooterConstants.MIN_HOOD_ANGLE,
                                 Math.min(shooterConstants.MAX_HOOD_ANGLE, angle));
-        
+
         double angleAsRadians = Math.toRadians((clamped) + 42.23); // mirror clamped angle and add constant angle (from CAD) for trig
-        // Calculation derived from CAD model to convert angle to actuator extention  
+        // Calculation derived from CAD model to convert angle to actuator extention
         double leftLength = (Math.sqrt((6.63*6.63) + (5.078*5.078) - (2*6.63*5.078 * Math.cos(angleAsRadians))));
         double leftPosition = (leftLength - 6.61)/(10.48-6.61); // Convert total length of actuator to percentage of extention
         double rightLength = Math.sqrt(103.25-99.727*(Math.cos(Math.acos((69.756 - leftLength*leftLength)/ 67.3444) - 0.243)));
@@ -69,7 +69,7 @@ public class Hood extends SubsystemBase {
     public void increaseAngle () {
         targetAngle = targetAngle + 5;
     }
-    
+
     public void decreaseAngle () {
         targetAngle = targetAngle - 5;
     }
@@ -86,7 +86,7 @@ public class Hood extends SubsystemBase {
         return runOnce(() -> setAngle(angle))
             .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
     }
-    
+
     public Command increaseAngleCommand() {
         return runOnce(() -> increaseAngle())
             .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
