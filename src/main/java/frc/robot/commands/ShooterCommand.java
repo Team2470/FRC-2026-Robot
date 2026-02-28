@@ -12,18 +12,21 @@ public class ShooterCommand extends Command{
     private final Hood      hood;
     private final Transfer  transfer;
     private final Hopper    hopper;
+    private final double    distance;
     private final boolean   isPassing;
 
     public ShooterCommand(Shooter    shooter,
                          Hood        hood,
                          Transfer    transfer,
                          Hopper      hopper,
+                         double      distance,
                          boolean     isPassing){
 
         this.shooter    = shooter;
         this.hood       = hood;
         this.transfer   = transfer;
         this.hopper     = hopper;
+        this.distance   = distance;
         this.isPassing  = isPassing;
     addRequirements(shooter, hood, transfer, hopper);
 }
@@ -31,17 +34,17 @@ public class ShooterCommand extends Command{
     public void execute(){
         double TargetRPM;
         double TargetHoodAngle;
-        double distance;
+        double clampedDistance;
         if(isPassing){
-            distance = Math.max(shooterConstants.MIN_PASS_DISTANCE,
-                                Math.min(shooterConstants.MAX_PASS_DISTANCE, shooter.distance));
-            TargetRPM = shooter.getPassRPM(distance);
-            TargetHoodAngle = shooter.getHoodPass(distance);
+            clampedDistance = Math.max(shooterConstants.MIN_PASS_DISTANCE,
+                                Math.min(shooterConstants.MAX_PASS_DISTANCE, distance));
+            TargetRPM = shooter.getPassRPM(clampedDistance);
+            TargetHoodAngle = shooter.getHoodPass(clampedDistance);
         } else {
-            distance = Math.max(shooterConstants.MIN_HUB_DISTANCE,
+            clampedDistance = Math.max(shooterConstants.MIN_HUB_DISTANCE,
                                 Math.min(shooterConstants.MAX_HUB_DISTANCE, shooter.distance));
-            TargetRPM = shooter.getHubRPM(distance);
-            TargetHoodAngle = shooter.getHoodHub(distance);
+            TargetRPM = shooter.getHubRPM(clampedDistance);
+            TargetHoodAngle = shooter.getHoodHub(clampedDistance);
         }
         hood.setAngle(TargetHoodAngle);
         shooter.setRPM(TargetRPM);

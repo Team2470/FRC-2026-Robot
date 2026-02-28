@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -21,6 +22,7 @@ public class Robot extends TimedRobot {
 
     private final RobotContainer m_robotContainer;
     private double m_lastLimelightPrintTime = 0.0;
+    public double distanceToHub;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -131,6 +133,13 @@ public class Robot extends TimedRobot {
         var poseY = pose.getY();
         var rotation = pose.getRotation().getDegrees();
 
+        distanceToHub = Constants.RED_HUB_LOCATION.getDistance(pose.getTranslation());
+        SmartDashboard.putNumber("distanceToHub", distanceToHub);
+        SmartDashboard.putNumber("pose X:", poseX);
+        SmartDashboard.putNumber("pose Y:", poseY);
+        SmartDashboard.putNumber("pose Rotation:", rotation);
+    
+
         if (poseX > 0 || poseY > 0 || rotation > 0) {
 
             System.out.printf(
@@ -139,6 +148,7 @@ public class Robot extends TimedRobot {
                     pose.getY(),
                     pose.getRotation().getDegrees());
         }
+        m_robotContainer.distanceToHub = distanceToHub;
     }
 
     @Override
