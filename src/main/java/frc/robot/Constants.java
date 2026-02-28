@@ -4,10 +4,12 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 
 public class Constants {
     public static final double MINUTE_TO_SECONDS = 60.0;
+    public static final Translation2d RED_HUB_LOCATION = new Translation2d(12.000, 4.025);
     public static class shooterConstants {
         public static final int FLYWHEEL_1_DEVICE_ID = 1;
         public static final int FLYWHEEL_2_DEVICE_ID = 2;

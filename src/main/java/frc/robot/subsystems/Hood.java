@@ -30,8 +30,8 @@ public class Hood extends SubsystemBase {
     private final Servo rightServo;
     private double leftCurrentPosition = 0.0;
     private double rightCurrentPosition = 0.0;
-    private double currentAngle = 25;
-    private double targetAngle = 25;
+    public double currentAngle = 25;
+    public double targetAngle = 25;
     private double leftTargetPosition = 0.0;
     private double rightTargetPosition = 0.0;
     private Time lastUpdateTime = Seconds.of(0);
@@ -47,14 +47,14 @@ public class Hood extends SubsystemBase {
     
     /** Expects an angle between 25 and 65*/
     public void setAngle (double angle) {
-        double clamped      = Math.max(shooterConstants.MIN_HOOD_ANGLE,
+          double clamped      = Math.max(shooterConstants.MIN_HOOD_ANGLE,
                                 Math.min(shooterConstants.MAX_HOOD_ANGLE, angle));
         
-        double angleAsRadians = Math.toRadians(Math.abs(clamped - 90) + 42.23);
+        double angleAsRadians = Math.toRadians((clamped) + 42.23); // mirror clamped angle and add constant angle (from CAD) for trig
         // Calculation derived from CAD model to convert angle to actuator extention  
-        double leftLength = (Math.sqrt((6.63 * 6.63) + (5.078 * 5.078) - (2 * 6.63 * 5.078 * Math.cos(angleAsRadians))));
-        double leftPosition = (leftLength - 6.61)/(10.48-6.61);
-        double rightLength = Math.sqrt(103.25-99.727*(Math.cos(Math.acos( (69.756 - leftLength * leftLength)/ 67.3444) -0.243)));
+        double leftLength = (Math.sqrt((6.63*6.63) + (5.078*5.078) - (2*6.63*5.078 * Math.cos(angleAsRadians))));
+        double leftPosition = (leftLength - 6.61)/(10.48-6.61); // Convert total length of actuator to percentage of extention
+        double rightLength = Math.sqrt(103.25-99.727*(Math.cos(Math.acos((69.756 - leftLength*leftLength)/ 67.3444) - 0.243)));
         double rightPosition = (rightLength - 6.61)/(10.48-6.61);
         final double leftClampedPosition = MathUtil.clamp(leftPosition, kMinPosition, kMaxPosition);
         final double rightClampedPosition = MathUtil.clamp(rightPosition, kMinPosition, kMaxPosition);
@@ -62,7 +62,7 @@ public class Hood extends SubsystemBase {
         rightServo.set(rightClampedPosition);
         leftTargetPosition = leftClampedPosition;
         rightTargetPosition = rightClampedPosition;
-        targetAngle = angleAsRadians;
+        // targetAngle = Math.toDegrees(angleAsRadians);
     }
 
     
@@ -73,6 +73,20 @@ public class Hood extends SubsystemBase {
     public void retractActuator() {
         setPosition(currentPosition - 0.05);
     } */
+
+    public Command increaseAngle() {
+         return Commands.runOnce(
+            () -> {
+                this.targetAngle += 5;
+            }, this);
+    }
+
+    public Command decreaseAngle() {
+         return Commands.runOnce(
+            () -> {
+                this.targetAngle -= 1;
+            }, this);
+    }
 
     /** Expects a position between 0.0 and 1.0 */
     public Command angleCommand(double angle) {
@@ -110,6 +124,7 @@ public class Hood extends SubsystemBase {
     @Override
     public void periodic() {
         updateCurrentPosition();
+        setAngle(targetAngle);
     }
 
     @Override

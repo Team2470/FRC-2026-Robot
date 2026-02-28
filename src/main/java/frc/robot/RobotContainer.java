@@ -15,11 +15,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.Commands.ShooterCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Turret;
+
 
 public class RobotContainer {
     private double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -39,6 +43,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Shooter shooter = new Shooter();
     public final Turret turret = new Turret();
+    public final Transfer transfer = new Transfer();
+    public final Hopper hopper = new Hopper();
 
     public RobotContainer() {
         configureBindings();
@@ -75,20 +81,22 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
+        // joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
 
-        joystick.x().whileTrue(shooter.increaseDistance());
-        joystick.y().whileTrue(shooter.decreaseDistance());
+        joystick.x().whileTrue(shooter.decreaseRPM());
+        joystick.y().whileTrue(shooter.increaseRPM());
 
         // Reset the field-centric heading on left bumper press.
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
+        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, false));
+        joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, true));
+
         
-        joystick.b().whileTrue(turret.runTurretCommand(1));
-        joystick.a().whileTrue(turret.runTurretCommand(-1));
+        joystick.a().whileTrue(shooter.hood.decreaseAngle());
+        joystick.b().whileTrue(shooter.hood.increaseAngle());
 
     }
 
