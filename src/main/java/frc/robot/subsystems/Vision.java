@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.*;
@@ -21,17 +22,16 @@ public class Vision extends SubsystemBase{
         var alliance = DriverStation.getAlliance();
         boolean isRed = alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
         String limelightName = "limelight-shooter";
-        var poseEstimate = isRed
-                ? LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName)
-                : LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
+        LimelightHelpers.PoseEstimate prePoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+        Pose2d poseEstimate = prePoseEstimate.pose;
         if (poseEstimate == null) {
             System.out.println("Limelight pose estimate unavailable (" + limelightName + ").");
             return;
         }
-        var pose = poseEstimate.pose;
+        var pose = poseEstimate;
 
-        var poseX = pose.getX();
-        var poseY = pose.getY();
+        double poseX = pose.getX();
+        double poseY = pose.getY();
         var rotation = pose.getRotation().getDegrees();
 
         SmartDashboard.putNumber("poseX", poseX);
@@ -43,8 +43,16 @@ public class Vision extends SubsystemBase{
         //         poseY,
         //         rotation);
     }
+
+    public double getDistance() {
+        double distanceToHub = Math.sqrt((11.915394- poseX) *(11.915394- poseX) + (4.03 - poseY) *(4.03 - poseY));
+        SmartDashboard.putNumber("distanceToHub", distanceToHub);
+        return distanceToHub;
+    }
+
     @Override public void periodic(){
     findPose1();
+    getDistance();
     }
 
 }
