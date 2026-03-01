@@ -12,6 +12,7 @@ public class Vision extends SubsystemBase{
     double poseX;
     double poseY; 
     double Rotation;
+    double distanceToHub;
     public void findPose1(){
         double now = Timer.getFPGATimestamp();
         if (now - m_lastLimelightPrintTime < (1.0 / 12.0)) {
@@ -20,14 +21,14 @@ public class Vision extends SubsystemBase{
         m_lastLimelightPrintTime = now;
 
         var alliance = DriverStation.getAlliance();
-        boolean isRed = alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
-        String limelightName = "limelight-shooter";
+        //boolean isRed = alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
+        String limelightName = "limelight-intake";
         LimelightHelpers.PoseEstimate prePoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        Pose2d poseEstimate = prePoseEstimate.pose;
-        if (poseEstimate == null) {
+        if (prePoseEstimate == null) {
             System.out.println("Limelight pose estimate unavailable (" + limelightName + ").");
             return;
-        }
+        } 
+        Pose2d poseEstimate = prePoseEstimate.pose;
         var pose = poseEstimate;
 
         double poseX = pose.getX();
@@ -44,15 +45,14 @@ public class Vision extends SubsystemBase{
         //         rotation);
     }
 
-    public double getDistance() {
-        double distanceToHub = Math.sqrt((11.915394- poseX) *(11.915394- poseX) + (4.03 - poseY) *(4.03 - poseY));
+    public void setDistance() {
+        distanceToHub = Math.sqrt((11.915394- poseX) *(11.915394- poseX) + (4.03 - poseY) *(4.03 - poseY));
         SmartDashboard.putNumber("distanceToHub", distanceToHub);
-        return distanceToHub;
     }
 
     @Override public void periodic(){
     findPose1();
-    getDistance();
+    setDistance();
     }
 
 }
