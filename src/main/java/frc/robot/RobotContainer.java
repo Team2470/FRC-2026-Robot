@@ -29,6 +29,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.IntakePivot;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -51,6 +52,7 @@ public class RobotContainer {
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
     public final Intake intake = new Intake();
+    public final IntakePivot intakepivot = new IntakePivot();
 
     public RobotContainer() {
         configureBindings();
@@ -106,6 +108,9 @@ public class RobotContainer {
         joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
         joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
         joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
+
+        joystick.povUp().whileTrue(intakepivot.intakeUp());
+        joystick.povDown().whileTrue(intakepivot.intakeDown());
     }
 
     public Command getAutonomousCommand() {
