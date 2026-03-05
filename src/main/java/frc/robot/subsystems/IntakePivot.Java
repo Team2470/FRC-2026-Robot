@@ -12,7 +12,7 @@ public class IntakePivot extends SubsystemBase {
     private double m_demand;
     
     public IntakePivot() {
-        m_motor = new TalonFX(0);
+        m_motor = new TalonFX(6);
         m_encoder = new CANcoder(0);
     }
     }
