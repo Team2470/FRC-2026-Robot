@@ -5,32 +5,22 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.*;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.LimelightHelpers;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 public class Vision extends SubsystemBase{
-    private static final String KEY_TARGET_TAG_ID = "Vision/TargetTagId";
-    private static final String KEY_FACING_THRESHOLD_DEG = "Vision/FacingThresholdDeg";
-    private static final String KEY_ROBOT_HEADING_DEG = "Vision/RobotHeadingDeg";
-    private static final String KEY_HEADING_TO_TAG_DEG = "Vision/HeadingToTagDeg";
-    private static final String KEY_HEADING_ERROR_DEG = "Vision/HeadingErrorDeg";
-    private static final String KEY_IS_FACING_TAG = "Vision/IsFacingTag";
-    private static final String KEY_HAS_ROBOT_POSE = "Vision/HasRobotPose";
-    private static final String KEY_HAS_TAG_POSE = "Vision/HasTagPose";
+    private static final String KEY_SEEN_TAG_IDS = "Vision/SeenTagIds";
+    private static final String KEY_SEEN_TAG_HEADINGS_DEG = "Vision/SeenTagHeadingsDeg";
+    private static final String KEY_SEEN_TAG_TURRET_ERROR_DEG = "Vision/SeenTagTurretErrorDeg";
     private final AprilTagFieldLayout fieldLayout;
     private Pose2d lastRobotPose = new Pose2d();
+    private LimelightHelpers.RawFiducial[] lastRawFiducials = new LimelightHelpers.RawFiducial[0];
     private boolean hasRobotPose;
     double m_lastLimelightPrintTime;
-    double poseX;
-    double poseY; 
-    double Rotation;
-    double distanceToHub;
     public Vision() {
         try {
             fieldLayout = AprilTagFieldLayout.loadFromResource(
@@ -39,8 +29,6 @@ public class Vision extends SubsystemBase{
         } catch (IOException e) {
             throw new RuntimeException("Failed to load AprilTag field layout", e);
         }
-        SmartDashboard.setDefaultNumber(KEY_TARGET_TAG_ID, 1);
-        SmartDashboard.setDefaultNumber(KEY_FACING_THRESHOLD_DEG, 20.0);
     }
     public void findPose1(){
         double now = Timer.getFPGATimestamp();
@@ -49,97 +37,111 @@ public class Vision extends SubsystemBase{
         }
         m_lastLimelightPrintTime = now;
 
-        var alliance = DriverStation.getAlliance();
-        //boolean isRed = alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
         String limelightName = "limelight-intake";
         LimelightHelpers.PoseEstimate prePoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
         if (prePoseEstimate == null) {
             hasRobotPose = false;
+            lastRawFiducials = new LimelightHelpers.RawFiducial[0];
             System.out.println("Limelight pose estimate unavailable (" + limelightName + ").");
             return;
         } 
         Pose2d poseEstimate = prePoseEstimate.pose;
         var pose = poseEstimate;
 
-        poseX = pose.getX();
-        poseY = pose.getY();
-        Rotation = pose.getRotation().getDegrees();
         lastRobotPose = pose;
+        lastRawFiducials =
+            prePoseEstimate.rawFiducials == null ? new LimelightHelpers.RawFiducial[0] : prePoseEstimate.rawFiducials;
         hasRobotPose = true;
-
-        SmartDashboard.putNumber("poseX", poseX);
-        SmartDashboard.putNumber("poseY", poseY);
-        SmartDashboard.putNumber("rotation", Rotation);
-        // System.out.printf(
-        //         "Limelight pose estimate: x=%.2f y=%.2f rot=%.1f deg%n",
-        //         poseX,
-        //         poseY,
-        //         rotation);
     }
 
-    public void setDistance() {
-        distanceToHub = Math.sqrt((11.915394- poseX) *(11.915394- poseX) + (4.03 - poseY) *(4.03 - poseY));
-        SmartDashboard.putNumber("distanceToHub", distanceToHub);
+    public void updateSeenTagsDashboard() {
+        SmartDashboard.putNumberArray(KEY_SEEN_TAG_IDS, getSeenTagIds());
+        SmartDashboard.putNumberArray(KEY_SEEN_TAG_HEADINGS_DEG, getSeenTagHeadingsDeg());
+        SmartDashboard.putNumberArray(KEY_SEEN_TAG_TURRET_ERROR_DEG, getSeenTagTurretErrorDeg());
     }
 
-    public void updateFacingTagDashboard() {
-        SmartDashboard.putBoolean(KEY_HAS_ROBOT_POSE, hasRobotPose);
-        if (!hasRobotPose) {
-            SmartDashboard.putNumber(KEY_ROBOT_HEADING_DEG, Double.NaN);
-            SmartDashboard.putNumber(KEY_HEADING_TO_TAG_DEG, Double.NaN);
-            SmartDashboard.putNumber(KEY_HEADING_ERROR_DEG, Double.NaN);
-            SmartDashboard.putBoolean(KEY_HAS_TAG_POSE, false);
-            SmartDashboard.putBoolean(KEY_IS_FACING_TAG, false);
-            return;
+    private double[] getSeenTagIds() {
+        if (lastRawFiducials == null || lastRawFiducials.length == 0) {
+            return new double[0];
         }
-
-        double targetTagIdRaw = SmartDashboard.getNumber(KEY_TARGET_TAG_ID, 0);
-        int targetTagId = (int) Math.round(targetTagIdRaw);
-        double maxAngleErrorDeg = SmartDashboard.getNumber(KEY_FACING_THRESHOLD_DEG, 20.0);
-
-        SmartDashboard.putNumber(KEY_ROBOT_HEADING_DEG, lastRobotPose.getRotation().getDegrees());
-
-        Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(targetTagId);
-        SmartDashboard.putBoolean(KEY_HAS_TAG_POSE, tagPose3dOpt.isPresent());
-        if (tagPose3dOpt.isEmpty()) {
-            SmartDashboard.putNumber(KEY_HEADING_TO_TAG_DEG, Double.NaN);
-            SmartDashboard.putNumber(KEY_HEADING_ERROR_DEG, Double.NaN);
-            SmartDashboard.putBoolean(KEY_IS_FACING_TAG, false);
-            return;
+        ArrayList<Double> ids = new ArrayList<>();
+        for (LimelightHelpers.RawFiducial fiducial : lastRawFiducials) {
+            if (fiducial == null) {
+                continue;
+            }
+            double id = fiducial.id;
+            if (!ids.contains(id)) {
+                ids.add(id);
+            }
         }
-
-        Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
-        Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
-        Rotation2d directionToTag = robotToTag.getAngle();
-        double errorDeg = directionToTag.minus(lastRobotPose.getRotation()).getDegrees();
-        errorDeg = Math.IEEEremainder(errorDeg, 360.0);
-
-        SmartDashboard.putNumber(KEY_HEADING_TO_TAG_DEG, directionToTag.getDegrees());
-        SmartDashboard.putNumber(KEY_HEADING_ERROR_DEG, errorDeg);
-        SmartDashboard.putBoolean(KEY_IS_FACING_TAG, Math.abs(errorDeg) <= maxAngleErrorDeg);
+        double[] out = new double[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            out[i] = ids.get(i);
+        }
+        return out;
     }
 
-    public boolean isFacingTag(Pose2d robotPose, int seenTagId, double maxAngleErrorDeg) {
-        Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(seenTagId);
-        if (tagPose3dOpt.isEmpty()) {
-            return false;
+    private double[] getSeenTagHeadingsDeg() {
+        ArrayList<Double> ids = getSeenTagIdsList();
+        if (ids.isEmpty()) {
+            return new double[0];
         }
+        double[] out = new double[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
+            if (tagPose3dOpt.isEmpty()) {
+                out[i] = Double.NaN;
+                continue;
+            }
+            Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
+            Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
+            Rotation2d directionToTag = robotToTag.getAngle();
+            out[i] = directionToTag.getDegrees();
+        }
+        return out;
+    }
 
-        Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
-        Translation2d robotToTag = tagPose2d.getTranslation().minus(robotPose.getTranslation());
-        Rotation2d directionToTag = robotToTag.getAngle();
-        Rotation2d robotHeading = robotPose.getRotation();
+    private double[] getSeenTagTurretErrorDeg() {
+        ArrayList<Double> ids = getSeenTagIdsList();
+        if (ids.isEmpty()) {
+            return new double[0];
+        }
+        double[] out = new double[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
+            if (tagPose3dOpt.isEmpty()) {
+                out[i] = Double.NaN;
+                continue;
+            }
+            Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
+            Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
+            Rotation2d directionToTag = robotToTag.getAngle();
+            double errorDeg = directionToTag.minus(lastRobotPose.getRotation()).getDegrees();
+            out[i] = Math.IEEEremainder(errorDeg, 360.0);
+        }
+        return out;
+    }
 
-        double errorDeg = directionToTag.minus(robotHeading).getDegrees();
-        errorDeg = Math.IEEEremainder(errorDeg, 360.0);
-
-        return Math.abs(errorDeg) <= maxAngleErrorDeg;
+    private ArrayList<Double> getSeenTagIdsList() {
+        ArrayList<Double> ids = new ArrayList<>();
+        if (lastRawFiducials == null || lastRawFiducials.length == 0) {
+            return ids;
+        }
+        for (LimelightHelpers.RawFiducial fiducial : lastRawFiducials) {
+            if (fiducial == null) {
+                continue;
+            }
+            double id = fiducial.id;
+            if (!ids.contains(id)) {
+                ids.add(id);
+            }
+        }
+        return ids;
     }
 
     @Override public void periodic(){
     findPose1();
-    setDistance();
-    updateFacingTagDashboard();
+    updateSeenTagsDashboard();
     }
 
 }
