@@ -14,8 +14,12 @@ import java.util.ArrayList;
 import java.util.Optional;
 public class Vision extends SubsystemBase{
     private static final String KEY_SEEN_TAG_IDS = "Vision/SeenTagIds";
-    private static final String KEY_SEEN_TAG_HEADINGS_DEG = "Vision/SeenTagHeadingsDeg";
-    private static final String KEY_SEEN_TAG_TURRET_ERROR_DEG = "Vision/SeenTagTurretErrorDeg";
+    private static final String KEY_SEEN_TAG_DISTANCES_M = "Vision/SeenTagDistancesM";
+    // private static final String KEY_SEEN_TAG_HEADINGS_DEG = "Vision/SeenTagHeadingsDeg";
+    // private static final String KEY_SEEN_TAG_TURRET_ERROR_DEG = "Vision/SeenTagTurretErrorDeg";
+    private static final String KEY_SEEN_TAG_CAMERA_ERROR_DEG = "Vision/SeenTagCameraErrorDeg";
+    // private static final String KEY_SEEN_TAG_ROTATIONS = "Vision/SeenTagRotations";
+    private static final String LIMELIGHT_NAME = "limelight-intake";
     private final AprilTagFieldLayout fieldLayout;
     private Pose2d lastRobotPose = new Pose2d();
     private LimelightHelpers.RawFiducial[] lastRawFiducials = new LimelightHelpers.RawFiducial[0];
@@ -37,12 +41,11 @@ public class Vision extends SubsystemBase{
         }
         m_lastLimelightPrintTime = now;
 
-        String limelightName = "limelight-intake";
-        LimelightHelpers.PoseEstimate prePoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+        LimelightHelpers.PoseEstimate prePoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LIMELIGHT_NAME);
         if (prePoseEstimate == null) {
             hasRobotPose = false;
             lastRawFiducials = new LimelightHelpers.RawFiducial[0];
-            System.out.println("Limelight pose estimate unavailable (" + limelightName + ").");
+            System.out.println("Limelight pose estimate unavailable (" + LIMELIGHT_NAME + ").");
             return;
         } 
         Pose2d poseEstimate = prePoseEstimate.pose;
@@ -56,8 +59,11 @@ public class Vision extends SubsystemBase{
 
     public void updateSeenTagsDashboard() {
         SmartDashboard.putNumberArray(KEY_SEEN_TAG_IDS, getSeenTagIds());
-        SmartDashboard.putNumberArray(KEY_SEEN_TAG_HEADINGS_DEG, getSeenTagHeadingsDeg());
-        SmartDashboard.putNumberArray(KEY_SEEN_TAG_TURRET_ERROR_DEG, getSeenTagTurretErrorDeg());
+        SmartDashboard.putNumberArray(KEY_SEEN_TAG_DISTANCES_M, getSeenTagDistancesM());
+        // SmartDashboard.putNumberArray(KEY_SEEN_TAG_HEADINGS_DEG, getSeenTagHeadingsDeg());
+        // SmartDashboard.putNumberArray(KEY_SEEN_TAG_TURRET_ERROR_DEG, getSeenTagTurretErrorDeg());
+        SmartDashboard.putNumberArray(KEY_SEEN_TAG_CAMERA_ERROR_DEG, getSeenTagCameraErrorDeg());
+        // SmartDashboard.putNumberArray(KEY_SEEN_TAG_ROTATIONS, getSeenTagRotation());
     }
 
     private double[] getSeenTagIds() {
@@ -81,45 +87,132 @@ public class Vision extends SubsystemBase{
         return out;
     }
 
-    private double[] getSeenTagHeadingsDeg() {
+    // private double[] getSeenTagHeadingsDeg() {
+    //     ArrayList<Double> ids = getSeenTagIdsList();
+    //     if (ids.isEmpty()) {
+    //         return new double[0];
+    //     }
+    //     double[] out = new double[ids.size()];
+    //     for (int i = 0; i < ids.size(); i++) {
+    //         Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
+    //         if (tagPose3dOpt.isEmpty()) {
+    //             out[i] = Double.NaN;
+    //             continue;
+    //         }
+    //         Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
+    //         Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
+    //         Rotation2d directionToTag = robotToTag.getAngle();
+    //         out[i] = directionToTag.getDegrees();
+    //     }
+    //     return out;
+    // }
+    
+    // private double[] getSeenTagRotation() {
+    //     ArrayList<Double> ids = getSeenTagIdsList();
+    //     if (ids.isEmpty()) {
+    //         return new double[0];
+    //     }
+    //     double[] out = new double[ids.size()];
+    //     for (int i = 0; i < ids.size(); i++) {
+    //         Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
+    //         if (tagPose3dOpt.isEmpty()) {
+    //             out[i] = Double.NaN;
+    //             continue;
+    //         }
+    //         Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
+    //         Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
+    //         Rotation2d directionToTag = robotToTag.getAngle();
+    //         out[i] = directionToTag.getRotations();
+    //     }
+    //     return out;
+    // }
+
+    // private double[] getSeenTagTurretErrorDeg() {
+    //     ArrayList<Double> ids = getSeenTagIdsList();
+    //     if (ids.isEmpty()) {
+    //         return new double[0];
+    //     }
+    //     double[] out = new double[ids.size()];
+    //     for (int i = 0; i < ids.size(); i++) {
+    //         Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
+    //         if (tagPose3dOpt.isEmpty()) {
+    //             out[i] = Double.NaN;
+    //             continue;
+    //         }
+    //         Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
+    //         Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
+    //         Rotation2d directionToTag = robotToTag.getAngle();
+    //         double errorDeg = directionToTag.minus(lastRobotPose.getRotation()).getDegrees();
+    //         out[i] = Math.IEEEremainder(errorDeg, 360.0);
+    //     }
+    //     return out;
+    // }
+
+    /**
+     * Per-seen-tag camera-frame horizontal error in degrees (Limelight "tx").
+     * 0 means centered in the camera image for that tag.
+     */
+    private double[] getSeenTagCameraErrorDeg() {
         ArrayList<Double> ids = getSeenTagIdsList();
         if (ids.isEmpty()) {
             return new double[0];
         }
         double[] out = new double[ids.size()];
         for (int i = 0; i < ids.size(); i++) {
-            Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
-            if (tagPose3dOpt.isEmpty()) {
-                out[i] = Double.NaN;
-                continue;
+            int id = ids.get(i).intValue();
+            double txDeg = Double.NaN;
+            for (LimelightHelpers.RawFiducial fid : lastRawFiducials) {
+                if (fid != null && fid.id == id) {
+                    txDeg = fid.txnc;
+                    break;
+                }
             }
-            Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
-            Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
-            Rotation2d directionToTag = robotToTag.getAngle();
-            out[i] = directionToTag.getDegrees();
+            out[i] = txDeg;
         }
         return out;
     }
 
-    private double[] getSeenTagTurretErrorDeg() {
+    private double[] getSeenTagDistancesM() {
         ArrayList<Double> ids = getSeenTagIdsList();
         if (ids.isEmpty()) {
             return new double[0];
         }
         double[] out = new double[ids.size()];
         for (int i = 0; i < ids.size(); i++) {
-            Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
-            if (tagPose3dOpt.isEmpty()) {
-                out[i] = Double.NaN;
-                continue;
+            int id = ids.get(i).intValue();
+            double distM = Double.NaN;
+            for (LimelightHelpers.RawFiducial fid : lastRawFiducials) {
+                if (fid != null && fid.id == id) {
+                    distM = fid.distToCamera;
+                    break;
+                }
             }
-            Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
-            Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
-            Rotation2d directionToTag = robotToTag.getAngle();
-            double errorDeg = directionToTag.minus(lastRobotPose.getRotation()).getDegrees();
-            out[i] = Math.IEEEremainder(errorDeg, 360.0);
+            out[i] = distM;
         }
         return out;
+    }
+
+    /**
+     * Returns the camera-frame horizontal error (tx, degrees) for the closest seen tag.
+     * If no tags are seen, returns NaN.
+     */
+    public double getClosestTagCameraErrorDeg() {
+        if (lastRawFiducials == null || lastRawFiducials.length == 0) {
+            return Double.NaN;
+        }
+        LimelightHelpers.RawFiducial closest = null;
+        for (LimelightHelpers.RawFiducial fid : lastRawFiducials) {
+            if (fid == null) {
+                continue;
+            }
+            if (closest == null || fid.distToCamera < closest.distToCamera) {
+                closest = fid;
+            }
+        }
+        if (closest == null) {
+            return Double.NaN;
+        }
+        return closest.txnc;
     }
 
     private ArrayList<Double> getSeenTagIdsList() {
@@ -139,9 +232,17 @@ public class Vision extends SubsystemBase{
         return ids;
     }
 
+    /**
+     * Returns how many degrees the camera/turret should rotate to center the tag in view.
+     * Uses Limelight "tx" (horizontal offset) where 0 means centered.
+     */
+    public double getTurretAimErrorDeg() {
+        return LimelightHelpers.getTX(LIMELIGHT_NAME);
+    }
+
     @Override public void periodic(){
-    findPose1();
-    updateSeenTagsDashboard();
+        findPose1();
+        updateSeenTagsDashboard();
     }
 
 }
