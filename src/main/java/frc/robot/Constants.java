@@ -62,9 +62,9 @@ public class Constants {
             // Distance (meters), Hood Angle (degrees)
             HOOD_HUB_MAP.put(Units.inchesToMeters(32), 25.000);
             HOOD_HUB_MAP.put(Units.inchesToMeters(118), 40.000);
-            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 40.000);
 
             // This map is for the Hood angle
+            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 40.000);
             // when we are passing into alliance zone
             // Distance (meters), Hood Angle (degrees)
             HOOD_PASS_MAP.put(1.524, 45.0);
@@ -110,5 +110,12 @@ public class Constants {
             HUB_TOF_MAP.put(1.829, 1.000);
             HUB_TOF_MAP.put(1.219, 0.900);
         }
+    }
+    public static class IntakePivotConstants {
+        public static final boolean encoderDirection = false;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kF = 0;
     }
 }

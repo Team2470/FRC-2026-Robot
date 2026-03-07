@@ -33,14 +33,15 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        if (RobotBase.isSimulation()) {
+        // if (RobotBase.isSimulation()) {
             var nt = NetworkTableInstance.getDefault();
             nt.stopClient();
-            nt.startClient4("sim");
+            // nt.startClient4("sim");
+            nt.startClient4("turret_cam");
             nt.setServer(new String[] {"172.28.0.1", "limelight.local"}); // Windows
             // nt.setServer(new String[] { "172.29.0.1", "limelight.local" }); // Mac
             nt.startDSClient();
-        }
+        // }
     }
 
     @Override
@@ -113,32 +114,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        double now = Timer.getFPGATimestamp();
-        if (now - m_lastLimelightPrintTime < (1.0 / 24.0)) {
-            return;
-        }
-        m_lastLimelightPrintTime = now;
 
-        String limelightName = "limelight-shooter";
-        var poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        if (poseEstimate == null) {
-            System.out.println("Limelight pose estimate unavailable (" + limelightName + ").");
-            return;
-        }
-        var pose = poseEstimate.pose;
-
-        var poseX = pose.getX();
-        var poseY = pose.getY();
-        var rotation = pose.getRotation().getDegrees();
-
-        if (poseX > 0 || poseY > 0 || rotation > 0) {
-
-            System.out.printf(
-                    "Limelight pose estimate: x=%.2f y=%.2f rot=%.1f deg%n",
-                    pose.getX(),
-                    pose.getY(),
-                    pose.getRotation().getDegrees());
-        }
     }
 
     @Override

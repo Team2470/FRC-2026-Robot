@@ -9,7 +9,7 @@ public class Intake extends SubsystemBase {
   //change id
   private final TalonFX m_intake;
   public Intake() {
-    m_intake = new TalonFX(0);
+    m_intake = new TalonFX(5);
   }
 
 
@@ -17,22 +17,22 @@ public class Intake extends SubsystemBase {
 	m_intake.setVoltage(4);
   }
   public void reverse_intake () {
-  m_intake.setVoltage(-6);
+  m_intake.setVoltage(-12);
 
   }
-  public void intakePercet(double volt){
+  public void intakePercent(double volt){
     m_intake.setVoltage(volt);
   }
   public void stop() {
     m_intake.stopMotor();
   }
-  public Command test_forwardsCommand() {
+  public Command test_reverseCommand() {
     return Commands.runEnd(
       ()-> this.intake(),
       this::stop,
       this);
   }
-    public Command test_reverseCommand() {
+    public Command test_forwardsCommand() {
       return Commands.runEnd(
       ()-> this.reverse_intake(),
       this::stop,
@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
   }
   public Command intakePercentCommand(double volt){
       return Commands.runEnd(
-      ()-> this.intakePercet(volt),
+      ()-> this.intakePercent(volt),
       this::stop,
       this);	
   }

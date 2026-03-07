@@ -25,9 +25,11 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.IntakePivot;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -49,6 +51,8 @@ public class RobotContainer {
     public final Turret turret = new Turret();
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
+    public final Intake intake = new Intake();
+    public final IntakePivot intakepivot = new IntakePivot();
 
     public RobotContainer() {
         configureBindings();
@@ -96,12 +100,17 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, false));
-        joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, true));
+        // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, true));
 
         joystick.b().whileTrue(turret.runTurretCommand(1));
         joystick.a().whileTrue(turret.runTurretCommand(-1));
-        // joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
-        // joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
+
+        joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
+        joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
+        joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
+
+        joystick.povUp().whileTrue(intakepivot.intakeUp());
+        joystick.povDown().whileTrue(intakepivot.intakeDown());
     }
 
     public Command getAutonomousCommand() {
