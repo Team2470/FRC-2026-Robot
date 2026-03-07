@@ -5,6 +5,8 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +17,8 @@ public class Turret extends SubsystemBase {
     private final MotionMagicVoltage m_mmRequest    = new MotionMagicVoltage(0);
     private Rotation2d turretAngle = Rotation2d.fromRadians(0);
     private final CANcoder m_turretCanCoder = new CANcoder(12);
+    private Vision m_vision;
+    private double m_lastVisionAdjustTime = 0.0;
 
     // Adjust based on your physical gear ratio (e.g., 100:1)
     private final double GEAR_RATIO = shooterConstants.TURRET_GEAR_RATIO;
@@ -28,6 +32,10 @@ public class Turret extends SubsystemBase {
         config.MotionMagic.MotionMagicCruiseVelocity    = shooterConstants.TURRET_MOTION_MAGIC_CRUISE_VELOCITY;
         config.MotionMagic.MotionMagicAcceleration      = shooterConstants.TURRET_MOTION_MAGIC_ACCELERACTIION;
         m_turretMotor.getConfigurator().apply(config);
+    }
+
+    public void setVision(Vision vision) {
+        this.m_vision = vision;
     }
 
     /**
@@ -51,5 +59,33 @@ public class Turret extends SubsystemBase {
             turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction));
         },
         () -> { this.setTargetAngle(turretAngle);}, this);
+    }
+
+    @Override
+    public void periodic() {
+        double currentRot = m_turretMotor.getPosition().getValueAsDouble() / GEAR_RATIO;
+        SmartDashboard.putNumber("Turret/CurrentAngleDeg", currentRot * 360.0);
+
+        if (m_vision == null) {
+            return;
+        }
+        double now = Timer.getFPGATimestamp();
+        if (now - m_lastVisionAdjustTime < 1.0) {
+            return;
+        }
+
+        Vision.SeenTagInfo closest = m_vision.getClosestTagInfo();
+        if (closest == null) {
+            return;
+        }
+        double errorDeg = closest.getCameraErrorDeg();
+        if (Double.isNaN(errorDeg)) {
+            return;
+        }
+
+        Rotation2d currentAngle = Rotation2d.fromRotations(currentRot);
+        Rotation2d target = currentAngle.plus(Rotation2d.fromDegrees(errorDeg));
+        setTargetAngle(target);
+        m_lastVisionAdjustTime = now;
     }
 }

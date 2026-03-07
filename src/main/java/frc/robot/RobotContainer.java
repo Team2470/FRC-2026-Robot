@@ -52,6 +52,7 @@ public class RobotContainer {
     public final Vision vision = new Vision();
 
     public RobotContainer() {
+        turret.setVision(vision);
         configureBindings();
     }
 

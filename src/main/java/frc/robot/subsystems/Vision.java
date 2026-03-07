@@ -16,6 +16,9 @@ public class Vision extends SubsystemBase{
     private static final String KEY_SEEN_TAG_IDS = "Vision/SeenTagIds";
     private static final String KEY_SEEN_TAG_DISTANCES_M = "Vision/SeenTagDistancesM";
     private static final String KEY_SEEN_TAG_CAMERA_ERROR_DEG = "Vision/SeenTagCameraErrorDeg";
+    private static final String KEY_CLOSEST_TAG_ID = "Vision/ClosestSeenTagId";
+    private static final String KEY_CLOSEST_TAG_DISTANCE_M = "Vision/ClosestTagDistanceM";
+    public static final String KEY_CLOSEST_TAG_CAMERA_ERROR_DEG = "Vision/ClosestTagCameraErrorDeg";
     private static final String LIMELIGHT_NAME = "limelight-intake";
     private final AprilTagFieldLayout fieldLayout;
     private Pose2d lastRobotPose = new Pose2d();
@@ -23,8 +26,30 @@ public class Vision extends SubsystemBase{
     private boolean hasRobotPose;
     double m_lastLimelightPrintTime;
     
-    // turret
-    private static final Turret m_turret = new Turret();
+
+    public static final class SeenTagInfo {
+        private final int id;
+        private final double distanceM;
+        private final double cameraErrorDeg;
+
+        private SeenTagInfo(int id, double distanceM, double cameraErrorDeg) {
+            this.id = id;
+            this.distanceM = distanceM;
+            this.cameraErrorDeg = cameraErrorDeg;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public double getDistanceM() {
+            return distanceM;
+        }
+
+        public double getCameraErrorDeg() {
+            return cameraErrorDeg;
+        }
+    }
     public Vision() {
         try {
             fieldLayout = AprilTagFieldLayout.loadFromResource(
@@ -58,118 +83,80 @@ public class Vision extends SubsystemBase{
     }
 
     public void updateSeenTagsDashboard() {
-        SmartDashboard.putNumberArray(KEY_SEEN_TAG_IDS, getSeenTagIds());
-        SmartDashboard.putNumberArray(KEY_SEEN_TAG_DISTANCES_M, getSeenTagDistancesM());
-        SmartDashboard.putNumberArray(KEY_SEEN_TAG_CAMERA_ERROR_DEG, getSeenTagCameraErrorDeg());
+        SeenTagInfo[] tags = getSeenTagInfo();
+        SmartDashboard.putNumberArray(KEY_SEEN_TAG_IDS, toIdArray(tags));
+        SmartDashboard.putNumberArray(KEY_SEEN_TAG_DISTANCES_M, toDistanceArray(tags));
+        SmartDashboard.putNumberArray(KEY_SEEN_TAG_CAMERA_ERROR_DEG, toCameraErrorArray(tags));
+
+        SeenTagInfo closest = getClosestTagInfo();
+        SmartDashboard.putNumber(KEY_CLOSEST_TAG_ID, closest == null ? Double.NaN : closest.id);
+        SmartDashboard.putNumber(KEY_CLOSEST_TAG_DISTANCE_M, closest == null ? Double.NaN : closest.distanceM);
+        SmartDashboard.putNumber(KEY_CLOSEST_TAG_CAMERA_ERROR_DEG, closest == null ? Double.NaN : closest.cameraErrorDeg);
     }
 
-    private double[] getSeenTagIds() {
+    /**
+     * Builds a compact per-tag view in a single pass over raw fiducials.
+     */
+    private SeenTagInfo[] getSeenTagInfo() {
         if (lastRawFiducials == null || lastRawFiducials.length == 0) {
-            return new double[0];
+            return new SeenTagInfo[0];
         }
-        ArrayList<Double> ids = new ArrayList<>();
-        for (LimelightHelpers.RawFiducial fiducial : lastRawFiducials) {
-            if (fiducial == null) {
-                continue;
-            }
-            double id = fiducial.id;
-            if (!ids.contains(id)) {
-                ids.add(id);
-            }
-        }
-        double[] out = new double[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            out[i] = ids.get(i);
-        }
-        return out;
-    }
-
-    /**
-     * Per-seen-tag camera-frame horizontal error in degrees (Limelight "tx").
-     * 0 means centered in the camera image for that tag.
-     */
-    private double[] getSeenTagCameraErrorDeg() {
-        ArrayList<Double> ids = getSeenTagIdsList();
-        if (ids.isEmpty()) {
-            return new double[0];
-        }
-        double[] out = new double[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            int id = ids.get(i).intValue();
-            double txDeg = Double.NaN;
-            for (LimelightHelpers.RawFiducial fid : lastRawFiducials) {
-                if (fid != null && fid.id == id) {
-                    txDeg = fid.txnc;
-                    break;
-                }
-            }
-            out[i] = txDeg;
-        }
-        return out;
-    }
-
-    /**
-     * Returns per-seen-tag distance to the camera in meters.
-     * Output order matches {@link #getSeenTagIdsList()}.
-     */
-    private double[] getSeenTagDistancesM() {
-        ArrayList<Double> ids = getSeenTagIdsList();
-        if (ids.isEmpty()) {
-            return new double[0];
-        }
-        double[] out = new double[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            int id = ids.get(i).intValue();
-            double distM = Double.NaN;
-            for (LimelightHelpers.RawFiducial fid : lastRawFiducials) {
-                if (fid != null && fid.id == id) {
-                    distM = fid.distToCamera;
-                    break;
-                }
-            }
-            out[i] = distM;
-        }
-        return out;
-    }
-
-    /**
-     * Returns the camera-frame horizontal error (tx, degrees) for the closest seen tag.
-     * If no tags are seen, returns NaN.
-     */
-    public double getClosestTagCameraErrorDeg() {
-        if (lastRawFiducials == null || lastRawFiducials.length == 0) {
-            return Double.NaN;
-        }
-        LimelightHelpers.RawFiducial closest = null;
+        ArrayList<SeenTagInfo> out = new ArrayList<>();
         for (LimelightHelpers.RawFiducial fid : lastRawFiducials) {
             if (fid == null) {
                 continue;
             }
-            if (closest == null || fid.distToCamera < closest.distToCamera) {
-                closest = fid;
+            boolean exists = false;
+            for (SeenTagInfo info : out) {
+                if (info.id == fid.id) {
+                    exists = true;
+                    break;
+                }
             }
-        }
-        if (closest == null) {
-            return Double.NaN;
-        }
-        return closest.txnc;
-    }
-
-    private ArrayList<Double> getSeenTagIdsList() {
-        ArrayList<Double> ids = new ArrayList<>();
-        if (lastRawFiducials == null || lastRawFiducials.length == 0) {
-            return ids;
-        }
-        for (LimelightHelpers.RawFiducial fiducial : lastRawFiducials) {
-            if (fiducial == null) {
+            if (exists) {
                 continue;
             }
-            double id = fiducial.id;
-            if (!ids.contains(id)) {
-                ids.add(id);
+            out.add(new SeenTagInfo(fid.id, fid.distToCamera, fid.txnc));
+        }
+        return out.toArray(new SeenTagInfo[0]);
+    }
+
+    private double[] toIdArray(SeenTagInfo[] tags) {
+        double[] out = new double[tags.length];
+        for (int i = 0; i < tags.length; i++) {
+            out[i] = tags[i].id;
+        }
+        return out;
+    }
+
+    private double[] toDistanceArray(SeenTagInfo[] tags) {
+        double[] out = new double[tags.length];
+        for (int i = 0; i < tags.length; i++) {
+            out[i] = tags[i].distanceM;
+        }
+        return out;
+    }
+
+    private double[] toCameraErrorArray(SeenTagInfo[] tags) {
+        double[] out = new double[tags.length];
+        for (int i = 0; i < tags.length; i++) {
+            out[i] = tags[i].cameraErrorDeg;
+        }
+        return out;
+    }
+
+    public SeenTagInfo getClosestTagInfo() {
+        SeenTagInfo[] tags = getSeenTagInfo();
+        if (tags.length == 0) {
+            return null;
+        }
+        SeenTagInfo closest = tags[0];
+        for (int i = 1; i < tags.length; i++) {
+            if (tags[i].distanceM < closest.distanceM) {
+                closest = tags[i];
             }
         }
-        return ids;
+        return closest;
     }
 
     /**
