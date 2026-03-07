@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.util.Units;
+// import edu.wpi.first.math.util.Units;
 
 public class Constants {
     public static final double MINUTE_TO_SECONDS = 60.0;
@@ -39,8 +39,8 @@ public class Constants {
          // TODO: grab coordinates of Center of Turret compared to our robot's origin point (typically in the center of our bellypan)
         public static final Transform3d ROBOT_TO_TURRET = new Transform3d(-1.0, 0.0, 0.44, Rotation3d.kZero);
 
-        public static final double MAX_HUB_DISTANCE = Units.inchesToMeters(255);
-        public static final double MIN_HUB_DISTANCE = Units.inchesToMeters(32);
+        public static final double MAX_HUB_DISTANCE = 6.477;
+        public static final double MIN_HUB_DISTANCE = 0.8128;
 
         public static final double MAX_PASS_DISTANCE = 11.000;
         public static final double MIN_PASS_DISTANCE = 1.500;
@@ -60,11 +60,11 @@ public class Constants {
             // This map is for the Hood angle
             // when we are shooting into hub
             // Distance (meters), Hood Angle (degrees)
-            HOOD_HUB_MAP.put(Units.inchesToMeters(32), 25.000);
-            HOOD_HUB_MAP.put(Units.inchesToMeters(118), 40.000);
+            HOOD_HUB_MAP.put(0.8128, 25.000);
+            HOOD_HUB_MAP.put(2.9972, 40.000);
 
             // This map is for the Hood angle
-            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 40.000);
+            HOOD_HUB_MAP.put(6.4516, 40.000);
             // when we are passing into alliance zone
             // Distance (meters), Hood Angle (degrees)
             HOOD_PASS_MAP.put(1.524, 45.0);
@@ -77,9 +77,9 @@ public class Constants {
             // This map is for the shooter flywheel
             // when we are shooting into hub
             // Distance (meters), Flywheel Speed (RPM)
-            HOOD_HUB_MAP.put(Units.inchesToMeters(32), 1700.000);
-            HOOD_HUB_MAP.put(Units.inchesToMeters(118), 2100.000);
-            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 2600.000);
+            HOOD_HUB_MAP.put(0.8128, 1700.000);
+            HOOD_HUB_MAP.put(2.9972, 2100.000);
+            HOOD_HUB_MAP.put(6.4516, 2600.000);
 
             // This map is for the shooter flywheel
             // when we are passing into alliance zone
