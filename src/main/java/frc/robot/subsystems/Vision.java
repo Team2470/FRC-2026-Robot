@@ -22,6 +22,9 @@ public class Vision extends SubsystemBase{
     private LimelightHelpers.RawFiducial[] lastRawFiducials = new LimelightHelpers.RawFiducial[0];
     private boolean hasRobotPose;
     double m_lastLimelightPrintTime;
+    
+    // turret
+    private static final Turret m_turret = new Turret();
     public Vision() {
         try {
             fieldLayout = AprilTagFieldLayout.loadFromResource(
@@ -58,7 +61,6 @@ public class Vision extends SubsystemBase{
         SmartDashboard.putNumberArray(KEY_SEEN_TAG_IDS, getSeenTagIds());
         SmartDashboard.putNumberArray(KEY_SEEN_TAG_DISTANCES_M, getSeenTagDistancesM());
         SmartDashboard.putNumberArray(KEY_SEEN_TAG_CAMERA_ERROR_DEG, getSeenTagCameraErrorDeg());
-       
     }
 
     private double[] getSeenTagIds() {
@@ -106,6 +108,10 @@ public class Vision extends SubsystemBase{
         return out;
     }
 
+    /**
+     * Returns per-seen-tag distance to the camera in meters.
+     * Output order matches {@link #getSeenTagIdsList()}.
+     */
     private double[] getSeenTagDistancesM() {
         ArrayList<Double> ids = getSeenTagIdsList();
         if (ids.isEmpty()) {
