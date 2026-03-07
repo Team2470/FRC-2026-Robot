@@ -13,7 +13,7 @@ import frc.robot.Constants.shooterConstants;
 public class Turret extends SubsystemBase {
     private final TalonFX m_turretMotor             = new TalonFX(shooterConstants.TURRET_DEVICE_ID);
     private final MotionMagicVoltage m_mmRequest    = new MotionMagicVoltage(0);
-    private Rotation2d turretAngle = Rotation2d.fromRadians(0);
+    public Rotation2d turretAngle = Rotation2d.fromRadians(0);
     private final CANcoder m_turretCanCoder = new CANcoder(12);
 
     // Adjust based on your physical gear ratio (e.g., 100:1)

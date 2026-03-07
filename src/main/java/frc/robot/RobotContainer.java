@@ -30,7 +30,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.IntakePivot;
-
+import frc.robot.subsystems.Vision;
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -53,7 +53,7 @@ public class RobotContainer {
     public final Hopper hopper = new Hopper();
     public final Intake intake = new Intake();
     public final IntakePivot intakepivot = new IntakePivot();
-
+    public final Vision vision = new Vision();
     public RobotContainer() {
         configureBindings();
     }
