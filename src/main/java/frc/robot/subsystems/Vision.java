@@ -15,10 +15,7 @@ import java.util.Optional;
 public class Vision extends SubsystemBase{
     private static final String KEY_SEEN_TAG_IDS = "Vision/SeenTagIds";
     private static final String KEY_SEEN_TAG_DISTANCES_M = "Vision/SeenTagDistancesM";
-    // private static final String KEY_SEEN_TAG_HEADINGS_DEG = "Vision/SeenTagHeadingsDeg";
-    // private static final String KEY_SEEN_TAG_TURRET_ERROR_DEG = "Vision/SeenTagTurretErrorDeg";
     private static final String KEY_SEEN_TAG_CAMERA_ERROR_DEG = "Vision/SeenTagCameraErrorDeg";
-    // private static final String KEY_SEEN_TAG_ROTATIONS = "Vision/SeenTagRotations";
     private static final String LIMELIGHT_NAME = "limelight-intake";
     private final AprilTagFieldLayout fieldLayout;
     private Pose2d lastRobotPose = new Pose2d();
@@ -60,10 +57,8 @@ public class Vision extends SubsystemBase{
     public void updateSeenTagsDashboard() {
         SmartDashboard.putNumberArray(KEY_SEEN_TAG_IDS, getSeenTagIds());
         SmartDashboard.putNumberArray(KEY_SEEN_TAG_DISTANCES_M, getSeenTagDistancesM());
-        // SmartDashboard.putNumberArray(KEY_SEEN_TAG_HEADINGS_DEG, getSeenTagHeadingsDeg());
-        // SmartDashboard.putNumberArray(KEY_SEEN_TAG_TURRET_ERROR_DEG, getSeenTagTurretErrorDeg());
         SmartDashboard.putNumberArray(KEY_SEEN_TAG_CAMERA_ERROR_DEG, getSeenTagCameraErrorDeg());
-        // SmartDashboard.putNumberArray(KEY_SEEN_TAG_ROTATIONS, getSeenTagRotation());
+       
     }
 
     private double[] getSeenTagIds() {
@@ -86,67 +81,6 @@ public class Vision extends SubsystemBase{
         }
         return out;
     }
-
-    // private double[] getSeenTagHeadingsDeg() {
-    //     ArrayList<Double> ids = getSeenTagIdsList();
-    //     if (ids.isEmpty()) {
-    //         return new double[0];
-    //     }
-    //     double[] out = new double[ids.size()];
-    //     for (int i = 0; i < ids.size(); i++) {
-    //         Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
-    //         if (tagPose3dOpt.isEmpty()) {
-    //             out[i] = Double.NaN;
-    //             continue;
-    //         }
-    //         Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
-    //         Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
-    //         Rotation2d directionToTag = robotToTag.getAngle();
-    //         out[i] = directionToTag.getDegrees();
-    //     }
-    //     return out;
-    // }
-    
-    // private double[] getSeenTagRotation() {
-    //     ArrayList<Double> ids = getSeenTagIdsList();
-    //     if (ids.isEmpty()) {
-    //         return new double[0];
-    //     }
-    //     double[] out = new double[ids.size()];
-    //     for (int i = 0; i < ids.size(); i++) {
-    //         Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
-    //         if (tagPose3dOpt.isEmpty()) {
-    //             out[i] = Double.NaN;
-    //             continue;
-    //         }
-    //         Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
-    //         Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
-    //         Rotation2d directionToTag = robotToTag.getAngle();
-    //         out[i] = directionToTag.getRotations();
-    //     }
-    //     return out;
-    // }
-
-    // private double[] getSeenTagTurretErrorDeg() {
-    //     ArrayList<Double> ids = getSeenTagIdsList();
-    //     if (ids.isEmpty()) {
-    //         return new double[0];
-    //     }
-    //     double[] out = new double[ids.size()];
-    //     for (int i = 0; i < ids.size(); i++) {
-    //         Optional<Pose3d> tagPose3dOpt = fieldLayout.getTagPose(ids.get(i).intValue());
-    //         if (tagPose3dOpt.isEmpty()) {
-    //             out[i] = Double.NaN;
-    //             continue;
-    //         }
-    //         Pose2d tagPose2d = tagPose3dOpt.get().toPose2d();
-    //         Translation2d robotToTag = tagPose2d.getTranslation().minus(lastRobotPose.getTranslation());
-    //         Rotation2d directionToTag = robotToTag.getAngle();
-    //         double errorDeg = directionToTag.minus(lastRobotPose.getRotation()).getDegrees();
-    //         out[i] = Math.IEEEremainder(errorDeg, 360.0);
-    //     }
-    //     return out;
-    // }
 
     /**
      * Per-seen-tag camera-frame horizontal error in degrees (Limelight "tx").
