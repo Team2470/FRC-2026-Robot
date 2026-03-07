@@ -1,6 +1,16 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
+import frc.robot.Constants.IntakePivotConstants;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,12 +22,23 @@ public class IntakePivot extends SubsystemBase {
     private final TalonFX m_motor;
     private final CANcoder m_encoder;
     private double m_demand;
-    private ControlMode m_controlMode;
+    private ControlMode m_controlMode = ControlMode.kOpenLoop;
     private double uplimit = 50;
     
     public IntakePivot() {
         m_motor = new TalonFX(6);
-        m_encoder = new CANcoder(0);
+        m_encoder = new CANcoder(13);
+
+        CANcoderConfiguration encoderconfigs = new CANcoderConfiguration();
+        encoderconfigs.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        TalonFXConfiguration motorconfigs = new TalonFXConfiguration();
+        motorconfigs.Feedback.RotorToSensorRatio = 2;
+        motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
+        motorconfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        
+
+        m_motor.getConfigurator().apply(motorconfigs);
     }
     
     private enum ControlMode {
@@ -46,15 +67,15 @@ public class IntakePivot extends SubsystemBase {
     public Command intakeUp() {
         return new SequentialCommandGroup(
         new InstantCommand(()-> uplimit = 118),
-        openLoopCommand(4).until(()->getAngle() > 60),
-        openLoopCommand(2).until(()-> getAngle() > 115)
+        openLoopCommand(2).until(()->getAngle() < 0),
+        openLoopCommand(1).until(()-> getAngle() <= -0.13)
         );
     }
 
     public Command intakeDown() {
 	return new SequentialCommandGroup(
-		openLoopCommand(-3).until(()-> getAngle() < 10),
-		openLoopCommand(-0.25)
+		openLoopCommand(-1).until(()-> getAngle() > 0.3),
+		openLoopCommand(-0.25).until(()-> getAngle() >= 0.4)
 	);
     }
 
@@ -72,6 +93,10 @@ public class IntakePivot extends SubsystemBase {
         // Determine output voltage
         double outputVoltage = 0;
         double Angle = getAngle();
+        SmartDashboard.putNumber("Intake Pivot Angle", Angle);
+        SmartDashboard.putNumber("Intake Pivot Angle From Motor", m_motor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake Pivot Angle Degrees", Angle*180);
+
         switch (m_controlMode) {
             case kOpenLoop:
                 // Do openloop stuff here
@@ -88,7 +113,7 @@ public class IntakePivot extends SubsystemBase {
                 break;
         }
 
-        if (Angle <= 10 && outputVoltage < 0 || Angle >= uplimit && outputVoltage > 0 ){
+        if (Angle >= 0.4 && outputVoltage < 0 || Angle <= -0.13 && outputVoltage > 0 ){
 	    outputVoltage = 0;
 	    }
         

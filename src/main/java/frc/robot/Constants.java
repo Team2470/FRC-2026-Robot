@@ -114,4 +114,11 @@ public class Constants {
             HUB_TOF_MAP.put(1.219, 0.900);
         }
     }
+    public static class IntakePivotConstants {
+        public static final boolean encoderDirection = false;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kF = 0;
+    }
 }
