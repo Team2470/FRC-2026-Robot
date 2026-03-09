@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,9 +13,11 @@ public class Intake extends SubsystemBase {
     m_intake = new TalonFX(5);
   }
 
-
+  public void postspeed () {
+    SmartDashboard.putNumber("Intake Speed" , m_intake.getVelocity().getValueAsDouble()*60);
+  }
   public void intake() {
-	m_intake.setVoltage(4);
+	m_intake.setVoltage(6);
   }
   public void reverse_intake () {
   m_intake.setVoltage(-12);
@@ -44,5 +47,11 @@ public class Intake extends SubsystemBase {
       this::stop,
       this);	
   }
+
+  @Override
+  public void periodic () {
+    this.postspeed();
+  }
+
 }
 
