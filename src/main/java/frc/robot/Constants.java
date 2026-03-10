@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Inches;
 
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -49,8 +50,8 @@ public class Constants {
         public static final double TURRET_MOTION_MAGIC_CRUISE_VELOCITY  = 80.0;
         public static final double TURRET_MOTION_MAGIC_ACCELERACTIION   = 160.0;
 
-         // TODO: grab coordinates of Center of Turret compared to our robot's origin point (typically in the center of our bellypan)
-        public static final Transform3d ROBOT_TO_TURRET = new Transform3d(-1.0, 0.0, 0.44, Rotation3d.kZero);
+        public static final Translation2d ROBOT_TO_TURRET = new Translation2d(0.187325, 0.16764);
+
 
         public static final double MAX_HUB_DISTANCE = Units.inchesToMeters(255);
         public static final double MIN_HUB_DISTANCE = Units.inchesToMeters(32);

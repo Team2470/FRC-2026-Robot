@@ -13,8 +13,12 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -22,7 +26,9 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
+import gg.questnav.questnav.*;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
@@ -55,6 +61,8 @@ public class RobotContainer {
     public double distanceToHub;
 
     public RobotContainer() {
+        Pose3d initialPose = new Pose3d(1.0, 2.0, 0.0, new Rotation3d(90, 0, 0));
+        questNav.setPose(initialPose);
         configureBindings();
     }
 
@@ -136,6 +144,22 @@ public class RobotContainer {
 
     public void periodic () {
         questNav.commandPeriodic();
+
+        PoseFrame[] newFrames = questNav.getAllUnreadPoseFrames();
+            // Get the most recent Quest pose
+        Pose3d questPose = newFrames[newFrames.length - 1].questPose3d();
+
+        for (PoseFrame frame : newFrames) {
+            
+            SmartDashboard.putNumber("questNav/Frame x", frame.questPose3d().getX());
+            SmartDashboard.putNumber("questNav/Frame y", frame.questPose3d().getY());
+            SmartDashboard.putNumber("questNav/Frame z", frame.questPose3d().getZ());
+        }
+
+        if (questNav.isConnected() && questNav.isTracking()) {
+            
+        }
+
     }
 
 }
