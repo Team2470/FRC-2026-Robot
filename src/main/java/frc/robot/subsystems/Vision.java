@@ -1,3 +1,4 @@
+
 package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,13 +11,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.LimelightHelpers;
 import frc.robot.subsystems.Turret;
 public class Vision extends SubsystemBase{
+    public double poseX;
+    public double poseY; 
+    public double Rotation;
     Turret turret = new Turret();
     double m_lastLimelightPrintTime;
-    double poseX;
-    double poseY; 
     double targetX;
-    double Rotation;
     double distanceToHub;
+
     public void findPose1(){
         double now = Timer.getFPGATimestamp();
         if (now - m_lastLimelightPrintTime < (1.0 / 12.0)) {
@@ -37,16 +39,16 @@ public class Vision extends SubsystemBase{
         double estimateDistance = prePoseEstimate.avgTagDist;
         var pose = poseEstimate;
 
-        double poseX = pose.getX();
-        double poseY = pose.getY();
-        var rotation = pose.getRotation().getDegrees();
+        poseX = pose.getX();
+        poseY = pose.getY();
+        Rotation = pose.getRotation().getDegrees();
 
         
 
         SmartDashboard.putNumber("poseX", poseX);
         SmartDashboard.putNumber("poseY", poseY);
 
-        SmartDashboard.putNumber("rotation", rotation);
+        SmartDashboard.putNumber("rotation", Rotation);
         SmartDashboard.putNumber("distanceToHub", 50);
         SmartDashboard.putNumber("estimateDistance", estimateDistance);
         SmartDashboard.putNumber("tagArea", tagArea);
@@ -66,8 +68,8 @@ public class Vision extends SubsystemBase{
     //     SmartDashboard.putNumber("distanceToHub", distanceToHub);
     // }
     public void checkVisibility() {
-        if (LimelightHelpers.getTargetCount("limelight-shooter") > 0){
-            targetX = LimelightHelpers.getTX("limelight-shooter");
+        if (LimelightHelpers.getTargetCount("limelight-turret") > 0){
+            targetX = LimelightHelpers.getTX("limelight-turret");
             SmartDashboard.putNumber("targetX",targetX);
             Rotation2d rTargetX = turret.turretAngle.rotateBy( Rotation2d.fromDegrees(targetX));
             SmartDashboard.putNumber("rTargetX", rTargetX.getDegrees());

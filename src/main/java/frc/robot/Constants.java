@@ -1,13 +1,42 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Rotation;
+
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 
 public class Constants {
     public static final double MINUTE_TO_SECONDS = 60.0;
+
+    public static final Translation2d RED_HUB_LOCATION = new Translation2d(12.000, 4.025);
+
+    public static class QuestNavConstants{
+        public static final Transform2d ROBOT_TO_QUEST = new Transform2d(
+        new Translation2d(Inches.of((29.0 / 2) - 16.725), Inches.of((29.0 / 2.0) - 5.762)),
+        Rotation2d.fromDegrees(180));
+        //   public static final Transform3d ROBOT_TO_QUEST = new Transform3d(
+        // new Translation3d(Inches.of((29.0 / 2) - 16.725), Inches.of((29.0 / 2.0) - 5.762), Inches.of(0.0)),
+        // new Rotation3d(Rotation2d.fromDegrees(180)));
+        public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(
+        0.03, // X: Trust Quest to within 3cm (Trust more than odometry)
+          0.03, // Y: Trust Quest to within 3cm
+          0.5 // Theta: Trust Quest rotation LESS than Gyro (Trust Pigeon more)
+        );
+    }
     public static class shooterConstants {
         public static final int FLYWHEEL_1_DEVICE_ID = 1;
         public static final int FLYWHEEL_2_DEVICE_ID = 2;
@@ -35,11 +64,10 @@ public class Constants {
         public static final double TURRET_MOTION_MAGIC_CRUISE_VELOCITY  = 80.0;
         public static final double TURRET_MOTION_MAGIC_ACCELERACTIION   = 160.0;
 
-         // TODO: grab coordinates of Center of Turret compared to our robot's origin point (typically in the center of our bellypan)
-        public static final Transform3d ROBOT_TO_TURRET = new Transform3d(-1.0, 0.0, 0.44, Rotation3d.kZero);
+        public static final Translation2d ROBOT_TO_TURRET = new Translation2d(0.187325, 0.16764);
 
-        public static final double MAX_HUB_DISTANCE = 4.000;
-        public static final double MIN_HUB_DISTANCE = 1.200;
+
+        public static final double MAX_HUB_DISTANCE = Units.inchesToMeters(255);
 
         public static final double MAX_PASS_DISTANCE = 11.000;
         public static final double MIN_PASS_DISTANCE = 1.500;
@@ -59,11 +87,9 @@ public class Constants {
             // This map is for the Hood angle
             // when we are shooting into hub
             // Distance (meters), Hood Angle (degrees)
-            HOOD_HUB_MAP.put(4.000, 25.000);
-            // HOOD_HUB_MAP.put(3.048, 67.000);
-            // HOOD_HUB_MAP.put(2.438, 65.000);
-            // HOOD_HUB_MAP.put(1.829, .000);
-            HOOD_HUB_MAP.put(1.20, 25.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(32), 25.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(118), 40.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 40.000);
 
             // This map is for the Hood angle
             // when we are passing into alliance zone
@@ -78,11 +104,9 @@ public class Constants {
             // This map is for the shooter flywheel
             // when we are shooting into hub
             // Distance (meters), Flywheel Speed (RPM)
-            HUB_RPM_MAP.put(4.000, 2500.000);
-            // HUB_RPM_MAP.put(3.048, 4070.655);
-            // HUB_RPM_MAP.put(2.438, 3716.685);
-            // HUB_RPM_MAP.put(1.829, 3539.700);
-            HUB_RPM_MAP.put(1.000, 1800.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(32), 1700.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(118), 2100.000);
+            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 2600.000);
 
             // This map is for the shooter flywheel
             // when we are passing into alliance zone
