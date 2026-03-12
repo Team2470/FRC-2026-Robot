@@ -34,6 +34,7 @@ import gg.questnav.questnav.QuestNav;
 import gg.questnav.questnav.*;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Turret;
@@ -64,6 +65,7 @@ public class RobotContainer {
     public final Turret turret = new Turret();
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
+    public final Intake intake = new Intake();
     public double distanceToHub;
     private QuestNavSubsystem questNav = new QuestNavSubsystem(drivetrain::addVisionMeasurement);
     public final Vision limelight = new Vision();

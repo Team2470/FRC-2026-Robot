@@ -66,8 +66,8 @@ public class Constants {
 
         public static final Translation2d ROBOT_TO_TURRET = new Translation2d(0.187325, 0.16764);
 
-
-        public static final double MAX_HUB_DISTANCE = Units.inchesToMeters(255);
+        public static final double MIN_HUB_DISTANCE = 0.8128;
+        public static final double MAX_HUB_DISTANCE = 6.477;
 
         public static final double MAX_PASS_DISTANCE = 11.000;
         public static final double MIN_PASS_DISTANCE = 1.500;
@@ -87,9 +87,9 @@ public class Constants {
             // This map is for the Hood angle
             // when we are shooting into hub
             // Distance (meters), Hood Angle (degrees)
-            HOOD_HUB_MAP.put(Units.inchesToMeters(32), 25.000);
-            HOOD_HUB_MAP.put(Units.inchesToMeters(118), 40.000);
-            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 40.000);
+            HOOD_HUB_MAP.put(0.8128, 25.000);
+            HOOD_HUB_MAP.put(2.997, 40.000);
+            HOOD_HUB_MAP.put(6.477, 40.000);
 
             // This map is for the Hood angle
             // when we are passing into alliance zone
@@ -104,9 +104,9 @@ public class Constants {
             // This map is for the shooter flywheel
             // when we are shooting into hub
             // Distance (meters), Flywheel Speed (RPM)
-            HOOD_HUB_MAP.put(Units.inchesToMeters(32), 1700.000);
-            HOOD_HUB_MAP.put(Units.inchesToMeters(118), 2100.000);
-            HOOD_HUB_MAP.put(Units.inchesToMeters(254), 2600.000);
+            HOOD_HUB_MAP.put(0.8128, 1700.000);
+            HOOD_HUB_MAP.put(2.997, 2100.000);
+            HOOD_HUB_MAP.put(6.477, 2600.000);
 
             // This map is for the shooter flywheel
             // when we are passing into alliance zone

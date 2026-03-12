@@ -34,16 +34,15 @@ public QuestNavSubsystem(
             // Get the most recent Quest pose
 
         for (PoseFrame frame : newFrames) {
-            
-            SmartDashboard.putNumber("questNav/Frame x", frame.questPose3d().getX());
-            SmartDashboard.putNumber("questNav/Frame y", frame.questPose3d().getY());
-            SmartDashboard.putNumber("questNav/Frame z", frame.questPose3d().getZ());
-
             if (questNav.isConnected() && questNav.isTracking()) {
             Pose3d questPose = frame.questPose3d();
             double timestamp = frame.dataTimestamp();   
             Pose3d robotPose = questPose.transformBy(new Transform3d(Constants.QuestNavConstants.ROBOT_TO_QUEST.inverse()));
 
+            SmartDashboard.putNumber("questNav/Frame x", frame.questPose3d().getX());
+            SmartDashboard.putNumber("questNav/Frame y", frame.questPose3d().getY());
+            SmartDashboard.putNumber("questNav/Frame z", frame.questPose3d().getZ());
+            
             visionMeasurementConsumer.addVisionMeasurement(robotPose.toPose2d(), timestamp, QUESTNAV_STD_DEVS); 
             }
 
