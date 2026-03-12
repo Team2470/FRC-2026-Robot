@@ -104,9 +104,9 @@ public class Constants {
             // This map is for the shooter flywheel
             // when we are shooting into hub
             // Distance (meters), Flywheel Speed (RPM)
-            HOOD_HUB_MAP.put(0.8128, 1700.000);
-            HOOD_HUB_MAP.put(2.997, 2100.000);
-            HOOD_HUB_MAP.put(6.477, 2600.000);
+            HUB_RPM_MAP.put(0.8128, 1700.000);
+            HUB_RPM_MAP.put(2.997, 2100.000);
+            HUB_RPM_MAP.put(6.477, 2600.000);
 
             // This map is for the shooter flywheel
             // when we are passing into alliance zone
