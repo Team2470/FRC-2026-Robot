@@ -5,6 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
+import static frc.robot.Constants.QuestNavConstants.QUESTNAV_STD_DEVS;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,7 +36,10 @@ import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.QuestNavSubsystem;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.ResetPoseCommand;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -49,8 +54,7 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
     
-    private QuestNav questNav = new QuestNav();
-
+    
     private final CommandXboxController joystick = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -59,10 +63,12 @@ public class RobotContainer {
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
     public double distanceToHub;
+    private QuestNavSubsystem questNav = new QuestNavSubsystem(drivetrain::addVisionMeasurement);
+    public final Vision limelight = new Vision();
 
     public RobotContainer() {
         Pose3d initialPose = new Pose3d(1.0, 2.0, 0.0, new Rotation3d(90, 0, 0));
-        questNav.setPose(initialPose);
+        questNav.setQuestNavPose(initialPose);
         configureBindings();
     }
 
@@ -114,6 +120,7 @@ public class RobotContainer {
         joystick.a().whileTrue(turret.runTurretCommand(-1));
         // joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
         // joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
+        joystick.povRight().whileTrue(new ResetPoseCommand(limelight, questNav));
     }
 
     public Command getAutonomousCommand() {
@@ -141,25 +148,4 @@ public class RobotContainer {
         //     drivetrain.applyRequest(() -> idle)
         // );
     }
-
-    public void periodic () {
-        questNav.commandPeriodic();
-
-        PoseFrame[] newFrames = questNav.getAllUnreadPoseFrames();
-            // Get the most recent Quest pose
-        Pose3d questPose = newFrames[newFrames.length - 1].questPose3d();
-
-        for (PoseFrame frame : newFrames) {
-            
-            SmartDashboard.putNumber("questNav/Frame x", frame.questPose3d().getX());
-            SmartDashboard.putNumber("questNav/Frame y", frame.questPose3d().getY());
-            SmartDashboard.putNumber("questNav/Frame z", frame.questPose3d().getZ());
-        }
-
-        if (questNav.isConnected() && questNav.isTracking()) {
-            
-        }
-
-    }
-
 }
