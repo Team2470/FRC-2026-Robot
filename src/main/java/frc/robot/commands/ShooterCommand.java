@@ -54,5 +54,6 @@ public class ShooterCommand extends Command{
         shooter.setRPM(0);
         transfer.transferPercent(0);
         hopper.hopperPercent(0);
+        hood.setAngle(25);
   }
 }
