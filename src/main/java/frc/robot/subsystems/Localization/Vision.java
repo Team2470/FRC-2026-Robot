@@ -125,8 +125,8 @@ public class Vision extends SubsystemBase{
     }
 
     public void checkVisibility() {
-        if (LimelightHelpers.getTargetCount("limelight-turret") > 0){
-            targetX = LimelightHelpers.getTX("limelight-turret");
+        if (LimelightHelpers.getTargetCount("limelight-shooter") > 0){
+            targetX = LimelightHelpers.getTX("limelight-shooter");
             SmartDashboard.putNumber("targetX",targetX);
             Rotation2d rTargetX = turret.turretAngle.rotateBy( Rotation2d.fromDegrees(targetX));
             SmartDashboard.putNumber("rTargetX", rTargetX.getDegrees());
@@ -136,7 +136,9 @@ public class Vision extends SubsystemBase{
         }
     }
 
-    @Override public void periodic(){
+
+    @Override
+    public void periodic(){
         PoseEstimate bestEstimate = findLLPose();
         findQuestPose(bestEstimate);
         checkVisibility();
