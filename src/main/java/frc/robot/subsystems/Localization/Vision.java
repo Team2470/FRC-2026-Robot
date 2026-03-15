@@ -34,6 +34,7 @@ public class Vision extends SubsystemBase{
     public double Rotation;
     public double distanceToHub;
     public double distanceToPass;
+    public boolean passLeft;
     double m_lastLimelightPrintTime;
     double targetX;
     String limelightName = "limelight-shooter";
@@ -114,14 +115,13 @@ public class Vision extends SubsystemBase{
         SmartDashboard.putNumber("distanceToHub", distanceToHub);
     }
 
-    public boolean setPassDistance(){
-        boolean passLeft = Constants.LEFT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation()) <
+    public void setPassDistance(){
+        passLeft = Constants.LEFT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation()) <
                             Constants.RIGHT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation());
         distanceToPass = Math.min(Constants.LEFT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation()),
                                     Constants.RIGHT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation()));
         SmartDashboard.putNumber("distanceToPass", distanceToPass);
         SmartDashboard.putBoolean("passLeft", passLeft);
-        return passLeft;
     }
 
     public void checkVisibility() {
