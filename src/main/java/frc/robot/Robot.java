@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import frc.robot.subsystems.LimelightHelpers;
-import gg.questnav.questnav.QuestNav;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -76,32 +74,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        double now = Timer.getFPGATimestamp();
-        if (now - m_lastLimelightPrintTime < (1.0 / 24.0)) {
-            return;
-        }
-        m_lastLimelightPrintTime = now;
-
-        String limelightName = "limelight-shooter";
-        var poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        if (poseEstimate == null) {
-            System.out.println("Limelight pose estimate unavailable (" + limelightName + ").");
-            return;
-        }
-        var pose = poseEstimate.pose;
-
-        var poseX = pose.getX();
-        var poseY = pose.getY();
-        var rotation = pose.getRotation().getDegrees();
-
-        if (poseX > 0 || poseY > 0 || rotation > 0) {
-
-            System.out.printf(
-                    "Limelight pose estimate: x=%.2f y=%.2f rot=%.1f deg%n",
-                    pose.getX(),
-                    pose.getY(),
-                    pose.getRotation().getDegrees());
-        }
     }
 
     @Override
@@ -117,40 +89,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        double now = Timer.getFPGATimestamp();
-        if (now - m_lastLimelightPrintTime < (1.0 / 24.0)) {
-            return;
-        }
-        m_lastLimelightPrintTime = now;
-
-        String limelightName = "limelight-shooter";
-        var poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        if (poseEstimate == null) {
-            System.out.println("Limelight pose estimate unavailable (" + limelightName + ").");
-            return;
-        }
-        var pose = poseEstimate.pose;
-
-        var poseX = pose.getX();
-        var poseY = pose.getY();
-        var rotation = pose.getRotation().getDegrees();
-
-        distanceToHub = Constants.RED_HUB_LOCATION.getDistance(pose.getTranslation());
-        SmartDashboard.putNumber("distanceToHub", distanceToHub);
-        SmartDashboard.putNumber("pose X:", poseX);
-        SmartDashboard.putNumber("pose Y:", poseY);
-        SmartDashboard.putNumber("pose Rotation:", rotation);
-    
-
-        if (poseX > 0 || poseY > 0 || rotation > 0) {
-
-            System.out.printf(
-                    "Limelight pose estimate: x=%.2f y=%.2f rot=%.1f deg%n",
-                    pose.getX(),
-                    pose.getY(),
-                    pose.getRotation().getDegrees());
-        }
-        m_robotContainer.distanceToHub = distanceToHub;
     }
 
     @Override

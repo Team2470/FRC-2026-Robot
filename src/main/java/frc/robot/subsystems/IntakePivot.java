@@ -24,7 +24,7 @@ public class IntakePivot extends SubsystemBase {
     private double m_demand;
     private ControlMode m_controlMode = ControlMode.kOpenLoop;
     private double uplimit = 50;
-    
+
     public IntakePivot() {
         m_motor = new TalonFX(6);
         m_encoder = new CANcoder(13);
@@ -36,11 +36,11 @@ public class IntakePivot extends SubsystemBase {
         motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
         motorconfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        
+
 
         m_motor.getConfigurator().apply(motorconfigs);
     }
-    
+
     private enum ControlMode {
         kOpenLoop,
         kPID
@@ -50,7 +50,7 @@ public class IntakePivot extends SubsystemBase {
 	    return m_encoder.getAbsolutePosition().getValueAsDouble();
     }
 
-    
+
     private Command openLoopCommand(double OutputVoltage) {
 
 
@@ -116,7 +116,7 @@ public class IntakePivot extends SubsystemBase {
         if (Angle >= 0.4 && outputVoltage < 0 || Angle <= 0 && outputVoltage > 0 ){
 	    outputVoltage = 0;
 	    }
-        
+
 	    m_motor.setVoltage(outputVoltage);
     }
     // If we need:
@@ -129,11 +129,11 @@ public class IntakePivot extends SubsystemBase {
     //     return(getAngle() <= 1);
     // }
 
-        
+
     // public void setBrakeMode (boolean enabled) {
     //     if(enabled) {
     //         m_motor.setIdleMode(IdleMode.kBrake);
-            
+
     //     } else {
     //         m_motor.setIdleMode(IdleMode.kCoast);
     //     }

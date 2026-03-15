@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Rotation;
 
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
+import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -18,11 +20,26 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
+
+    public static boolean isBlueAlliance() {
+        return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue;
+    }
+
     public static final double MINUTE_TO_SECONDS = 60.0;
 
     public static final Translation2d RED_HUB_LOCATION = new Translation2d(12.000, 4.025);
+    public static final Translation2d BLUE_HUB_LOCATION = new Translation2d(4.600, 4.025);
+    public static final Translation2d HUB_LOCATION = isBlueAlliance() ? BLUE_HUB_LOCATION : RED_HUB_LOCATION;
+
+    public static final Translation2d RED_LEFT_PASS_LOCATION = new Translation2d(15.000, 6.000);
+    public static final Translation2d RED_RIGHT_PASS_LOCATION = new Translation2d(15.000, 2.000);
+    public static final Translation2d BLUE_LEFT_PASS_LOCATION = new Translation2d(2.000, 2.000);
+    public static final Translation2d BLUE_RIGHT_PASS_LOCATION = new Translation2d(2.000, 6.000);
+    public static final Translation2d LEFT_PASS_LOCATION = isBlueAlliance() ? BLUE_LEFT_PASS_LOCATION : RED_LEFT_PASS_LOCATION;
+    public static final Translation2d RIGHT_PASS_LOCATION = isBlueAlliance() ? BLUE_RIGHT_PASS_LOCATION : RED_RIGHT_PASS_LOCATION;
 
     public static class QuestNavConstants{
         public static final Transform2d ROBOT_TO_QUEST = new Transform2d(

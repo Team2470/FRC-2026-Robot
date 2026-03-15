@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems.Localization;
 
 import static edu.wpi.first.units.Units.Microseconds;
 import static edu.wpi.first.units.Units.Seconds;
@@ -114,7 +114,7 @@ public class QuestNav {
 
   /**
    * Gets the pose of the robot on the field
-   * 
+   *
    * @return pose of the robot
    */
   public Pose2d getRobotPose() {
@@ -123,7 +123,7 @@ public class QuestNav {
 
   /**
    * Gets the pose of the Quest on the field
-   * 
+   *
    * @return pose of the Quest
    */
   private Pose2d getQuestPose() {
@@ -135,7 +135,7 @@ public class QuestNav {
 
   /**
    * Gets the raw pose of the oculus, relative to the position where it started
-   * 
+   *
    * @return pose of the oculus
    */
   private Pose2d getUncorrectedOculusPose() {
@@ -145,7 +145,7 @@ public class QuestNav {
   /**
    * Set the robot's pose on the field. This is useful to seed the robot to a known position. This is usually called at
    * the start of the autonomous period.
-   * 
+   *
    * @param newPose new robot pose
    */
   public void resetRobotPose(Pose2d newPose) {
