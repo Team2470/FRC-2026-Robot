@@ -38,7 +38,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Localization.Vision;
 import frc.robot.subsystems.QuestNavSubsystem;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ResetPoseCommand;
@@ -68,12 +68,10 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public double distanceToHub;
     private QuestNavSubsystem questNav = new QuestNavSubsystem(drivetrain::addVisionMeasurement);
-    public final Vision limelight = new Vision();
+    public final Vision limelight = new Vision(drivetrain::addVisionMeasurement, () -> drivetrain.getState().Pose);
 
     public final IntakePivot intakepivot = new IntakePivot();
     public RobotContainer() {
-        Pose3d initialPose = new Pose3d(1.0, 2.0, 0.0, new Rotation3d(90, 0, 0));
-        questNav.setQuestNavPose(initialPose);
         configureBindings();
     }
 

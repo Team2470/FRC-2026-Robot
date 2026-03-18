@@ -35,8 +35,7 @@ public class IntakePivot extends SubsystemBase {
         motorconfigs.Feedback.RotorToSensorRatio = 2;
         motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
-        motorconfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        
+        motorconfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;        
 
         m_motor.getConfigurator().apply(motorconfigs);
     }
