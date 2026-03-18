@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -35,7 +37,8 @@ public class IntakePivot extends SubsystemBase {
         motorconfigs.Feedback.RotorToSensorRatio = 2;
         motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
-        motorconfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;        
+        motorconfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        motorconfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;        
 
         m_motor.getConfigurator().apply(motorconfigs);
     }

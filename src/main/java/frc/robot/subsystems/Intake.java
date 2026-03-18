@@ -16,10 +16,10 @@ public class Intake extends SubsystemBase {
   public void postspeed () {
     SmartDashboard.putNumber("Intake Speed" , m_intake.getVelocity().getValueAsDouble()*60);
   }
-  public void intake() {
+  public void reverse_intake() {
 	m_intake.setVoltage(6);
   }
-  public void reverse_intake () {
+  public void intake () {
   m_intake.setVoltage(-12);
 
   }
@@ -31,13 +31,13 @@ public class Intake extends SubsystemBase {
   }
   public Command test_reverseCommand() {
     return Commands.runEnd(
-      ()-> this.intake(),
+      ()-> this.reverse_intake(),
       this::stop,
       this);
   }
     public Command test_forwardsCommand() {
       return Commands.runEnd(
-      ()-> this.reverse_intake(),
+      ()-> this.intake(),
       this::stop,
       this);
   }
