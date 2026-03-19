@@ -41,7 +41,6 @@ import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Localization.Vision;
 import frc.robot.subsystems.QuestNavSubsystem;
 import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.ResetPoseCommand;
 
 import frc.robot.subsystems.IntakePivot;
 public class RobotContainer {
@@ -126,9 +125,9 @@ public class RobotContainer {
         joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
         joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
 
-        joystick.povUp().whileTrue(intakepivot.intakeUp());
-        joystick.povDown().whileTrue(intakepivot.intakeDown());
-        joystick.povRight().whileTrue(new ResetPoseCommand(limelight, questNav));
+        joystick.povUp().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
+        joystick.povDown().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
+        joystick.povRight().whileTrue(limelight.runOnce(() -> limelight.ResetPoseCommand()));
     }
 
     public Command getAutonomousCommand() {

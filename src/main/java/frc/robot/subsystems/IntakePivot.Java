@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -9,6 +10,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.Constants.IntakePivotConstants;
 
@@ -26,6 +28,10 @@ public class IntakePivot extends SubsystemBase {
     private double m_demand;
     private ControlMode m_controlMode = ControlMode.kOpenLoop;
     private double uplimit = 50;
+    private double upPosition = -0.14;
+    private double downPosition = 0.4;
+    private double midPosition = 0;
+    private final PositionVoltage m_positionRequest = new PositionVoltage(upPosition);
     
     public IntakePivot() {
         m_motor = new TalonFX(6);
@@ -37,8 +43,12 @@ public class IntakePivot extends SubsystemBase {
         motorconfigs.Feedback.RotorToSensorRatio = 2;
         motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
-        motorconfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        motorconfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         motorconfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;        
+        motorconfigs.Slot0.kP = 12;
+        motorconfigs.Slot0.kV = 4;
+        motorconfigs.Slot0.kG = 1;
+        motorconfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         m_motor.getConfigurator().apply(motorconfigs);
     }
@@ -66,19 +76,16 @@ public class IntakePivot extends SubsystemBase {
     // private Command openLoopCommand(double OutputVoltage) {
     //     return openLoopCommand(()-> OutputVoltage);
     // }
-    public Command intakeUp() {
-        return new SequentialCommandGroup(
-        new InstantCommand(()-> uplimit = 118),
-        openLoopCommand(2).until(()->getAngle() < 0),
-        openLoopCommand(1).until(()-> getAngle() <= -0.13)
-        );
+    public void intakeUp() {
+        m_motor.setControl(m_positionRequest.withPosition(upPosition));
     }
 
-    public Command intakeDown() {
-	return new SequentialCommandGroup(
-		openLoopCommand(-1).until(()-> getAngle() > 0.3),
-		openLoopCommand(-0.25).until(()-> getAngle() >= 0.4)
-	);
+    public void intakeDown() {
+        m_motor.setControl(m_positionRequest.withPosition(downPosition));
+    }
+
+    public void intakeMid() {
+        m_motor.setControl(m_positionRequest.withPosition(midPosition));
     }
 
     public void setOutputVoltage(double OutputVoltage) {
@@ -92,34 +99,34 @@ public class IntakePivot extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Determine output voltage
-        double outputVoltage = 0;
+        // // Determine output voltage
+        // double outputVoltage = 0;
         double Angle = getAngle();
         SmartDashboard.putNumber("Intake Pivot Angle", Angle);
         SmartDashboard.putNumber("Intake Pivot Angle From Motor", m_motor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake Pivot Angle Degrees", Angle*180);
 
-        switch (m_controlMode) {
-            case kOpenLoop:
-                // Do openloop stuff here
-                outputVoltage = m_demand;
-                break;
+        // switch (m_controlMode) {
+        //     case kOpenLoop:
+        //         // Do openloop stuff here
+        //         outputVoltage = m_demand;
+        //         break;
 
-            case kPID:
-                // Do PID stuff
-                // outputVoltage = m_pidController.calculate(getAngle(), m_demand);
+        //     case kPID:
+        //         // Do PID stuff
+        //         // outputVoltage = m_pidController.calculate(getAngle(), m_demand);
 
-                break;
-            default:
-                // What happened!?
-                break;
-        }
+        //         break;
+        //     default:
+        //         // What happened!?
+        //         break;
+        // }
 
-        if (Angle >= 0.4 && outputVoltage < 0 || Angle <= 0 && outputVoltage > 0 ){
-	    outputVoltage = 0;
-	    }
+        // if (Angle >= 0.4 && outputVoltage < 0 || Angle <= 0 && outputVoltage > 0 ){
+	    // outputVoltage = 0;
+	    // }
         
-	    m_motor.setVoltage(outputVoltage);
+	    // m_motor.setVoltage(outputVoltage);
     }
     // If we need:
 
