@@ -33,13 +33,11 @@ public class ShooterCommand extends Command{
         double TargetHoodAngle;
         double distance;
         if(isPassing){
-            distance = Math.max(shooterConstants.MIN_PASS_DISTANCE,
-                                Math.min(shooterConstants.MAX_PASS_DISTANCE, shooter.distance));
+            distance = shooter.distance;
             TargetRPM = shooter.getPassRPM(distance);
             TargetHoodAngle = shooter.getHoodPass(distance);
         } else {
-            distance = Math.max(shooterConstants.MIN_HUB_DISTANCE,
-                                Math.min(shooterConstants.MAX_HUB_DISTANCE, shooter.distance));
+            distance = shooter.distance;
             TargetRPM = shooter.getHubRPM(distance);
             TargetHoodAngle = shooter.getHoodHub(distance);
         }
@@ -56,5 +54,6 @@ public class ShooterCommand extends Command{
         shooter.setRPM(0);
         transfer.transferPercent(0);
         hopper.hopperPercent(0);
+        hood.setAngle(25);
   }
 }

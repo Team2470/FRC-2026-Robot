@@ -5,6 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
+import static frc.robot.Constants.QuestNavConstants.QUESTNAV_STD_DEVS;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -13,24 +14,35 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.ShooterCommand;
+
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import gg.questnav.questnav.PoseFrame;
+import gg.questnav.questnav.QuestNav;
+import gg.questnav.questnav.*;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.IntakePivot;
+import frc.robot.subsystems.Localization.Vision;
+import frc.robot.subsystems.QuestNavSubsystem;
+import frc.robot.commands.ShooterCommand;
 
+import frc.robot.subsystems.IntakePivot;
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -44,6 +56,7 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
+
     private final CommandXboxController joystick = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -52,8 +65,11 @@ public class RobotContainer {
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
     public final Intake intake = new Intake();
-    public final IntakePivot intakepivot = new IntakePivot();
+    public double distanceToHub;
+    private QuestNavSubsystem questNav = new QuestNavSubsystem(drivetrain::addVisionMeasurement);
+    public final Vision limelight = new Vision(drivetrain::addVisionMeasurement, () -> drivetrain.getState().Pose);
 
+    public final IntakePivot intakepivot = new IntakePivot();
     public RobotContainer() {
         configureBindings();
     }
@@ -95,7 +111,7 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(shooter.decreaseDistance());
 
         // Reset the field-centric heading on left bumper press.
-        joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -109,8 +125,9 @@ public class RobotContainer {
         joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
         joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
 
-        joystick.povUp().whileTrue(intakepivot.intakeUp());
-        joystick.povDown().whileTrue(intakepivot.intakeDown());
+        joystick.povUp().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
+        joystick.povDown().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
+        joystick.povRight().whileTrue(limelight.runOnce(() -> limelight.ResetPoseCommand()));
     }
 
     public Command getAutonomousCommand() {
