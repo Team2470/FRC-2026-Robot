@@ -120,6 +120,6 @@ public class RobotContainer {
     public void configurePathPlannerCommands(){
         NamedCommands.registerCommand("DeployIntake", intakepivot.runOnce(() -> intakepivot.intakeDown()));
         NamedCommands.registerCommand("RunIntake", intake.test_forwardsCommand());
-        NamedCommands.registerCommand("RunShooter", new ShooterCommand(shooter, shooter.hood, transfer, hopper, false));
+        NamedCommands.registerCommand("RunShooter", new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, false));
     }
 }
