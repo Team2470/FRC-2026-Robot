@@ -62,6 +62,11 @@ public class Turret extends SubsystemBase {
         } else if (rotations > MAX_TURRET_ROTATIONS) {
             rotations = MAX_TURRET_ROTATIONS;
         }
+        if (getTurretAngle().getDegrees() < robotRelativeAngle.getDegrees()){
+            m_mmRequest.FeedForward = 0.2;
+        } else {
+            m_mmRequest.FeedForward = 0;
+        }
         m_turretMotor.setControl(m_mmRequest.withPosition(rotations));
         SmartDashboard.putNumber("setTargetAngle rotations", rotations);
     }
