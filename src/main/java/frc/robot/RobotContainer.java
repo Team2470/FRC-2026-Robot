@@ -118,8 +118,8 @@ public class RobotContainer {
         joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, false));
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, true));
 
-        joystick.b().whileTrue(turret.runTurretCommand(1));
-        joystick.a().whileTrue(turret.runTurretCommand(-1));
+        joystick.b().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(0))));
+        joystick.a().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(Math.PI / 2))));
 
         joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
         joystick.x().whileTrue(shooter.hood.increaseAngleCommand());

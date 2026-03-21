@@ -29,6 +29,8 @@ public class Vision extends SubsystemBase{
     public double distanceToHub;
     public double distanceToPass;
     public boolean passLeft;
+    public Rotation2d angleToHub;
+    public Rotation2d angleToPass;
     private Pose3d bestLimelightPose;
     private Pose3d questRobotPose;
 
@@ -107,6 +109,11 @@ public class Vision extends SubsystemBase{
     public void setHubDistance() {
         distanceToHub = Constants.HUB_LOCATION.getDistance(poseSupplier.get().getTranslation());
         SmartDashboard.putNumber("distanceToHub", distanceToHub);
+    }
+
+    public void getHubAngle(){
+        angleToHub = Constants.HUB_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
+        SmartDashboard.putNumber("Angle to Hub", angleToHub.getRotations());
     }
 
     public void checkVisibility() {
