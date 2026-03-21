@@ -48,7 +48,7 @@ public class Vision extends SubsystemBase{
                     Supplier<Pose2d> poseSupplier){
         this.visionMeasurementConsumer = addVisionMeasurement;
         this.poseSupplier = poseSupplier;
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-shooter", 0.199, 0.337, 0.429, 0.0, degreesToRadians(70), 0);
+        // LimelightHelpers.setCameraPose_RobotSpace("limelight-shooter", 0.199, 0.337, 0.429, 0.0, degreesToRadians(70), 0);
                                                     // When Turned to face hub pre-match: 0.222, 0.033, 0.435, 0.0, degreesToRadians(70), Math.PI/4
     }
 
@@ -148,6 +148,8 @@ public class Vision extends SubsystemBase{
             return;
          } else {
             setQuestNavPose(resetPose.pose);
+            visionMeasurementConsumer.addVisionMeasurement(resetPose.pose.toPose2d(), resetPose.timestampSeconds, QUESTNAV_STD_DEVS);
+            
          }
 
     }
