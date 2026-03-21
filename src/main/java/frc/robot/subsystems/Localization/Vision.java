@@ -5,7 +5,6 @@ import static frc.robot.Constants.QuestNavConstants.QUESTNAV_STD_DEVS;
 import static edu.wpi.first.math.util.Units.degreesToRadians;
 
 import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,7 +38,6 @@ public class Vision extends SubsystemBase{
     Turret turret = new Turret();
     double m_lastLimelightPrintTime;
     double targetX;
-
     private final VisionMeasurementConsumer visionMeasurementConsumer;
     private Supplier<Pose2d> poseSupplier;
 
@@ -77,7 +75,7 @@ public class Vision extends SubsystemBase{
         return bestEstimate;
     }
        
-    public void findQuestPose(PoseEstimate bestLLEstimate){
+   public void findQuestPose(PoseEstimate bestLLEstimate){
         questNav.commandPeriodic();
 
         PoseFrame[] newFrames = questNav.getAllUnreadPoseFrames();
@@ -94,7 +92,7 @@ public class Vision extends SubsystemBase{
                 break; // Found the most recent tracking frame, exit loop
             }
         }
-    }
+    } 
 
     public void setQuestNavPose(Pose3d robotPose) {
         Pose3d questPose = robotPose.transformBy(new Transform3d(Constants.QuestNavConstants.ROBOT_TO_QUEST.inverse()));
@@ -115,6 +113,8 @@ public class Vision extends SubsystemBase{
     }
 
     public void getHubAngle(){
+        // Robot Angle is the angle of the robot on the field
+        // angle to Hub is the angle of the center of the robot to the hub
         Rotation2d robotAngle = poseSupplier.get().getRotation();
         Rotation2d angleToHub = Constants.HUB_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
         turretHubAngle = angleToHub.minus(robotAngle);
@@ -136,10 +136,15 @@ public class Vision extends SubsystemBase{
     @Override public void periodic() {
         PoseEstimate bestEstimate = findLLPose();
         findQuestPose(bestEstimate);
-        checkVisibility();
+    //  checkVisibility();
         setHubDistance();
         setPassDistance();
         getHubAngle();
+        turret.setTargetAngle(turretHubAngle.times(-1));
+       
+        if (DriverStation.isDisabled()) {
+            ResetPoseCommand();
+        }
     }
 
     public void ResetPoseCommand() {

@@ -48,6 +48,7 @@ public class ShooterCommand extends Command{
             TargetHoodAngle = shooter.getHoodHub(distance);
             TargetTurretAngle = vision.turretHubAngle;
         }
+        
         hood.setAngle(TargetHoodAngle);
         shooter.setRPM(TargetRPM);
 

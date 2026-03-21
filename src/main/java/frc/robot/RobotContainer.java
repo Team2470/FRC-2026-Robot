@@ -43,12 +43,11 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-
     private final CommandXboxController joystick = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Shooter shooter = new Shooter();
-    public final Turret turret = new Turret();
+    //public final Turret turret = new Turret();
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
     public final Intake intake = new Intake();
@@ -106,8 +105,8 @@ public class RobotContainer {
         joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, false));
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, true));
 
-        joystick.b().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(0))));
-        joystick.a().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(Math.PI / 2))));
+       // joystick.b().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(0))));
+        // joystick.a().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(Math.PI / 2))));
 
         joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
         joystick.x().whileTrue(shooter.hood.increaseAngleCommand());

@@ -20,10 +20,12 @@ public class Turret extends SubsystemBase {
     private final MotionMagicVoltage m_mmRequest    = new MotionMagicVoltage(0);
     public Rotation2d turretAngle = Rotation2d.fromRadians(0);
     private final CANcoder m_turretCanCoder = new CANcoder(12);
-
+    
     // Adjust based on your physical gear ratio (e.g., 100:1)
     private final double GEAR_RATIO = shooterConstants.TURRET_GEAR_RATIO;
     private final double ENCODERATIO = shooterConstants.TURRET_ENCODER_RATIO;
+    private final double MAX_TURRET_ROTATIONS = shooterConstants.MAX_TURRET_ROTATIONS.getRotations();
+    private final double MIN_TURRET_ROTATIONS = shooterConstants.MIN_TURRET_ROTATIONS.getRotations();
 
     public Turret() {
         TalonFXConfiguration config                     = new TalonFXConfiguration();
@@ -36,16 +38,17 @@ public class Turret extends SubsystemBase {
         m_turretMotor.getConfigurator().apply(config);
     }
 
-        public void periodic(){
+    public void periodic(){
         SmartDashboard.putNumber("Angle", getTurretAngle().getDegrees());
+        // setTargetAngle()
     }
 
     public Rotation2d getTurretAngle(){
         Rotation2d angle = Rotation2d.fromRadians(0);
         StatusSignal<Angle> angleSignal = m_turretCanCoder.getPosition();
-        angle = new Rotation2d(angleSignal.getValue());
+        angle = new Rotation2d(angleSignal.getValue() );
         angle = new Rotation2d(angle.getRadians()/ENCODERATIO);
-        return angle;
+        return angle.minus(Rotation2d.fromDegrees(11));
     }
 
     /**
@@ -54,7 +57,13 @@ public class Turret extends SubsystemBase {
      */
     public void setTargetAngle(Rotation2d robotRelativeAngle) {
         double rotations = robotRelativeAngle.getRotations() * GEAR_RATIO;
+        if (rotations < MIN_TURRET_ROTATIONS) {
+            rotations = MIN_TURRET_ROTATIONS;
+        } else if (rotations > MAX_TURRET_ROTATIONS) {
+            rotations = MAX_TURRET_ROTATIONS;
+        }
         m_turretMotor.setControl(m_mmRequest.withPosition(rotations));
+        SmartDashboard.putNumber("setTargetAngle rotations", rotations);
     }
 
     public boolean isOnTarget(Rotation2d target, double toleranceDegrees) {
@@ -62,6 +71,7 @@ public class Turret extends SubsystemBase {
         double error = Math.abs(currentRot - target.getRotations()) * 360.0;
         return error < toleranceDegrees;
     }
+
     public Command runTurretCommand(Integer direction){
     return Commands.runEnd(
         () -> { 
