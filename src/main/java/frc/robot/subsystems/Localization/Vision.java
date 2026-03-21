@@ -29,6 +29,8 @@ public class Vision extends SubsystemBase{
     public double distanceToHub;
     public double distanceToPass;
     public boolean passLeft;
+    public Rotation2d turretHubAngle;
+    public Rotation2d angleToPass;
     private Pose3d bestLimelightPose;
     private Pose3d questRobotPose;
 
@@ -109,6 +111,13 @@ public class Vision extends SubsystemBase{
         SmartDashboard.putNumber("distanceToHub", distanceToHub);
     }
 
+    public void getHubAngle(){
+        Rotation2d robotAngle = poseSupplier.get().getRotation();
+        Rotation2d angleToHub = Constants.HUB_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
+        turretHubAngle = angleToHub.minus(robotAngle);
+        SmartDashboard.putNumber("turretHubAngle", turretHubAngle.getRotations());
+    }
+
     public void checkVisibility() {
         if (LimelightHelpers.getTargetCount("limelight-shooter") > 0){
             targetX = LimelightHelpers.getTX("limelight-shooter");
@@ -127,6 +136,7 @@ public class Vision extends SubsystemBase{
         checkVisibility();
         setHubDistance();
         setPassDistance();
+        getHubAngle();
     }
 
     public void ResetPoseCommand() {
