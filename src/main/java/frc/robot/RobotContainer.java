@@ -66,7 +66,6 @@ public class RobotContainer {
     public final Hopper hopper = new Hopper();
     public final Intake intake = new Intake();
     public double distanceToHub;
-    private QuestNavSubsystem questNav = new QuestNavSubsystem(drivetrain::addVisionMeasurement);
     public final Vision limelight = new Vision(drivetrain::addVisionMeasurement, () -> drivetrain.getState().Pose);
 
     public final IntakePivot intakepivot = new IntakePivot();
@@ -115,8 +114,8 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, false));
-        // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, true));
+        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, false));
+        // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, true));
 
         joystick.b().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(0))));
         joystick.a().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(Math.PI / 2))));
