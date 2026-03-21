@@ -2,6 +2,7 @@
 package frc.robot.subsystems.Localization;
 import static edu.wpi.first.units.Units.Rotation;
 import static frc.robot.Constants.QuestNavConstants.QUESTNAV_STD_DEVS;
+import static edu.wpi.first.math.util.Units.degreesToRadians;
 
 import java.util.function.Supplier;
 
@@ -47,6 +48,8 @@ public class Vision extends SubsystemBase{
                     Supplier<Pose2d> poseSupplier){
         this.visionMeasurementConsumer = addVisionMeasurement;
         this.poseSupplier = poseSupplier;
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-shooter", 0.199, 0.337, 0.429, 0.0, degreesToRadians(70), 0);
+                                                    // When Turned to face hub pre-match: 0.222, 0.033, 0.435, 0.0, degreesToRadians(70), Math.PI/4
     }
 
     private boolean isValidPoseEstimate(PoseEstimate poseEstimate) {
