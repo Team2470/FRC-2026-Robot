@@ -129,12 +129,11 @@ public class Constants {
             // This map is for the shooter flywheel
             // when we are passing into alliance zone
             // Distance (meters), Flywheel Speed (RPM)
-            PASS_RPM_MAP.put(1.524, 3539.700);
-            PASS_RPM_MAP.put(3.048, 4601.610);
-            PASS_RPM_MAP.put(6.096, 6902.415);
-            PASS_RPM_MAP.put(7.620, 7079.400);
-            PASS_RPM_MAP.put(9.144, 7100.000);
-            PASS_RPM_MAP.put(11.280,7256.385);
+            PASS_RPM_MAP.put(1.1176, 1000.0);
+            PASS_RPM_MAP.put(4.699, 2000.0);
+            PASS_RPM_MAP.put(7.3152, 2500.0);
+            PASS_RPM_MAP.put(9.779, 3000.0);
+            PASS_RPM_MAP.put(12.6492, 3500.0);
 
             // This map is time of flight in seconds
             // when we are passing into alliance zone
