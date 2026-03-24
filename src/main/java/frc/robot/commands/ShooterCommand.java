@@ -7,6 +7,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Transfer;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Localization.Vision;
 
 public class ShooterCommand extends Command{
@@ -15,6 +16,7 @@ public class ShooterCommand extends Command{
     private final Transfer  transfer;
     private final Hopper    hopper;
     private final Vision    vision;
+    private final Turret    turret;
     private final boolean   isPassing;
 
     public ShooterCommand(Shooter    shooter,
@@ -22,6 +24,7 @@ public class ShooterCommand extends Command{
                          Transfer    transfer,
                          Hopper      hopper,
                          Vision      vision,
+                         Turret      turret,
                          boolean     isPassing){
 
         this.shooter    = shooter;
@@ -29,8 +32,9 @@ public class ShooterCommand extends Command{
         this.transfer   = transfer;
         this.hopper     = hopper;
         this.vision     = vision;
+        this.turret     = turret;
         this.isPassing  = isPassing;
-    addRequirements(shooter, hood, transfer, hopper, vision);
+    addRequirements(shooter, hood, transfer, hopper, vision, turret);
 }
     @Override
     public void execute(){
@@ -46,13 +50,13 @@ public class ShooterCommand extends Command{
             distance = vision.distanceToHub;
             TargetRPM = shooter.getHubRPM(distance);
             TargetHoodAngle = shooter.getHoodHub(distance);
-            TargetTurretAngle = vision.turretHubAngle;
         }
+        TargetTurretAngle = vision.turretAngle;
         
         hood.setAngle(TargetHoodAngle);
         shooter.setRPM(TargetRPM);
 
-        if(hood.isPositionWithinTolerance() && shooter.isAtSpeed(TargetRPM, 50)){
+        if(hood.isPositionWithinTolerance() && shooter.isAtSpeed(TargetRPM, 25)){
             transfer.transferPercent(12);
             hopper.hopperPercent(12);
         }

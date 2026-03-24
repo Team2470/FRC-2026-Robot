@@ -21,6 +21,7 @@ import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Localization.LimelightHelpers.PoseEstimate;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
+import frc.robot.Constants.shooterConstants;
 
 public class Vision extends SubsystemBase{
     public double poseX;
@@ -29,13 +30,17 @@ public class Vision extends SubsystemBase{
     public double distanceToHub;
     public double distanceToPass;
     public boolean passLeft;
-    public Rotation2d turretHubAngle;
-    public Rotation2d angleToPass;
+    public Rotation2d turretAngle;
+    public boolean inAllianceZone = true;
     private Pose3d bestLimelightPose;
     private Pose3d questRobotPose;
+    public Turret turret = new Turret();
+    private Rotation2d robotAngle;
+    private Rotation2d angleToHub;
+    private Rotation2d angleToPassLeft;
+    private Rotation2d angleToPassRight;
 
     QuestNav questNav = new QuestNav();
-    Turret turret = new Turret();
     double m_lastLimelightPrintTime;
     double targetX;
     private final VisionMeasurementConsumer visionMeasurementConsumer;
@@ -75,7 +80,7 @@ public class Vision extends SubsystemBase{
         return bestEstimate;
     }
        
-   public void findQuestPose(PoseEstimate bestLLEstimate){
+   public void findQuestPose(){
         questNav.commandPeriodic();
 
         PoseFrame[] newFrames = questNav.getAllUnreadPoseFrames();
@@ -104,7 +109,13 @@ public class Vision extends SubsystemBase{
     }
 
     public void setPassDistance() {
-
+        passLeft = Constants.LEFT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation()) <
+                            Constants.RIGHT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation());
+        distanceToPass = Math.min(Constants.LEFT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation()),
+                                    Constants.RIGHT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation()));
+        distanceToPass = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.min(shooterConstants.MAX_PASS_DISTANCE, distanceToPass));
+        SmartDashboard.putNumber("distanceToPass", distanceToPass);
+        SmartDashboard.putBoolean("passLeft", passLeft);     
     }
 
     public void setHubDistance() {
@@ -112,13 +123,40 @@ public class Vision extends SubsystemBase{
         SmartDashboard.putNumber("distanceToHub", distanceToHub);
     }
 
-    public void getHubAngle(){
-        // Robot Angle is the angle of the robot on the field
-        // angle to Hub is the angle of the center of the robot to the hub
-        Rotation2d robotAngle = poseSupplier.get().getRotation();
-        Rotation2d angleToHub = Constants.HUB_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
-        turretHubAngle = angleToHub.minus(robotAngle);
-        SmartDashboard.putNumber("turretHubAngle", turretHubAngle.getRotations());
+    public void checkAllianceZone() {
+        double x_value = poseSupplier.get().getX();
+        if (Constants.isBlueAlliance() && (x_value > 5.500)) {
+            inAllianceZone = false;
+        } else if (!Constants.isBlueAlliance() && (x_value < 11.000)) {
+            inAllianceZone = false;
+        } else{
+            inAllianceZone = true;
+        }
+        SmartDashboard.putBoolean("inAllianceZone" , inAllianceZone);
+    }
+
+    public Rotation2d getTurretAngle(){
+        robotAngle = poseSupplier.get().getRotation();
+
+        if (inAllianceZone) {
+            // Robot Angle is the angle of the robot on the field
+            // angle to Hub is the angle of the center of the robot to the hub
+            angleToHub = Constants.HUB_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
+            turretAngle = angleToHub.minus(robotAngle);
+            SmartDashboard.putNumber("turretHubAngle", turretAngle.getRotations());
+        } else {
+            if (passLeft) {
+                angleToPassLeft = Constants.LEFT_PASS_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
+                turretAngle = angleToPassLeft.minus(robotAngle);
+                SmartDashboard.putNumber("angleToPass", turretAngle.getRotations());
+            } else {
+                angleToPassRight = Constants.RIGHT_PASS_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
+                turretAngle = angleToPassRight.minus(robotAngle);
+                SmartDashboard.putNumber("angleToPass", turretAngle.getRotations());
+            }
+        }
+        return turretAngle; 
+        
     }
 
     public void checkVisibility() {
@@ -134,13 +172,17 @@ public class Vision extends SubsystemBase{
     }
 
     @Override public void periodic() {
-        PoseEstimate bestEstimate = findLLPose();
-        findQuestPose(bestEstimate);
+        // PoseEstimate bestEstimate = findLLPose();
+        findQuestPose();
+        checkAllianceZone();
     //  checkVisibility();
-        setHubDistance();
-        setPassDistance();
-        getHubAngle();
-        turret.setTargetAngle(turretHubAngle.times(-1));
+        if(inAllianceZone){
+            setHubDistance();
+        } else {
+            setPassDistance();
+        }
+        Rotation2d angle = getTurretAngle();
+        turret.setTargetAngle(angle.times(-1));
        
         if (DriverStation.isDisabled()) {
             ResetPoseCommand();

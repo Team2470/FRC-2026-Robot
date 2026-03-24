@@ -94,26 +94,27 @@ public class RobotContainer {
 
         // joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
 
-        joystick.rightBumper().onTrue(shooter.increaseDistance());
-        joystick.leftBumper().onTrue(shooter.decreaseDistance());
+        // joystick.rightBumper().onTrue(shooter.increaseDistance());
+        // joystick.leftBumper().onTrue(shooter.decreaseDistance());
 
+        
+        drivetrain.registerTelemetry(logger::telemeterize);
+        
         // Reset the field-centric heading on left bumper press.
         joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)));
-
-        drivetrain.registerTelemetry(logger::telemeterize);
-
-        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, false));
+        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, limelight.turret, !limelight.inAllianceZone));
+        joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
+        joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
+        joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
+        joystick.a().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeMid()));
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, true));
 
        // joystick.b().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(0))));
         // joystick.a().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(Math.PI / 2))));
 
-        joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
-        joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
-        joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
+        // joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
+        // joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
 
-        joystick.povUp().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
-        joystick.povDown().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
         joystick.povRight().whileTrue(limelight.runOnce(() -> limelight.ResetPoseCommand()));
     }
 
@@ -124,6 +125,6 @@ public class RobotContainer {
     public void configurePathPlannerCommands(){
         NamedCommands.registerCommand("DeployIntake", intakepivot.runOnce(() -> intakepivot.intakeDown()));
         NamedCommands.registerCommand("RunIntake", intake.test_forwardsCommand());
-        NamedCommands.registerCommand("RunShooter", new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, false));
+        NamedCommands.registerCommand("RunShooter", new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, limelight.turret, false));
     }
 }

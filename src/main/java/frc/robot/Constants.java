@@ -74,20 +74,20 @@ public class Constants {
                                                                             360.0 * TURRET_GEAR_RATIO;
         public static final Rotation2d MAX_TURRET_ROTATIONS             = new Rotation2d(0.7);
         public static final Rotation2d MIN_TURRET_ROTATIONS             = new Rotation2d(-0.3);
-        public static final double TURRET_KP                            = 0.15;
+        public static final double TURRET_KP                            = 0.5;
         public static final double TURRET_KI                            = 0.0;
         public static final double TURRET_KD                            = 0.0;
         public static final double TURRET_KV                            = 0.105;
         public static final double TURRET_MOTION_MAGIC_CRUISE_VELOCITY  = 80.0;
         public static final double TURRET_MOTION_MAGIC_ACCELERACTIION   = 160.0;
 
-        public static final Translation2d ROBOT_TO_TURRET = new Translation2d(0.187325, 0.16764);
+        public static final Transform2d ROBOT_TO_TURRET = new Transform2d(0.187325, 0.16764, new Rotation2d(0));
 
         public static final double MIN_HUB_DISTANCE = 0.8128;
         public static final double MAX_HUB_DISTANCE = 6.477;
 
-        public static final double MAX_PASS_DISTANCE = 11.000;
-        public static final double MIN_PASS_DISTANCE = 1.500;
+        public static final double MAX_PASS_DISTANCE = 12.6492;
+        public static final double MIN_PASS_DISTANCE = 1.1176;
 
         public static InterpolatingDoubleTreeMap HUB_RPM_MAP    = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap PASS_RPM_MAP   = new InterpolatingDoubleTreeMap();
@@ -109,15 +109,10 @@ public class Constants {
             HOOD_HUB_MAP.put(6.477, 40.000);
 
             // This map is for the Hood angle
-            HOOD_HUB_MAP.put(6.4516, 40.000);
             // when we are passing into alliance zone
             // Distance (meters), Hood Angle (degrees)
-            HOOD_PASS_MAP.put(1.524, 45.0);
-            HOOD_PASS_MAP.put(3.048, 45.0);
-            HOOD_PASS_MAP.put(6.096, 45.0);
-            HOOD_PASS_MAP.put(7.620, 45.0);
-            HOOD_PASS_MAP.put(9.144, 45.0);
-            HOOD_PASS_MAP.put(11.280, 45.0);
+            HOOD_PASS_MAP.put(1.1176, 45.0);
+            HOOD_PASS_MAP.put(12.6492, 45.0);
 
             // This map is for the shooter flywheel
             // when we are shooting into hub
@@ -129,12 +124,11 @@ public class Constants {
             // This map is for the shooter flywheel
             // when we are passing into alliance zone
             // Distance (meters), Flywheel Speed (RPM)
-            PASS_RPM_MAP.put(1.524, 3539.700);
-            PASS_RPM_MAP.put(3.048, 4601.610);
-            PASS_RPM_MAP.put(6.096, 6902.415);
-            PASS_RPM_MAP.put(7.620, 7079.400);
-            PASS_RPM_MAP.put(9.144, 7100.000);
-            PASS_RPM_MAP.put(11.280,7256.385);
+            PASS_RPM_MAP.put(1.1176, 1000.0);
+            PASS_RPM_MAP.put(4.699, 2000.0);
+            PASS_RPM_MAP.put(7.3152, 2500.0);
+            PASS_RPM_MAP.put(9.779, 3000.0);
+            PASS_RPM_MAP.put(12.6492, 3500.0);
 
             // This map is time of flight in seconds
             // when we are passing into alliance zone
