@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
+import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,15 +37,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        // if (RobotBase.isSimulation()) {
-            var nt = NetworkTableInstance.getDefault();
-            nt.stopClient();
-            // nt.startClient4("sim");
-            nt.startClient4("turret_cam");
-            nt.setServer(new String[] {"172.28.0.1", "limelight.local"}); // Windows
-            // nt.setServer(new String[] { "172.29.0.1", "limelight.local" }); // Mac
-            nt.startDSClient();
-        // }
+        FollowPathCommand.warmupCommand().schedule();
     }
 
     @Override

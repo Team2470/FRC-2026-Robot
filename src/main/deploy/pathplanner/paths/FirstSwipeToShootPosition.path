@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 8.1,
-        "y": 5.5
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.811850226288135,
-        "y": 6.960164570579959
+        "y": 6.460164570579959
       },
       "isLocked": false,
       "linkedName": "EndOfFirstSwipe"

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.895975553052743,
-        "y": 6.8773804385533905
+        "x": 6.8590897560832795,
+        "y": 7.146438295282674
       },
       "isLocked": false,
       "linkedName": "ClearTrench"
@@ -20,8 +20,8 @@
         "y": 7.0
       },
       "prevControl": {
-        "x": 7.8243808857429,
-        "y": 7.119443165181356
+        "x": 7.854805971829202,
+        "y": 7.048784101399717
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "reversed": false,
   "folder": "Auto",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 3.0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true
