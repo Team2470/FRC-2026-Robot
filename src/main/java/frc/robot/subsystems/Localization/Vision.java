@@ -120,6 +120,7 @@ public class Vision extends SubsystemBase{
 
     public void setHubDistance() {
         distanceToHub = Constants.HUB_LOCATION.getDistance(poseSupplier.get().getTranslation());
+        distanceToHub = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.min(shooterConstants.MAX_HUB_DISTANCE, distanceToHub));
         SmartDashboard.putNumber("distanceToHub", distanceToHub);
     }
 

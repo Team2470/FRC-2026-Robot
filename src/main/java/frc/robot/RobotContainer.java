@@ -15,6 +15,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -106,7 +107,7 @@ public class RobotContainer {
         joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
         joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
         joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
-        joystick.a().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeMid()));
+        joystick.a().whileTrue(IntakeFeedCommand());
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, true));
 
        // joystick.b().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(0))));
@@ -119,12 +120,18 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("GetToShoot");
+        return new PathPlannerAuto("FirstShoot");
     }
 
     public void configurePathPlannerCommands(){
         NamedCommands.registerCommand("DeployIntake", intakepivot.runOnce(() -> intakepivot.intakeDown()));
         NamedCommands.registerCommand("RunIntake", intake.test_forwardsCommand());
         NamedCommands.registerCommand("RunShooter", new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, limelight.turret, false));
+        NamedCommands.registerCommand("Feed", IntakeFeedCommand());
+    }
+
+    public Command IntakeFeedCommand() {
+        return new ParallelCommandGroup(intakepivot.runOnce(() -> intakepivot.intakeMid()),
+                                        intake.test_forwardsCommand());
     }
 }
