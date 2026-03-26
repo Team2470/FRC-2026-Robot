@@ -18,14 +18,16 @@ import frc.robot.Constants.shooterConstants;
 public class Turret extends SubsystemBase {
     private final TalonFX m_turretMotor             = new TalonFX(shooterConstants.TURRET_DEVICE_ID);
     private final MotionMagicVoltage m_mmRequest    = new MotionMagicVoltage(0);
-    public Rotation2d turretAngle = Rotation2d.fromRadians(0);
     private final CANcoder m_turretCanCoder = new CANcoder(12);
+
     
     // Adjust based on your physical gear ratio (e.g., 100:1)
     private final double GEAR_RATIO = shooterConstants.TURRET_GEAR_RATIO;
     private final double ENCODERATIO = shooterConstants.TURRET_ENCODER_RATIO;
     private final double MAX_TURRET_ROTATIONS = shooterConstants.MAX_TURRET_ROTATIONS.getRotations();
     private final double MIN_TURRET_ROTATIONS = shooterConstants.MIN_TURRET_ROTATIONS.getRotations();
+    private final double turretAngle = 0;
+
 
     public Turret() {
         TalonFXConfiguration config                     = new TalonFXConfiguration();
@@ -36,19 +38,22 @@ public class Turret extends SubsystemBase {
         config.MotionMagic.MotionMagicCruiseVelocity    = shooterConstants.TURRET_MOTION_MAGIC_CRUISE_VELOCITY;
         config.MotionMagic.MotionMagicAcceleration      = shooterConstants.TURRET_MOTION_MAGIC_ACCELERACTIION;
         m_turretMotor.getConfigurator().apply(config);
+        
     }
-
+    
     public void periodic(){
         SmartDashboard.putNumber("Angle", getTurretAngle().getDegrees());
         // setTargetAngle()
     }
-
+    
     public Rotation2d getTurretAngle(){
-        Rotation2d angle = Rotation2d.fromRadians(0);
+        Rotation2d angle = Rotation2d.fromRadians(Math.PI/2);
         StatusSignal<Angle> angleSignal = m_turretCanCoder.getPosition();
         angle = new Rotation2d(angleSignal.getValue() );
         angle = new Rotation2d(angle.getRadians()/ENCODERATIO);
-        return angle.minus(Rotation2d.fromDegrees(11));
+        angle = angle.plus(Rotation2d.fromRotations(.3)); 
+        SmartDashboard.putNumber("Current_Turret_Angle", angle.getRotations());
+        return angle;
     }
 
     /**
@@ -79,12 +84,12 @@ public class Turret extends SubsystemBase {
         return error < toleranceDegrees;
     }
 
-    public Command runTurretCommand(Integer direction){
-    return Commands.runEnd(
-        () -> { 
-            this.setTargetAngle(turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction)));
-            turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction));
-        },
-        () -> { this.setTargetAngle(turretAngle);}, this);
-    }
+    // public Command runTurretCommand(Integer direction){
+    // return Commands.runEnd(
+    //     () -> { 
+    //         this.setTargetAngle(turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction)));
+    //         turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction));
+    //     },
+    //     () -> { this.setTargetAngle(turretAngle);}, this);
+    // }
 }

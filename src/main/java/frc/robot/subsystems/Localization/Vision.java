@@ -156,21 +156,21 @@ public class Vision extends SubsystemBase{
                 SmartDashboard.putNumber("angleToPass", turretAngle.getRotations());
             }
         }
-        return turretAngle; 
+        return turretAngle.minus(Rotation2d.fromRotations(0.3)); 
         
     }
 
-    public void checkVisibility() {
-        if (LimelightHelpers.getTargetCount("limelight-shooter") > 0){
-            targetX = LimelightHelpers.getTX("limelight-shooter");
-            SmartDashboard.putNumber("targetX",targetX);
-            Rotation2d rTargetX = turret.turretAngle.rotateBy( Rotation2d.fromDegrees(targetX));
-            SmartDashboard.putNumber("rTargetX", rTargetX.getDegrees());
-            turret.setTargetAngle(turret.turretAngle.rotateBy( Rotation2d.fromDegrees(targetX)));
-        } else {
-            return;
-        }
-    }
+    // public void checkVisibility() {
+    //     if (LimelightHelpers.getTargetCount("limelight-shooter") > 0){
+    //         targetX = LimelightHelpers.getTX("limelight-shooter");
+    //         SmartDashboard.putNumber("targetX",targetX);
+    //         Rotation2d rTargetX = turret.turretAngle.rotateBy( Rotation2d.fromDegrees(targetX));
+    //         SmartDashboard.putNumber("rTargetX", rTargetX.getDegrees());
+    //         turret.setTargetAngle(turret.turretAngle.rotateBy( Rotation2d.fromDegrees(targetX)));
+    //     } else {
+    //         return;
+    //     }
+    // }
 
     @Override public void periodic() {
         // PoseEstimate bestEstimate = findLLPose();

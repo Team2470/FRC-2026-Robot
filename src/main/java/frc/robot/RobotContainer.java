@@ -120,7 +120,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("FirstShoot");
+        return new PathPlannerAuto("FirstAutoPlsWrk");
     }
 
     public void configurePathPlannerCommands(){
