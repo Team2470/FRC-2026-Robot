@@ -14,6 +14,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -104,8 +105,8 @@ public class RobotContainer {
         joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
         joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
         joystick.a().whileTrue(IntakeFeedCommand());
-        // joystick.leftBumper().onTrue(turret.runTurretCommand(-1));
-        // joystick.rightBumper().onTrue(turret.runTurretCommand(1));
+        joystick.leftBumper().onTrue(shooter.decreaseDistance());
+        joystick.rightBumper().onTrue(shooter.increaseDistance());
 
 
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, true));

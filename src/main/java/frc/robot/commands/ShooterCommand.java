@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.subsystems.Hood;
@@ -40,18 +41,24 @@ public class ShooterCommand extends Command{
     public void execute(){
         double TargetRPM;
         double TargetHoodAngle;
-        Rotation2d TargetTurretAngle;
+        // Rotation2d TargetTurretAngle;
         double distance;
         if(isPassing){
-            distance = vision.distanceToPass;
+            distance = shooter.distance;
+            distance = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.max(shooterConstants.MAX_PASS_DISTANCE, distance));
             TargetRPM = shooter.getPassRPM(distance);
             TargetHoodAngle = shooter.getHoodPass(distance);
         } else {
-            distance = vision.distanceToHub;
+            distance = shooter.distance;
+            distance = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.max(shooterConstants.MAX_HUB_DISTANCE, distance));
+            if(DriverStation.isAutonomous()){
+                TargetHoodAngle = 40;
+            } else {
+                TargetHoodAngle = shooter.getHoodHub(distance);
+            }
             TargetRPM = shooter.getHubRPM(distance);
-            TargetHoodAngle = shooter.getHoodHub(distance);
         }
-        TargetTurretAngle = vision.turretAngle;
+        // TargetTurretAngle = vision.turretAngle;
         
         hood.setAngle(TargetHoodAngle);
         shooter.setRPM(TargetRPM);

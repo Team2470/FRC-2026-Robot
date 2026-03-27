@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.shooterConstants;
 
 public class Turret extends SubsystemBase {
@@ -46,6 +47,7 @@ public class Turret extends SubsystemBase {
 
     public void periodic(){
         SmartDashboard.putNumber("Angle", getTurretAngle().getDegrees());
+        SmartDashboard.putBoolean("isBlueAlliance", Constants.isBlueAlliance());
         // if (DriverStation.isAutonomous()){
             // setTargetAngle(new Rotation2d(-0.55)); // In Auto, we shoot from a position where the turret must point to the robot's left
         // }

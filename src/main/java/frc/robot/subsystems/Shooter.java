@@ -59,7 +59,7 @@ public class Shooter extends SubsystemBase {
     // public shooterConstants.Targets targetNumber = shooterConstants.Targets.HUB;
     public double targetRPM = 500;
     public double targetAngle = 25;
-    public double distance = 1.219;
+    public double distance = 6.4;
     public double angle = 1.3;
     // private finasl PIDController m_pidController = new PIDController(shooterConstants.FLYWHEEL_KP, shooterConstants.FLYWHEEL_KI, shooterConstants.FLYWHEEL_KD);
     public Hood hood = new Hood();
@@ -92,7 +92,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void periodic(){
-        SmartDashboard.putNumber("Distance", distance);
+        SmartDashboard.putNumber("Shooter_Distance", distance);
         SmartDashboard.putNumber("TargetRPM", targetRPM);
         // SmartDashboard.putString("targetNumber", targetNumber.toString());
     }
@@ -355,7 +355,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void incDistance(){
-        double newDistance  = this.distance + 0.05;
+        double newDistance  = this.distance + 0.25;
         // switch(this.targetNumber) {
             // case HUB:
                 // this.targetRPM      = getHubRPM(newDistance);
@@ -375,7 +375,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void decDistance(){
-        double newDistance  = this.distance - 0.05;
+        double newDistance  = this.distance - 0.25;
                 // switch(this.targetNumber) {
             // case HUB:
                 // this.targetRPM      = getHubRPM(newDistance);
