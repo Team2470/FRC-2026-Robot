@@ -45,9 +45,9 @@ public class Turret extends SubsystemBase {
 
     public void periodic(){
         SmartDashboard.putNumber("Angle", getTurretAngle().getDegrees());
-        if (DriverStation.isAutonomous()){
-            setTargetAngle(new Rotation2d(-0.25)); // In Auto, we shoot from a position where the turret must point to the robot's left
-        }
+        // if (DriverStation.isAutonomous()){
+            // setTargetAngle(new Rotation2d(-0.55)); // In Auto, we shoot from a position where the turret must point to the robot's left
+        // }
     }
 
     public Rotation2d getTurretAngle(){

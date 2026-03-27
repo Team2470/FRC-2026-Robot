@@ -121,6 +121,7 @@ public class Vision extends SubsystemBase{
 
     public void setHubDistance() {
         distanceToHub = Constants.HUB_LOCATION.getDistance(poseSupplier.get().getTranslation());
+        SmartDashboard.putNumber("preclampHubDist", distanceToHub);
         distanceToHub = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.min(shooterConstants.MAX_HUB_DISTANCE, distanceToHub));
         SmartDashboard.putNumber("distanceToHub", distanceToHub);
     }
@@ -179,11 +180,11 @@ public class Vision extends SubsystemBase{
         findQuestPose();
         checkAllianceZone();
     //  checkVisibility();
-        if(inAllianceZone){
+        // if(inAllianceZone){
             setHubDistance();
-        } else {
+        // } else {
             setPassDistance();
-        }
+        // }
         // Rotation2d angle = getTurretAngle();
         // turret.setTargetAngle(angle.times(-1));
 

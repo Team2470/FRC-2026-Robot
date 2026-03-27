@@ -29,7 +29,7 @@ public class Constants {
 
         public static final Translation2d RED_HUB_LOCATION = new Translation2d(12.000, 4.025);
         public static final Translation2d BLUE_HUB_LOCATION = new Translation2d(4.600, 4.025);
-        public static final Translation2d HUB_LOCATION = isBlueAlliance() ? BLUE_HUB_LOCATION : RED_HUB_LOCATION;
+        public static final Translation2d HUB_LOCATION = isBlueAlliance() ? RED_HUB_LOCATION : BLUE_HUB_LOCATION;
 
         public static final Translation2d RED_LEFT_PASS_LOCATION = new Translation2d(15.000, 6.000);
         public static final Translation2d RED_RIGHT_PASS_LOCATION = new Translation2d(15.000, 2.000);
@@ -41,7 +41,7 @@ public class Constants {
     public static class QuestNavConstants{
         public static final Transform2d ROBOT_TO_QUEST = new Transform2d(
         new Translation2d(Inches.of((29.0 / 2) - 16.725), Inches.of((29.0 / 2.0) - 5.762)),
-        Rotation2d.fromDegrees(180));
+        Rotation2d.fromDegrees(0));
         //   public static final Transform3d ROBOT_TO_QUEST = new Transform3d(
         // new Translation3d(Inches.of((29.0 / 2) - 16.725), Inches.of((29.0 / 2.0) - 5.762), Inches.of(0.0)),
         // new Rotation3d(Rotation2d.fromDegrees(180)));
