@@ -54,6 +54,7 @@ public class ShooterCommand extends Command{
             distance = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.max(shooterConstants.MAX_HUB_DISTANCE, distance));
             if(DriverStation.isAutonomous()){
                 TargetHoodAngle = 40;
+                distance = 3.5;
             } else {
                 TargetHoodAngle = shooter.getHoodHub(distance);
             }
