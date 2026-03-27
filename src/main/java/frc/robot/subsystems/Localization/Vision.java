@@ -193,7 +193,7 @@ public class Vision extends SubsystemBase{
     }
 
     public void ResetPoseCommand() {
-        if (DriverStation.isEnabled()){
+        if (DriverStation.isDisabled()){
             if(Constants.isBlueAlliance()) {
                 // Blue Alliance Pathplanner Start Position
                 setQuestNavPose(new Pose2d(new Translation2d(4.450, 7.350), Rotation2d.kZero));
