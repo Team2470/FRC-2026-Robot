@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,13 +21,13 @@ public class Turret extends SubsystemBase {
     private final MotionMagicVoltage m_mmRequest    = new MotionMagicVoltage(0);
     private final CANcoder m_turretCanCoder = new CANcoder(12);
 
-    
+
     // Adjust based on your physical gear ratio (e.g., 100:1)
     private final double GEAR_RATIO = shooterConstants.TURRET_GEAR_RATIO;
     private final double ENCODERATIO = shooterConstants.TURRET_ENCODER_RATIO;
     private final double MAX_TURRET_ROTATIONS = shooterConstants.MAX_TURRET_ROTATIONS.getRotations();
     private final double MIN_TURRET_ROTATIONS = shooterConstants.MIN_TURRET_ROTATIONS.getRotations();
-    private final double turretAngle = 0;
+    public Rotation2d turretAngle;
 
 
     public Turret() {
@@ -39,14 +40,16 @@ public class Turret extends SubsystemBase {
         config.MotionMagic.MotionMagicCruiseVelocity    = shooterConstants.TURRET_MOTION_MAGIC_CRUISE_VELOCITY;
         config.MotionMagic.MotionMagicAcceleration      = shooterConstants.TURRET_MOTION_MAGIC_ACCELERACTIION;
         m_turretMotor.getConfigurator().apply(config);
-        
+
     }
-    
+
     public void periodic(){
         SmartDashboard.putNumber("Angle", getTurretAngle().getDegrees());
-        // setTargetAngle()
+        if (DriverStation.isAutonomous()){
+            setTargetAngle(new Rotation2d(-0.25)); // In Auto, we shoot from a position where the turret must point to the robot's left
+        }
     }
-    
+
     public Rotation2d getTurretAngle(){
         Rotation2d angle = Rotation2d.fromRadians(Math.PI/2);
         StatusSignal<Angle> angleSignal = m_turretCanCoder.getPosition();
@@ -86,12 +89,17 @@ public class Turret extends SubsystemBase {
         return error < toleranceDegrees;
     }
 
-    // public Command runTurretCommand(Integer direction){
-    // return Commands.runEnd(
-    //     () -> { 
-    //         this.setTargetAngle(turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction)));
-    //         turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction));
-    //     },
-    //     () -> { this.setTargetAngle(turretAngle);}, this);
-    // }
+    public Command runTurretCommand(Integer direction){
+    return Commands.runEnd(
+        () -> {
+            this.setTargetAngle(turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction)));
+            turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction));
+            if(turretAngle.getRotations() < MIN_TURRET_ROTATIONS){
+                turretAngle = Rotation2d.fromRotations(MIN_TURRET_ROTATIONS);
+            } else if (turretAngle.getRotations() > MAX_TURRET_ROTATIONS){
+                turretAngle = Rotation2d.fromRotations(MAX_TURRET_ROTATIONS);
+            }
+        },
+        () -> { this.setTargetAngle(turretAngle);}, this);
+    }
 }
