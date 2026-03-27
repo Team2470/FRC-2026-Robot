@@ -20,13 +20,13 @@ public class Turret extends SubsystemBase {
     private final MotionMagicVoltage m_mmRequest    = new MotionMagicVoltage(0);
     private final CANcoder m_turretCanCoder = new CANcoder(12);
 
-    
+
     // Adjust based on your physical gear ratio (e.g., 100:1)
     private final double GEAR_RATIO = shooterConstants.TURRET_GEAR_RATIO;
     private final double ENCODERATIO = shooterConstants.TURRET_ENCODER_RATIO;
     private final double MAX_TURRET_ROTATIONS = shooterConstants.MAX_TURRET_ROTATIONS.getRotations();
     private final double MIN_TURRET_ROTATIONS = shooterConstants.MIN_TURRET_ROTATIONS.getRotations();
-    private final double turretAngle = 0;
+    public Rotation2d turretAngle;
 
 
     public Turret() {
@@ -38,20 +38,20 @@ public class Turret extends SubsystemBase {
         config.MotionMagic.MotionMagicCruiseVelocity    = shooterConstants.TURRET_MOTION_MAGIC_CRUISE_VELOCITY;
         config.MotionMagic.MotionMagicAcceleration      = shooterConstants.TURRET_MOTION_MAGIC_ACCELERACTIION;
         m_turretMotor.getConfigurator().apply(config);
-        
+
     }
-    
+
     public void periodic(){
         SmartDashboard.putNumber("Angle", getTurretAngle().getDegrees());
         // setTargetAngle()
     }
-    
+
     public Rotation2d getTurretAngle(){
         Rotation2d angle = Rotation2d.fromRadians(Math.PI/2);
         StatusSignal<Angle> angleSignal = m_turretCanCoder.getPosition();
         angle = new Rotation2d(angleSignal.getValue() );
         angle = new Rotation2d(angle.getRadians()/ENCODERATIO);
-        angle = angle.plus(Rotation2d.fromRotations(.3)); 
+        angle = angle.plus(Rotation2d.fromRotations(.3));
         SmartDashboard.putNumber("Current_Turret_Angle", angle.getRotations());
         return angle;
     }
@@ -73,7 +73,7 @@ public class Turret extends SubsystemBase {
             m_mmRequest.FeedForward = 0.8;
             // rotations = rotations - 1.0;
         }
-        
+
         m_turretMotor.setControl(m_mmRequest.withPosition(rotations));
         SmartDashboard.putNumber("setTargetAngle rotations", rotations);
     }
@@ -84,12 +84,17 @@ public class Turret extends SubsystemBase {
         return error < toleranceDegrees;
     }
 
-    // public Command runTurretCommand(Integer direction){
-    // return Commands.runEnd(
-    //     () -> { 
-    //         this.setTargetAngle(turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction)));
-    //         turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction));
-    //     },
-    //     () -> { this.setTargetAngle(turretAngle);}, this);
-    // }
+    public Command runTurretCommand(Integer direction){
+    return Commands.runEnd(
+        () -> {
+            this.setTargetAngle(turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction)));
+            turretAngle = turretAngle.plus(Rotation2d.fromRadians(Math.PI/180 * direction));
+            if(turretAngle.getRotations() < MIN_TURRET_ROTATIONS){
+                turretAngle = Rotation2d.fromRotations(MIN_TURRET_ROTATIONS);
+            } else if (turretAngle.getRotations() > MAX_TURRET_ROTATIONS){
+                turretAngle = Rotation2d.fromRotations(MAX_TURRET_ROTATIONS);
+            }
+        },
+        () -> { this.setTargetAngle(turretAngle);}, this);
+    }
 }

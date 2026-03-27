@@ -95,12 +95,8 @@ public class RobotContainer {
 
         // joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
 
-        // joystick.rightBumper().onTrue(shooter.increaseDistance());
-        // joystick.leftBumper().onTrue(shooter.decreaseDistance());
-
-        
         drivetrain.registerTelemetry(logger::telemeterize);
-        
+
         // Reset the field-centric heading on left bumper press.
         joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)));
         joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, limelight.turret, !limelight.inAllianceZone));
@@ -108,6 +104,10 @@ public class RobotContainer {
         joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
         joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
         joystick.a().whileTrue(IntakeFeedCommand());
+        joystick.leftBumper().onTrue(limelight.turret.runTurretCommand(-1));
+        joystick.rightBumper().onTrue(limelight.turret.runTurretCommand(1));
+
+
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, true));
 
        // joystick.b().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(0))));

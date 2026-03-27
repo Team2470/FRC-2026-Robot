@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.*;
@@ -25,7 +26,7 @@ import frc.robot.Constants.shooterConstants;
 
 public class Vision extends SubsystemBase{
     public double poseX;
-    public double poseY; 
+    public double poseY;
     public double Rotation;
     public double distanceToHub;
     public double distanceToPass;
@@ -79,7 +80,7 @@ public class Vision extends SubsystemBase{
         }
         return bestEstimate;
     }
-       
+
    public void findQuestPose(){
         questNav.commandPeriodic();
 
@@ -97,7 +98,7 @@ public class Vision extends SubsystemBase{
                 break; // Found the most recent tracking frame, exit loop
             }
         }
-    } 
+    }
 
     public void setQuestNavPose(Pose3d robotPose) {
         Pose3d questPose = robotPose.transformBy(new Transform3d(Constants.QuestNavConstants.ROBOT_TO_QUEST.inverse()));
@@ -115,7 +116,7 @@ public class Vision extends SubsystemBase{
                                     Constants.RIGHT_PASS_LOCATION.getDistance(poseSupplier.get().getTranslation()));
         distanceToPass = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.min(shooterConstants.MAX_PASS_DISTANCE, distanceToPass));
         SmartDashboard.putNumber("distanceToPass", distanceToPass);
-        SmartDashboard.putBoolean("passLeft", passLeft);     
+        SmartDashboard.putBoolean("passLeft", passLeft);
     }
 
     public void setHubDistance() {
@@ -156,8 +157,8 @@ public class Vision extends SubsystemBase{
                 SmartDashboard.putNumber("angleToPass", turretAngle.getRotations());
             }
         }
-        return turretAngle.minus(Rotation2d.fromRotations(0.3)); 
-        
+        return turretAngle.minus(Rotation2d.fromRotations(0.3));
+
     }
 
     // public void checkVisibility() {
@@ -182,23 +183,31 @@ public class Vision extends SubsystemBase{
         } else {
             setPassDistance();
         }
-        Rotation2d angle = getTurretAngle();
-        turret.setTargetAngle(angle.times(-1));
-       
+        // Rotation2d angle = getTurretAngle();
+        // turret.setTargetAngle(angle.times(-1));
+
         if (DriverStation.isDisabled()) {
             ResetPoseCommand();
         }
     }
 
     public void ResetPoseCommand() {
-         LimelightHelpers.PoseEstimate resetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
-         if(resetPose.tagCount < 2.0) {
-            return;
-         } else {
-            setQuestNavPose(resetPose.pose);
-            visionMeasurementConsumer.addVisionMeasurement(resetPose.pose.toPose2d(), resetPose.timestampSeconds, QUESTNAV_STD_DEVS);
-            
-         }
-
+        if (DriverStation.isEnabled()){
+            if(Constants.isBlueAlliance()) {
+                // Blue Alliance Pathplanner Start Position
+                setQuestNavPose(new Pose2d(new Translation2d(4.450, 7.350), Rotation2d.kZero));
+            } else {
+                // Red Alliance Pathplanner Start Position
+                setQuestNavPose(new Pose2d(new Translation2d(12.100, 0.750), Rotation2d.k180deg));
+            }
+        } else{
+            LimelightHelpers.PoseEstimate resetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
+            if(resetPose.tagCount < 2.0) {
+               return;
+            } else {
+               setQuestNavPose(resetPose.pose);
+               visionMeasurementConsumer.addVisionMeasurement(resetPose.pose.toPose2d(), resetPose.timestampSeconds, QUESTNAV_STD_DEVS);
+            }
+        }
     }
 }
