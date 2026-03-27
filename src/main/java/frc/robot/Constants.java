@@ -3,6 +3,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Rotation;
 
+import java.util.Optional;
+
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.math.Matrix;
@@ -24,12 +26,20 @@ public class Constants {
     public static final double MINUTE_TO_SECONDS = 60.0;
 
     public static boolean isBlueAlliance() {
-        return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue;
+        // return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue;
+        boolean isBlue = false;
+        Optional<DriverStation.Alliance> color = DriverStation.getAlliance();
+        if (color.isPresent()) 
+        {
+            isBlue = (color.get() == DriverStation.Alliance.Blue);
+        }
+        return isBlue;
     }
 
         public static final Translation2d RED_HUB_LOCATION = new Translation2d(12.000, 4.025);
         public static final Translation2d BLUE_HUB_LOCATION = new Translation2d(4.600, 4.025);
-        public static final Translation2d HUB_LOCATION = isBlueAlliance() ? RED_HUB_LOCATION : BLUE_HUB_LOCATION;
+        // public static final Translation2d HUB_LOCATION = isBlueAlliance() ? RED_HUB_LOCATION : BLUE_HUB_LOCATION;
+        public static final Translation2d HUB_LOCATION = isBlueAlliance() ? BLUE_HUB_LOCATION : RED_HUB_LOCATION;
 
         public static final Translation2d RED_LEFT_PASS_LOCATION = new Translation2d(15.000, 6.000);
         public static final Translation2d RED_RIGHT_PASS_LOCATION = new Translation2d(15.000, 2.000);

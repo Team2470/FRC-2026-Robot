@@ -102,6 +102,9 @@ public class Vision extends SubsystemBase{
 
     public void setQuestNavPose(Pose3d robotPose) {
         Pose3d questPose = robotPose.transformBy(new Transform3d(Constants.QuestNavConstants.ROBOT_TO_QUEST.inverse()));
+        if(questPose.getX() < 0.0 || questPose.getX() > 16.500 || questPose.getY() < 0.0 || questPose.getY() < 8.00){
+            return;
+        }
         questNav.setPose(questPose);
     }
 

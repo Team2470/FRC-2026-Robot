@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 8.1,
-        "y": 5.0
+        "y": 4.4
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.811850226288135,
-        "y": 6.460164570579959
+        "y": 5.860164570579959
       },
       "isLocked": false,
       "linkedName": "EndOfFirstSwipe"
@@ -68,7 +68,7 @@
   "reversed": false,
   "folder": "Auto",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
