@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.subsystems.Hood;
@@ -59,6 +60,8 @@ public class ShooterCommand extends Command{
             TargetRPM = shooter.getHubRPM(distance);
         }
         // TargetTurretAngle = vision.turretAngle;
+
+        SmartDashboard.putNumber("ShootCommandDistance", distance);
         
         hood.setAngle(TargetHoodAngle);
         shooter.setRPM(TargetRPM);
