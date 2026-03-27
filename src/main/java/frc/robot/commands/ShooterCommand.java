@@ -46,12 +46,12 @@ public class ShooterCommand extends Command{
         double distance;
         if(isPassing){
             distance = shooter.distance;
-            distance = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.max(shooterConstants.MAX_PASS_DISTANCE, distance));
+            distance = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.min(shooterConstants.MAX_PASS_DISTANCE, distance));
             TargetRPM = shooter.getPassRPM(distance);
             TargetHoodAngle = shooter.getHoodPass(distance);
         } else {
             distance = shooter.distance;
-            distance = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.max(shooterConstants.MAX_HUB_DISTANCE, distance));
+            distance = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.min(shooterConstants.MAX_HUB_DISTANCE, distance));
             if(DriverStation.isAutonomous()){
                 TargetHoodAngle = 40;
                 distance = 3.5;
