@@ -35,6 +35,7 @@ public class Turret extends SubsystemBase {
         config.Slot0.kI                                 = shooterConstants.TURRET_KI;
         config.Slot0.kD                                 = shooterConstants.TURRET_KD;
         config.Slot0.kV                                 = shooterConstants.TURRET_KV;
+        config.Slot0.kS                                 = shooterConstants.TURRET_KS;
         config.MotionMagic.MotionMagicCruiseVelocity    = shooterConstants.TURRET_MOTION_MAGIC_CRUISE_VELOCITY;
         config.MotionMagic.MotionMagicAcceleration      = shooterConstants.TURRET_MOTION_MAGIC_ACCELERACTIION;
         m_turretMotor.getConfigurator().apply(config);
@@ -51,7 +52,7 @@ public class Turret extends SubsystemBase {
         StatusSignal<Angle> angleSignal = m_turretCanCoder.getPosition();
         angle = new Rotation2d(angleSignal.getValue() );
         angle = new Rotation2d(angle.getRadians()/ENCODERATIO);
-        angle = angle.plus(Rotation2d.fromRotations(.3)); 
+        // angle = angle.plus(Rotation2d.fromRotations(.3)); 
         SmartDashboard.putNumber("Current_Turret_Angle", angle.getRotations());
         return angle;
     }
@@ -67,13 +68,14 @@ public class Turret extends SubsystemBase {
         // } else if (rotations > MAX_TURRET_ROTATIONS) {
         //     rotations = MAX_TURRET_ROTATIONS;
         // }
-        if (getTurretAngle().getDegrees() < robotRelativeAngle.getDegrees()) {
-            m_mmRequest.FeedForward = 0.5;
-        } else {
-            m_mmRequest.FeedForward = 0.8;
-            // rotations = rotations - 1.0;
-        }
-        
+        // if (getTurretAngle().getDegrees() < robotRelativeAngle.getDegrees()) {
+        //     m_mmRequest.FeedForward = 0.5;
+        // } else {
+        //     m_mmRequest.FeedForward = 0.8;
+        //     // rotations = rotations - 1.0;
+        // }
+
+        m_mmRequest.FeedForward = 0.8;
         m_turretMotor.setControl(m_mmRequest.withPosition(rotations));
         SmartDashboard.putNumber("setTargetAngle rotations", rotations);
     }

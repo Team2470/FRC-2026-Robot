@@ -156,7 +156,8 @@ public class Vision extends SubsystemBase{
                 SmartDashboard.putNumber("angleToPass", turretAngle.getRotations());
             }
         }
-        return turretAngle.minus(Rotation2d.fromRotations(0.3)); 
+        return turretAngle.plus(Rotation2d.fromRotations(0.3));
+        // return turretAngle; 
         
     }
 

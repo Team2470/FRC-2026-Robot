@@ -76,8 +76,9 @@ public class Constants {
         public static final Rotation2d MIN_TURRET_ROTATIONS             = new Rotation2d(-0.3);
         public static final double TURRET_KP                            = 0.5;
         public static final double TURRET_KI                            = 0.0;
-        public static final double TURRET_KD                            = 0.0;
+        public static final double TURRET_KD                            = 0.1;
         public static final double TURRET_KV                            = 0.105;
+        public static final double TURRET_KS                            = 0.2;
         public static final double TURRET_MOTION_MAGIC_CRUISE_VELOCITY  = 80.0;
         public static final double TURRET_MOTION_MAGIC_ACCELERACTIION   = 160.0;
 
