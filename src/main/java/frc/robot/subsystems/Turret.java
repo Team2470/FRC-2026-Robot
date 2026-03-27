@@ -28,6 +28,7 @@ public class Turret extends SubsystemBase {
     private final double MAX_TURRET_ROTATIONS = shooterConstants.MAX_TURRET_ROTATIONS.getRotations();
     private final double MIN_TURRET_ROTATIONS = shooterConstants.MIN_TURRET_ROTATIONS.getRotations();
     public Rotation2d turretAngle;
+    public boolean overrideSet = false;
 
 
     public Turret() {
@@ -76,10 +77,14 @@ public class Turret extends SubsystemBase {
         // } else {
         //     m_mmRequest.FeedForward = 0.8;
         //     // rotations = rotations - 1.0;
-        // }
+        // }    
 
         m_mmRequest.FeedForward = 0.8;
-        m_turretMotor.setControl(m_mmRequest.withPosition(rotations));
+        if(overrideSet){
+            m_turretMotor.setControl(m_mmRequest.withPosition(-0.25 * GEAR_RATIO));
+        } else {
+            m_turretMotor.setControl(m_mmRequest.withPosition(rotations));
+        }
         SmartDashboard.putNumber("setTargetAngle rotations", rotations);
     }
 
@@ -87,6 +92,12 @@ public class Turret extends SubsystemBase {
         double currentRot = m_turretMotor.getPosition().getValueAsDouble() / GEAR_RATIO;
         double error = Math.abs(currentRot - target.getRotations()) * 360.0;
         return error < toleranceDegrees;
+    }
+
+    public Command setOverride() {
+        return Commands.runOnce(
+            () -> {overrideSet = !overrideSet;}
+        );
     }
 
     public Command runTurretCommand(Integer direction){

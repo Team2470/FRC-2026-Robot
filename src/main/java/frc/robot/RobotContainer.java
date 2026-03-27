@@ -117,6 +117,7 @@ public class RobotContainer {
         // joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
 
         joystick.povRight().whileTrue(limelight.runOnce(() -> limelight.ResetPoseCommand()));
+        joystick.povLeft().whileTrue(limelight.turret.setOverride());
     }
 
     public Command getAutonomousCommand() {
