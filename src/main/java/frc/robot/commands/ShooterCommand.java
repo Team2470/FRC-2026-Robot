@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,12 +47,14 @@ public class ShooterCommand extends Command{
         double distance;
         if(isPassing){
             distance = shooter.distance;
-            distance = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.min(shooterConstants.MAX_PASS_DISTANCE, distance));
+            // distance = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.min(shooterConstants.MAX_PASS_DISTANCE, distance));
+            distance = MathUtil.clamp(distance, shooterConstants.MIN_PASS_DISTANCE, shooterConstants.MAX_PASS_DISTANCE);
             TargetRPM = shooter.getPassRPM(distance);
             TargetHoodAngle = shooter.getHoodPass(distance);
         } else {
             distance = shooter.distance;
-            distance = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.min(shooterConstants.MAX_HUB_DISTANCE, distance));
+            // distance = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.min(shooterConstants.MAX_HUB_DISTANCE, distance));
+            distance = MathUtil.clamp(distance, shooterConstants.MIN_HUB_DISTANCE, shooterConstants.MAX_HUB_DISTANCE);
             if(DriverStation.isAutonomous()){
                 TargetHoodAngle = 40;
                 distance = 3.5;

@@ -7,6 +7,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,17 +22,15 @@ import frc.robot.Constants.shooterConstants;
 public class Turret extends SubsystemBase {
     private final TalonFX m_turretMotor             = new TalonFX(shooterConstants.TURRET_DEVICE_ID);
     private final MotionMagicVoltage m_mmRequest    = new MotionMagicVoltage(0);
-    private final CANcoder m_turretCanCoder = new CANcoder(12);
-
+    private final CANcoder m_turretCanCoder         = new CANcoder(12);
 
     // Adjust based on your physical gear ratio (e.g., 100:1)
     private final double GEAR_RATIO = shooterConstants.TURRET_GEAR_RATIO;
     private final double ENCODERATIO = shooterConstants.TURRET_ENCODER_RATIO;
     private final double MAX_TURRET_ROTATIONS = shooterConstants.MAX_TURRET_ROTATIONS.getRotations();
     private final double MIN_TURRET_ROTATIONS = shooterConstants.MIN_TURRET_ROTATIONS.getRotations();
-    public Rotation2d turretAngle;
+    public Rotation2d turretAngle = Rotation2d.fromRadians(0);
     public boolean overrideSet = false;
-
 
     public Turret() {
         TalonFXConfiguration config                     = new TalonFXConfiguration();
@@ -41,8 +41,11 @@ public class Turret extends SubsystemBase {
         config.Slot0.kS                                 = shooterConstants.TURRET_KS;
         config.MotionMagic.MotionMagicCruiseVelocity    = shooterConstants.TURRET_MOTION_MAGIC_CRUISE_VELOCITY;
         config.MotionMagic.MotionMagicAcceleration      = shooterConstants.TURRET_MOTION_MAGIC_ACCELERACTIION;
+        
+        config.Feedback.RotorToSensorRatio              = shooterConstants.TURRET_ENCODER_RATIO;
+        config.Feedback.FeedbackSensorSource            = FeedbackSensorSourceValue.RemoteCANcoder;
+        config.Feedback.FeedbackRemoteSensorID          = m_turretCanCoder.getDeviceID();
         m_turretMotor.getConfigurator().apply(config);
-
     }
 
     public void periodic(){
@@ -56,7 +59,7 @@ public class Turret extends SubsystemBase {
     public Rotation2d getTurretAngle(){
         Rotation2d angle = Rotation2d.fromRadians(Math.PI/2);
         StatusSignal<Angle> angleSignal = m_turretCanCoder.getPosition();
-        angle = new Rotation2d(angleSignal.getValue() );
+        angle = new Rotation2d(angleSignal.getValue());
         angle = new Rotation2d(angle.getRadians()/ENCODERATIO);
         // angle = angle.plus(Rotation2d.fromRotations(.3)); 
         SmartDashboard.putNumber("Current_Turret_Angle", angle.getRotations());
@@ -68,18 +71,20 @@ public class Turret extends SubsystemBase {
      * @param robotRelativeAngle Angle relative to the robot's front.
      */
     public void setTargetAngle(Rotation2d robotRelativeAngle) {
-        double rotations = robotRelativeAngle.getRotations() * GEAR_RATIO;
-        // if (rotations < MIN_TURRET_ROTATIONS) {
-        //     rotations = MIN_TURRET_ROTATIONS;
-        // } else if (rotations > MAX_TURRET_ROTATIONS) {
-        //     rotations = MAX_TURRET_ROTATIONS;
+        // double clampedRelativeAngle;
+        // if (robotRelativeAngle.getRotations() < MIN_TURRET_ROTATIONS) {
+        //     clampedRelativeAngle = MIN_TURRET_ROTATIONS;
+        // } else if (robotRelativeAngle.getRotations() > MAX_TURRET_ROTATIONS) {
+        //     clampedRelativeAngle = MAX_TURRET_ROTATIONS;
         // }
+        // double rotations = clampedRelativeAngle * GEAR_RATIO;
+        double rotations = robotRelativeAngle.getRotations() * GEAR_RATIO;
         // if (getTurretAngle().getDegrees() < robotRelativeAngle.getDegrees()) {
         //     m_mmRequest.FeedForward = 0.5;
         // } else {
         //     m_mmRequest.FeedForward = 0.8;
         //     // rotations = rotations - 1.0;
-        // }    
+        // }
 
         m_mmRequest.FeedForward = 0.8;
         if(overrideSet){
