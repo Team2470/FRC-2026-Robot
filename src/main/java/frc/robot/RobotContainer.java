@@ -105,8 +105,8 @@ public class RobotContainer {
         joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
         joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
         joystick.a().whileTrue(IntakeFeedCommand());
-        joystick.leftBumper().onTrue(shooter.decreaseDistance());
-        joystick.rightBumper().onTrue(shooter.increaseDistance());
+        joystick.leftBumper().whileTrue(turret.runTurretCommand(-1));
+        joystick.rightBumper().whileTrue(turret.runTurretCommand(1));
 
 
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, true));

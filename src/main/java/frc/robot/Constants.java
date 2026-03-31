@@ -82,8 +82,8 @@ public class Constants {
                                                                             360.0 * TURRET_GEAR_RATIO;
         public static final double MAX_TURRET_SOFT_LIMIT                = MAX_TURRET_ANGLE /
                                                                             360.0 * TURRET_GEAR_RATIO;
-        public static final Rotation2d MAX_TURRET_ROTATIONS             = new Rotation2d(0.7);
-        public static final Rotation2d MIN_TURRET_ROTATIONS             = new Rotation2d(-0.3);
+        public static final Rotation2d MAX_TURRET_ROTATIONS             = new Rotation2d(0.15);
+        public static final Rotation2d MIN_TURRET_ROTATIONS             = new Rotation2d(-0.77);
         public static final double TURRET_KP                            = 0.5;
         public static final double TURRET_KI                            = 0.0;
         public static final double TURRET_KD                            = 0.1;

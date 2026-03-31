@@ -29,7 +29,7 @@ public class Turret extends SubsystemBase {
     private final double ENCODERATIO = shooterConstants.TURRET_ENCODER_RATIO;
     private final double MAX_TURRET_ROTATIONS = shooterConstants.MAX_TURRET_ROTATIONS.getRotations();
     private final double MIN_TURRET_ROTATIONS = shooterConstants.MIN_TURRET_ROTATIONS.getRotations();
-    public Rotation2d turretAngle = Rotation2d.fromRadians(0);
+    public Rotation2d turretAngle = Rotation2d.fromRadians(-0.5);
     public boolean overrideSet = false;
 
     public Turret() {
@@ -50,7 +50,9 @@ public class Turret extends SubsystemBase {
 
     public void periodic(){
         SmartDashboard.putNumber("Angle", getTurretAngle().getDegrees());
+        SmartDashboard.putNumber("turretAngle", turretAngle.getRotations());
         SmartDashboard.putBoolean("isBlueAlliance", Constants.isBlueAlliance());
+        SmartDashboard.putBoolean("Override Turret", overrideSet);
         // if (DriverStation.isAutonomous()){
             // setTargetAngle(new Rotation2d(-0.55)); // In Auto, we shoot from a position where the turret must point to the robot's left
         // }
@@ -88,7 +90,7 @@ public class Turret extends SubsystemBase {
 
         m_mmRequest.FeedForward = 0.8;
         if(overrideSet){
-            m_turretMotor.setControl(m_mmRequest.withPosition(-0.25 * GEAR_RATIO));
+            // m_turretMotor.setControl(m_mmRequest.withPosition(0 * GEAR_RATIO));
         } else {
             m_turretMotor.setControl(m_mmRequest.withPosition(rotations));
         }
