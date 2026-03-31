@@ -28,9 +28,10 @@ public class IntakePivot extends SubsystemBase {
     private double m_demand;
     private ControlMode m_controlMode = ControlMode.kOpenLoop;
     private double uplimit = 50;
-    private double upPosition = -0.35;
-    private double downPosition = 0.6;
-    private double midPosition = 0;
+    private double upPosition = 0.05;
+    private double downPosition = 1.3;
+    private double midPosition = 0.72;
+    private double targetPosition = upPosition;
     private final PositionVoltage m_positionRequest = new PositionVoltage(upPosition);
     
     public IntakePivot() {
@@ -41,13 +42,15 @@ public class IntakePivot extends SubsystemBase {
         encoderconfigs.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         TalonFXConfiguration motorconfigs = new TalonFXConfiguration();
         motorconfigs.Feedback.RotorToSensorRatio = 1;
+        // motorconfigs.Feedback.
+        motorconfigs.Feedback.SensorToMechanismRatio = 0.5;
         motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
         motorconfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         motorconfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;        
-        motorconfigs.Slot0.kP = 7.5;
+        motorconfigs.Slot0.kP = 10;
         motorconfigs.Slot0.kV = 50;
-        motorconfigs.Slot0.kG = 2;
+        motorconfigs.Slot0.kG = -2;
         motorconfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         m_motor.getConfigurator().apply(motorconfigs);
@@ -78,14 +81,18 @@ public class IntakePivot extends SubsystemBase {
     // }
     public void intakeUp() {
         m_motor.setControl(m_positionRequest.withPosition(upPosition));
+        targetPosition = upPosition;
+
     }
 
     public void intakeDown() {
         m_motor.setControl(m_positionRequest.withPosition(downPosition));
+        targetPosition = downPosition;
     }
 
     public void intakeMid() {
         m_motor.setControl(m_positionRequest.withPosition(midPosition));
+        targetPosition = midPosition;
     }
 
     public void setOutputVoltage(double OutputVoltage) {
@@ -102,10 +109,9 @@ public class IntakePivot extends SubsystemBase {
         // // Determine output voltage
         // double outputVoltage = 0;
         double Angle = getAngle();
-        SmartDashboard.putNumber("Intake Pivot Angle", Angle);
-        SmartDashboard.putNumber("Intake Pivot Angle From Motor", m_motor.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Intake Pivot Angle Degrees", Angle*180);
-
+        SmartDashboard.putNumber("Intake Pivot Angle From Cancoder", m_motor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake Pivot Target", targetPosition);
+        m_motor.setControl(m_positionRequest.withPosition(targetPosition));
         // switch (m_controlMode) {
         //     case kOpenLoop:
         //         // Do openloop stuff here
