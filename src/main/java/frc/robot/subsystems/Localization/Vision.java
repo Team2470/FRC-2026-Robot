@@ -64,19 +64,22 @@ public class Vision extends SubsystemBase{
         PoseEstimate bestEstimate = null;
         double bestDeviation = Double.MAX_VALUE;
 
-        String limelight = "limelight-shooter";
+        String[] limelights = {"limelight-shooter", "limelight-intake"};
+        PoseEstimate poseEstimates = null;
 
-        PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight);
+        for(int i = 0; i < limelights.length - 1; i++){
+            poseEstimates = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelights[i]);
+        
+            if(isValidPoseEstimate(poseEstimates)){
+                double adjustedXYDeviation = 0.05 + (0.01 * Math.pow(poseEstimates.avgTagDist, 2));
+                if(bestDeviation > adjustedXYDeviation){
+                    bestEstimate = poseEstimates;
+                    bestDeviation = adjustedXYDeviation;
+                }
 
-        if(isValidPoseEstimate(poseEstimate)){
-            double adjustedXYDeviation = 0.05 + (0.01 * Math.pow(poseEstimate.avgTagDist, 2));
-            if(bestDeviation > adjustedXYDeviation){
-                bestEstimate = poseEstimate;
-                bestDeviation = adjustedXYDeviation;
+                bestLimelightPose = bestEstimate == null ? null: bestEstimate.pose;
+                return bestEstimate;
             }
-
-            bestLimelightPose = bestEstimate == null ? null: bestEstimate.pose;
-            return bestEstimate;
         }
         return bestEstimate;
     }
@@ -92,7 +95,7 @@ public class Vision extends SubsystemBase{
 
                 SmartDashboard.putNumber("questNav/Frame x", newFrames[i].questPose3d().getX());
                 SmartDashboard.putNumber("questNav/Frame y", newFrames[i].questPose3d().getY());
-                SmartDashboard.putNumber("questNav/Frame z", newFrames[i].questPose3d().getZ());
+                SmartDashboard.putNumber("questNav/Frame Rotation", newFrames[i].questPose3d().getRotation().getAngle());
 
                 visionMeasurementConsumer.addVisionMeasurement(questRobotPose.toPose2d(), newFrames[i].dataTimestamp(), QUESTNAV_STD_DEVS);
                 break; // Found the most recent tracking frame, exit loop
@@ -181,8 +184,13 @@ public class Vision extends SubsystemBase{
     @Override public void periodic() {
         if (DriverStation.isDisabled()) {
             ResetPoseCommand();
+            PoseEstimate bestEstimate = findLLPose();
+            if(bestEstimate != null){
+                SmartDashboard.putNumber("LL Best Estimate X", bestEstimate.pose.getX());
+                SmartDashboard.putNumber("LL Best Estimate Y", bestEstimate.pose.getY());
+                SmartDashboard.putNumber("LL Best Estimate Rotation", bestEstimate.pose.getRotation().getAngle());
+            }
         }
-        // PoseEstimate bestEstimate = findLLPose();
         findQuestPose();
         checkAllianceZone();
     //  checkVisibility();
@@ -193,7 +201,8 @@ public class Vision extends SubsystemBase{
         // }
         // Rotation2d angle = getTurretAngle();
         // turret.setTargetAngle(angle.times(-1));
-
+        SmartDashboard.putNumber("Hub X", Constants.HUB_LOCATION.getX());
+        SmartDashboard.putNumber("Hub Y", Constants.HUB_LOCATION.getY());
     }
 
     public void ResetPoseCommand() {
@@ -208,10 +217,16 @@ public class Vision extends SubsystemBase{
         // } else{
             LimelightHelpers.PoseEstimate resetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
             if(resetPose.tagCount < 2.0) {
-               return;
+                LimelightHelpers.PoseEstimate intakePose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-intake");
+                if(intakePose.tagCount < 2.0) {
+                    return;
+                } else {
+                    setQuestNavPose(intakePose.pose);
+                    visionMeasurementConsumer.addVisionMeasurement(intakePose.pose.toPose2d(), intakePose.timestampSeconds, QUESTNAV_STD_DEVS);
+                }
             } else {
-               setQuestNavPose(resetPose.pose);
-               visionMeasurementConsumer.addVisionMeasurement(resetPose.pose.toPose2d(), resetPose.timestampSeconds, QUESTNAV_STD_DEVS);
+                setQuestNavPose(resetPose.pose);
+                visionMeasurementConsumer.addVisionMeasurement(resetPose.pose.toPose2d(), resetPose.timestampSeconds, QUESTNAV_STD_DEVS);
             }
         // }
     }
