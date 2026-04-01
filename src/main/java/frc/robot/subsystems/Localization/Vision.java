@@ -86,15 +86,15 @@ public class Vision extends SubsystemBase{
 
         PoseFrame[] newFrames = questNav.getAllUnreadPoseFrames();
 
-        for (PoseFrame frame : newFrames) {
+        for (int i = newFrames.length - 1; i >= 0; i--) {
             if (questNav.isConnected() && questNav.isTracking()) {
-                questRobotPose = frame.questPose3d().transformBy(new Transform3d(Constants.QuestNavConstants.ROBOT_TO_QUEST.inverse()));
+                questRobotPose = newFrames[i].questPose3d().transformBy(new Transform3d(Constants.QuestNavConstants.ROBOT_TO_QUEST.inverse()));
 
-                SmartDashboard.putNumber("questNav/Frame x", frame.questPose3d().getX());
-                SmartDashboard.putNumber("questNav/Frame y", frame.questPose3d().getY());
-                SmartDashboard.putNumber("questNav/Frame z", frame.questPose3d().getZ());
+                SmartDashboard.putNumber("questNav/Frame x", newFrames[i].questPose3d().getX());
+                SmartDashboard.putNumber("questNav/Frame y", newFrames[i].questPose3d().getY());
+                SmartDashboard.putNumber("questNav/Frame z", newFrames[i].questPose3d().getZ());
 
-                visionMeasurementConsumer.addVisionMeasurement(questRobotPose.toPose2d(), frame.dataTimestamp(), QUESTNAV_STD_DEVS);
+                visionMeasurementConsumer.addVisionMeasurement(questRobotPose.toPose2d(), newFrames[i].dataTimestamp(), QUESTNAV_STD_DEVS);
                 break; // Found the most recent tracking frame, exit loop
             }
         }
@@ -102,7 +102,7 @@ public class Vision extends SubsystemBase{
 
     public void setQuestNavPose(Pose3d robotPose) {
         Pose3d questPose = robotPose.transformBy(new Transform3d(Constants.QuestNavConstants.ROBOT_TO_QUEST.inverse()));
-        if(questPose.getX() < 0.0 || questPose.getX() > 16.500 || questPose.getY() < 0.0 || questPose.getY() < 8.00){
+        if(questPose.getX() < 0.0 || questPose.getX() > 16.500 || questPose.getY() < 0.0 || questPose.getY() > 8.00){
             return;
         }
         questNav.setPose(questPose);
@@ -179,6 +179,9 @@ public class Vision extends SubsystemBase{
     // }
 
     @Override public void periodic() {
+        if (DriverStation.isDisabled()) {
+            ResetPoseCommand();
+        }
         // PoseEstimate bestEstimate = findLLPose();
         findQuestPose();
         checkAllianceZone();
@@ -191,21 +194,18 @@ public class Vision extends SubsystemBase{
         // Rotation2d angle = getTurretAngle();
         // turret.setTargetAngle(angle.times(-1));
 
-        if (DriverStation.isDisabled()) {
-            ResetPoseCommand();
-        }
     }
 
     public void ResetPoseCommand() {
-        if (DriverStation.isDisabled()){
-            if(Constants.isBlueAlliance()) {
-                // Blue Alliance Pathplanner Start Position
-                setQuestNavPose(new Pose2d(new Translation2d(4.450, 7.350), Rotation2d.kZero));
-            } else {
-                // Red Alliance Pathplanner Start Position
-                setQuestNavPose(new Pose2d(new Translation2d(12.100, 0.750), Rotation2d.k180deg));
-            }
-        } else{
+        // if (DriverStation.isDisabled()){
+        //     if(Constants.isBlueAlliance()) {
+        //         // Blue Alliance Pathplanner Start Position
+        //         setQuestNavPose(new Pose2d(new Translation2d(4.450, 7.350), Rotation2d.kZero));
+        //     } else {
+        //         // Red Alliance Pathplanner Start Position
+        //         setQuestNavPose(new Pose2d(new Translation2d(12.100, 0.750), Rotation2d.k180deg));
+        //     }
+        // } else{
             LimelightHelpers.PoseEstimate resetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
             if(resetPose.tagCount < 2.0) {
                return;
@@ -213,6 +213,6 @@ public class Vision extends SubsystemBase{
                setQuestNavPose(resetPose.pose);
                visionMeasurementConsumer.addVisionMeasurement(resetPose.pose.toPose2d(), resetPose.timestampSeconds, QUESTNAV_STD_DEVS);
             }
-        }
+        // }
     }
 }
