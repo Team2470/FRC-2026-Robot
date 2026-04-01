@@ -8,8 +8,10 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.*;
@@ -215,4 +217,12 @@ public class Vision extends SubsystemBase{
             }
         // }
     }
+
+    public Pose3d getLimelightRotationPose() {
+        Pose3d rotatedLimelightPose = LimelightHelpers.getCameraPose3d_RobotSpace("limelight-shooter");
+        Rotation3d turretRotation3d = new Rotation3d(turret.getTurretAngle());
+        Translation3d turretCenterTranslation3d = new Translation3d(shooterConstants.ROBOT_TO_TURRET);
+        return rotatedLimelightPose.rotateAround(turretCenterTranslation3d, turretRotation3d);
+    }
+
 }

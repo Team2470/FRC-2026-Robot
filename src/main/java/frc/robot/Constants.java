@@ -92,7 +92,7 @@ public class Constants {
         public static final double TURRET_MOTION_MAGIC_CRUISE_VELOCITY  = 80.0;
         public static final double TURRET_MOTION_MAGIC_ACCELERACTIION   = 160.0;
 
-        public static final Transform2d ROBOT_TO_TURRET = new Transform2d(0.187325, 0.16764, new Rotation2d(0));
+        public static final Translation2d ROBOT_TO_TURRET = new Translation2d(0.187325, 0.16764);
 
         public static final double MIN_HUB_DISTANCE = 0.8128;
         public static final double MAX_HUB_DISTANCE = 6.477;
