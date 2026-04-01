@@ -49,12 +49,12 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Shooter shooter = new Shooter();
-    public final Turret turret = new Turret();
+    // public final Turret turret = new Turret();
     public final Transfer transfer = new Transfer();
     public final Hopper hopper = new Hopper();
     public final Intake intake = new Intake();
     public double distanceToHub;
-    public final Vision limelight = new Vision(drivetrain::addVisionMeasurement, () -> drivetrain.getState().Pose);
+    public final Vision vision = new Vision(drivetrain::addVisionMeasurement, () -> drivetrain.getState().Pose);
 
     public final IntakePivot intakepivot = new IntakePivot();
     public RobotContainer() {
@@ -100,16 +100,16 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)));
-        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, limelight.turret, !limelight.inAllianceZone));
-        joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
-        joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
-        joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
-        joystick.a().whileTrue(IntakeFeedCommand());
-        joystick.leftBumper().whileTrue(turret.runTurretCommand(-1));
-        joystick.rightBumper().whileTrue(turret.runTurretCommand(1));
+        joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, vision, vision.turret, !vision.inAllianceZone));
+        // joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
+        // joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
+        // joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
+        // joystick.a().whileTrue(IntakeFeedCommand());
+        joystick.leftBumper().whileTrue(vision.turret.runTurretCommand(-1));
+        joystick.rightBumper().whileTrue(vision.turret.runTurretCommand(1));
 
 
-        // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, true));
+        // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, vision, true));
 
        // joystick.b().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(0))));
         // joystick.a().whileTrue(turret.runOnce(() -> turret.setTargetAngle(new Rotation2d(Math.PI / 2))));
@@ -117,8 +117,8 @@ public class RobotContainer {
         // joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
         // joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
 
-        joystick.povRight().whileTrue(limelight.runOnce(() -> limelight.ResetPoseCommand()));
-        joystick.povLeft().whileTrue(limelight.turret.setOverride());
+        joystick.povRight().whileTrue(vision.runOnce(() -> vision.ResetPoseCommand()));
+        joystick.povLeft().whileTrue(vision.turret.setOverride());
     }
 
     public Command getAutonomousCommand() {
@@ -128,7 +128,7 @@ public class RobotContainer {
     public void configurePathPlannerCommands(){
         NamedCommands.registerCommand("DeployIntake", intakepivot.runOnce(() -> intakepivot.intakeDown()));
         NamedCommands.registerCommand("RunIntake", intake.test_forwardsCommand());
-        NamedCommands.registerCommand("RunShooter", new ShooterCommand(shooter, shooter.hood, transfer, hopper, limelight, limelight.turret, false));
+        NamedCommands.registerCommand("RunShooter", new ShooterCommand(shooter, shooter.hood, transfer, hopper, vision, vision.turret, false));
         NamedCommands.registerCommand("Feed", IntakeFeedCommand());
     }
 
