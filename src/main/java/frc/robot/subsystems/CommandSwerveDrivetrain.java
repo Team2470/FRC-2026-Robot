@@ -311,10 +311,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     @Override
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
-        if(visionRobotPoseMeters.getX() < 0.0 || visionRobotPoseMeters.getX() > 16.500 
-            || visionRobotPoseMeters.getY() < 0.0 || visionRobotPoseMeters.getY() > 8.00){
-            return;
-        }
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
     }
 
@@ -337,10 +333,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double timestampSeconds,
         Matrix<N3, N1> visionMeasurementStdDevs
     ) {
-        if(visionRobotPoseMeters.getX() < 0.0 || visionRobotPoseMeters.getX() > 16.500 
-        || visionRobotPoseMeters.getY() < 0.0 || visionRobotPoseMeters.getY() > 8.00){
-            return;
-        }
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
