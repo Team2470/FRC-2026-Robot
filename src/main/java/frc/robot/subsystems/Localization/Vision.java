@@ -5,12 +5,17 @@ import static frc.robot.Constants.QuestNavConstants.QUESTNAV_STD_DEVS;
 import static edu.wpi.first.math.util.Units.degreesToRadians;
 
 import java.util.function.Supplier;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -74,6 +79,10 @@ public class Vision extends SubsystemBase{
         
             if(isValidPoseEstimate(poseEstimates)){
                 double adjustedXYDeviation = 0.05 + (0.01 * Math.pow(poseEstimates.avgTagDist, 2));
+                SmartDashboard.putNumber("LL Std Devs", adjustedXYDeviation);
+                Matrix<N3, N1> adjustedDeviations = VecBuilder.fill(adjustedXYDeviation, adjustedXYDeviation, Double.MAX_VALUE);
+                visionMeasurementConsumer.addVisionMeasurement(poseEstimates.pose.toPose2d(), poseEstimates.timestampSeconds, adjustedDeviations);
+                
                 if(bestDeviation > adjustedXYDeviation){
                     bestEstimate = poseEstimates;
                     bestDeviation = adjustedXYDeviation;
@@ -90,6 +99,9 @@ public class Vision extends SubsystemBase{
         questNav.commandPeriodic();
 
         PoseFrame[] newFrames = questNav.getAllUnreadPoseFrames();
+
+        SmartDashboard.putBoolean("questNav/isConnected", questNav.isConnected());
+        SmartDashboard.putBoolean("questNav/isTracking", questNav.isTracking());
 
         for (int i = newFrames.length - 1; i >= 0; i--) {
             if (questNav.isConnected() && questNav.isTracking()) {
@@ -186,12 +198,12 @@ public class Vision extends SubsystemBase{
     @Override public void periodic() {
         if (DriverStation.isDisabled()) {
             ResetPoseCommand();
-            PoseEstimate bestEstimate = findLLPose();
-            if(bestEstimate != null){
-                SmartDashboard.putNumber("LL Best Estimate X", bestEstimate.pose.getX());
-                SmartDashboard.putNumber("LL Best Estimate Y", bestEstimate.pose.getY());
-                SmartDashboard.putNumber("LL Best Estimate Rotation", bestEstimate.pose.getRotation().getAngle());
-            }
+        }
+        PoseEstimate bestEstimate = findLLPose();
+        if(bestEstimate != null){
+            SmartDashboard.putNumber("LL Best Estimate X", bestEstimate.pose.getX());
+            SmartDashboard.putNumber("LL Best Estimate Y", bestEstimate.pose.getY());
+            SmartDashboard.putNumber("LL Best Estimate Rotation", bestEstimate.pose.getRotation().getAngle());
         }
         findQuestPose();
         checkAllianceZone();
