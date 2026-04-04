@@ -160,13 +160,14 @@ public class Vision extends SubsystemBase{
 
     public Rotation2d getTurretAngle(){
         robotAngle = poseSupplier.get().getRotation();
-
+        SmartDashboard.putNumber("robotAngle",robotAngle.getRotations());
         if (inAllianceZone) {
             // Robot Angle is the angle of the robot on the field
             // angle to Hub is the angle of the center of the robot to the hub
             angleToHub = Constants.HUB_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
             turretAngle = angleToHub.minus(robotAngle);
             SmartDashboard.putNumber("turretHubAngle", turretAngle.getRotations());
+            SmartDashboard.putNumber("angleToHub", angleToHub.getRotations());
         } else {
             if (passLeft) {
                 angleToPassLeft = Constants.LEFT_PASS_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
@@ -212,9 +213,8 @@ public class Vision extends SubsystemBase{
             setHubDistance();
         // } else {
             setPassDistance();
-        // }
-        // Rotation2d angle = getTurretAngle();
-        // turret.setTargetAngle(angle.times(-1));
+        Rotation2d angle = getTurretAngle();
+        turret.setTargetAngle(angle.times(-1));
         SmartDashboard.putNumber("Hub X", Constants.HUB_LOCATION.getX());
         SmartDashboard.putNumber("Hub Y", Constants.HUB_LOCATION.getY());
     }

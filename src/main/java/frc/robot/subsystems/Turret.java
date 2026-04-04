@@ -41,8 +41,9 @@ public class Turret extends SubsystemBase {
         config.Slot0.kS                                 = shooterConstants.TURRET_KS;
         config.MotionMagic.MotionMagicCruiseVelocity    = shooterConstants.TURRET_MOTION_MAGIC_CRUISE_VELOCITY;
         config.MotionMagic.MotionMagicAcceleration      = shooterConstants.TURRET_MOTION_MAGIC_ACCELERACTIION;
-        
-        config.Feedback.RotorToSensorRatio              = shooterConstants.TURRET_ENCODER_RATIO;
+
+        config.Feedback.RotorToSensorRatio              = shooterConstants.TURRET_MOTOR_RATIO;
+        config.Feedback.SensorToMechanismRatio          = shooterConstants.TURRET_ENCODER_RATIO;
         config.Feedback.FeedbackSensorSource            = FeedbackSensorSourceValue.RemoteCANcoder;
         config.Feedback.FeedbackRemoteSensorID          = m_turretCanCoder.getDeviceID();
         m_turretMotor.getConfigurator().apply(config);
@@ -73,14 +74,16 @@ public class Turret extends SubsystemBase {
      * @param robotRelativeAngle Angle relative to the robot's front.
      */
     public void setTargetAngle(Rotation2d robotRelativeAngle) {
-        // double clampedRelativeAngle;
-        // if (robotRelativeAngle.getRotations() < MIN_TURRET_ROTATIONS) {
-        //     clampedRelativeAngle = MIN_TURRET_ROTATIONS;
-        // } else if (robotRelativeAngle.getRotations() > MAX_TURRET_ROTATIONS) {
-        //     clampedRelativeAngle = MAX_TURRET_ROTATIONS;
-        // }
-        // double rotations = clampedRelativeAngle * GEAR_RATIO;
-        double rotations = robotRelativeAngle.getRotations() * GEAR_RATIO;
+        double clampedRelativeAngle = 0.0;
+        if (robotRelativeAngle.getRotations() < MIN_TURRET_ROTATIONS) {
+            clampedRelativeAngle = MIN_TURRET_ROTATIONS;
+        } else if (robotRelativeAngle.getRotations() > MAX_TURRET_ROTATIONS) {
+            clampedRelativeAngle = MAX_TURRET_ROTATIONS;
+        } else {
+            clampedRelativeAngle = robotRelativeAngle.getRotations();
+        }
+        double rotations = clampedRelativeAngle * GEAR_RATIO;
+        // double rotations = robotRelativeAngle.getRotations() * GEAR_RATIO;
         // if (getTurretAngle().getDegrees() < robotRelativeAngle.getDegrees()) {
         //     m_mmRequest.FeedForward = 0.5;
         // } else {

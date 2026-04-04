@@ -74,6 +74,7 @@ public class Constants {
         public static final int TURRET_DEVICE_ID                        = 0;
         public static final double TURRET_GEAR_RATIO                    = 45.0;
         public static final double TURRET_ENCODER_RATIO                 = 9.0;
+        public static final double TURRET_MOTOR_RATIO                  = 5.0;
         public static final double MIN_TURRET_ANGLE                     = 0.0;
         public static final double MAX_TURRET_ANGLE                     = 180.0;
         public static final double MIN_HOOD_ANGLE                       = 25.0;
@@ -84,8 +85,8 @@ public class Constants {
                                                                             360.0 * TURRET_GEAR_RATIO;
         public static final Rotation2d MAX_TURRET_ROTATIONS             = new Rotation2d(0.15);
         public static final Rotation2d MIN_TURRET_ROTATIONS             = new Rotation2d(-0.77);
-        public static final double TURRET_KP                            = 0.5;
-        public static final double TURRET_KI                            = 0.0;
+        public static final double TURRET_KP                            = 7;
+        public static final double TURRET_KI                            = 0.2;
         public static final double TURRET_KD                            = 0.1;
         public static final double TURRET_KV                            = 0.105;
         public static final double TURRET_KS                            = 0.2;
