@@ -92,7 +92,7 @@ public class Constants {
         public static final double TURRET_MOTION_MAGIC_CRUISE_VELOCITY  = 80.0;
         public static final double TURRET_MOTION_MAGIC_ACCELERACTIION   = 160.0;
 
-        public static final Transform2d ROBOT_TO_TURRET = new Transform2d(0.187325, 0.16764, new Rotation2d(0));
+        public static final Translation2d ROBOT_TO_TURRET = new Translation2d(0.187325, 0.16764);
 
         public static final double MIN_HUB_DISTANCE = 0.8128;
         public static final double MAX_HUB_DISTANCE = 6.477;
@@ -154,11 +154,9 @@ public class Constants {
             // This map is time of flight in seconds
             // when we are shooting into hub
             // Distance (meters), Time of Flight (Seconds)
-            HUB_TOF_MAP.put(3.993, 1.900);
-            HUB_TOF_MAP.put(3.048, 1.600);
-            HUB_TOF_MAP.put(2.438, 1.200);
-            HUB_TOF_MAP.put(1.829, 1.000);
-            HUB_TOF_MAP.put(1.219, 0.900);
+            HUB_TOF_MAP.put(0.8128, 0.893);
+            HUB_TOF_MAP.put(2.997, 0.913);
+            HUB_TOF_MAP.put(6.477, 1.360);
         }
     }
     public static class IntakePivotConstants {
