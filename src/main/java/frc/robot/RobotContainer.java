@@ -101,12 +101,12 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)));
         joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, vision, vision.turret, !vision.inAllianceZone));
-        // joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
-        // joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
-        // joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
-        // joystick.a().whileTrue(IntakeFeedCommand());
-        joystick.leftBumper().whileTrue(vision.turret.runTurretCommand(-1));
-        joystick.rightBumper().whileTrue(vision.turret.runTurretCommand(1));
+        joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
+        joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
+        joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
+        joystick.a().whileTrue(IntakeFeedCommand());
+        // joystick.leftBumper().onTrue(vision.turret.setTurretRotationCommand(0.1));
+        // joystick.rightBumper().onTrue(vision.turret.setTurretRotationCommand(-0.1));
 
 
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, vision, true));

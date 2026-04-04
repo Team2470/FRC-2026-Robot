@@ -38,15 +38,17 @@ public class Constants {
 
         public static final Translation2d RED_HUB_LOCATION = new Translation2d(12.000, 4.025);
         public static final Translation2d BLUE_HUB_LOCATION = new Translation2d(4.600, 4.025);
-        // public static final Translation2d HUB_LOCATION = isBlueAlliance() ? RED_HUB_LOCATION : BLUE_HUB_LOCATION;
-        public static final Translation2d HUB_LOCATION = isBlueAlliance() ? BLUE_HUB_LOCATION : RED_HUB_LOCATION;
+        public static final Translation2d HUB_LOCATION = isBlueAlliance() ? RED_HUB_LOCATION : BLUE_HUB_LOCATION;
+        // public static final Translation2d HUB_LOCATION = isBlueAlliance() ? BLUE_HUB_LOCATION : RED_HUB_LOCATION;
 
         public static final Translation2d RED_LEFT_PASS_LOCATION = new Translation2d(15.000, 6.000);
         public static final Translation2d RED_RIGHT_PASS_LOCATION = new Translation2d(15.000, 2.000);
         public static final Translation2d BLUE_LEFT_PASS_LOCATION = new Translation2d(2.000, 2.000);
         public static final Translation2d BLUE_RIGHT_PASS_LOCATION = new Translation2d(2.000, 6.000);
-        public static final Translation2d LEFT_PASS_LOCATION = isBlueAlliance() ? BLUE_LEFT_PASS_LOCATION : RED_LEFT_PASS_LOCATION;
-        public static final Translation2d RIGHT_PASS_LOCATION = isBlueAlliance() ? BLUE_RIGHT_PASS_LOCATION : RED_RIGHT_PASS_LOCATION;
+        public static final Translation2d LEFT_PASS_LOCATION = isBlueAlliance() ? RED_LEFT_PASS_LOCATION : BLUE_LEFT_PASS_LOCATION;
+        // public static final Translation2d LEFT_PASS_LOCATION = isBlueAlliance() ? BLUE_LEFT_PASS_LOCATION : RED_LEFT_PASS_LOCATION;
+        public static final Translation2d RIGHT_PASS_LOCATION = isBlueAlliance() ? RED_RIGHT_PASS_LOCATION : BLUE_RIGHT_PASS_LOCATION;
+        // public static final Translation2d RIGHT_PASS_LOCATION = isBlueAlliance() ? BLUE_RIGHT_PASS_LOCATION : RED_RIGHT_PASS_LOCATION;
 
     public static class QuestNavConstants{
         public static final Transform2d ROBOT_TO_QUEST = new Transform2d(
@@ -83,12 +85,13 @@ public class Constants {
                                                                             360.0 * TURRET_GEAR_RATIO;
         public static final double MAX_TURRET_SOFT_LIMIT                = MAX_TURRET_ANGLE /
                                                                             360.0 * TURRET_GEAR_RATIO;
-        public static final Rotation2d MAX_TURRET_ROTATIONS             = new Rotation2d(0.15);
-        public static final Rotation2d MIN_TURRET_ROTATIONS             = new Rotation2d(-0.77);
-        public static final double TURRET_KP                            = 7;
+        public static final Rotation2d MAX_TURRET_ROTATIONS             = Rotation2d.fromRotations(0.4);
+        public static final Rotation2d MIN_TURRET_ROTATIONS             = Rotation2d.fromRotations(-0.5);
+        public static final Rotation2d TURRET_ROTATIONS_OFFSET          = Rotation2d.fromRotations(0.3);
+        public static final double TURRET_KP                            = 30;
         public static final double TURRET_KI                            = 0.2;
-        public static final double TURRET_KD                            = 0.1;
-        public static final double TURRET_KV                            = 0.105;
+        public static final double TURRET_KD                            = 0.0;
+        public static final double TURRET_KV                            = 1.0;
         public static final double TURRET_KS                            = 0.2;
         public static final double TURRET_MOTION_MAGIC_CRUISE_VELOCITY  = 80.0;
         public static final double TURRET_MOTION_MAGIC_ACCELERACTIION   = 160.0;

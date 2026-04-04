@@ -179,9 +179,7 @@ public class Vision extends SubsystemBase{
                 SmartDashboard.putNumber("angleToPass", turretAngle.getRotations());
             }
         }
-        return turretAngle.plus(Rotation2d.fromRotations(0.3));
-        // return turretAngle; 
-        
+        return turretAngle.plus(shooterConstants.TURRET_ROTATIONS_OFFSET);        
     }
 
     // public void checkVisibility() {
@@ -213,10 +211,16 @@ public class Vision extends SubsystemBase{
             setHubDistance();
         // } else {
             setPassDistance();
+
         Rotation2d angle = getTurretAngle();
-        turret.setTargetAngle(angle.times(-1));
+        turret.setTargetAngle(angle);
+
         SmartDashboard.putNumber("Hub X", Constants.HUB_LOCATION.getX());
         SmartDashboard.putNumber("Hub Y", Constants.HUB_LOCATION.getY());
+        SmartDashboard.putNumber("Pass Left X", Constants.LEFT_PASS_LOCATION.getX());
+        SmartDashboard.putNumber("Pass Left Y", Constants.LEFT_PASS_LOCATION.getY());
+        SmartDashboard.putNumber("Pass Right X", Constants.RIGHT_PASS_LOCATION.getX());
+        SmartDashboard.putNumber("Pass Right Y", Constants.RIGHT_PASS_LOCATION.getY());
     }
 
     public void ResetPoseCommand() {
