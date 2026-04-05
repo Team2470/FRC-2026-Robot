@@ -53,7 +53,6 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Angle", getTurretAngle().getDegrees());
         SmartDashboard.putNumber("turretAngle", turretAngle.getRotations());
         SmartDashboard.putBoolean("Override Turret", overrideSet);
-        SmartDashboard.putBoolean("isBlueAlliance", Constants.isBlueAlliance());
         // if (DriverStation.isAutonomous()){
             // setTargetAngle(new Rotation2d(-0.55)); // In Auto, we shoot from a position where the turret must point to the robot's left
         // }

@@ -48,6 +48,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
+        SmartDashboard.putBoolean("isBlueAlliance", Constants.isBlueAlliance());
+        SmartDashboard.putNumber("Hub X", Constants.HUB_LOCATION.getX());
+        SmartDashboard.putNumber("Hub Y", Constants.HUB_LOCATION.getY());
+        SmartDashboard.putNumber("Pass Left X", Constants.LEFT_PASS_LOCATION.getX());
+        SmartDashboard.putNumber("Pass Left Y", Constants.LEFT_PASS_LOCATION.getY());
+        SmartDashboard.putNumber("Pass Right X", Constants.RIGHT_PASS_LOCATION.getX());
+        SmartDashboard.putNumber("Pass Right Y", Constants.RIGHT_PASS_LOCATION.getY());
     }
 
     @Override
@@ -65,6 +72,13 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
         }
+        SmartDashboard.putBoolean("isBlueAlliance", Constants.isBlueAlliance());
+        SmartDashboard.putNumber("Hub X", Constants.HUB_LOCATION.getX());
+        SmartDashboard.putNumber("Hub Y", Constants.HUB_LOCATION.getY());
+        SmartDashboard.putNumber("Pass Left X", Constants.LEFT_PASS_LOCATION.getX());
+        SmartDashboard.putNumber("Pass Left Y", Constants.LEFT_PASS_LOCATION.getY());
+        SmartDashboard.putNumber("Pass Right X", Constants.RIGHT_PASS_LOCATION.getX());
+        SmartDashboard.putNumber("Pass Right Y", Constants.RIGHT_PASS_LOCATION.getY());
     }
 
     @Override

@@ -29,7 +29,7 @@ public class Constants {
         // return DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue;
         boolean isBlue = false;
         Optional<DriverStation.Alliance> color = DriverStation.getAlliance();
-        if (color.isPresent()) 
+        if (color.isPresent())
         {
             isBlue = (color.get() == DriverStation.Alliance.Blue);
         }

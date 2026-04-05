@@ -76,13 +76,13 @@ public class Vision extends SubsystemBase{
 
         for(int i = 0; i < limelights.length - 1; i++){
             poseEstimates = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelights[i]);
-        
+
             if(isValidPoseEstimate(poseEstimates)){
                 double adjustedXYDeviation = 0.05 + (0.01 * Math.pow(poseEstimates.avgTagDist, 2));
                 SmartDashboard.putNumber("LL Std Devs", adjustedXYDeviation);
                 Matrix<N3, N1> adjustedDeviations = VecBuilder.fill(adjustedXYDeviation, adjustedXYDeviation, Double.MAX_VALUE);
                 visionMeasurementConsumer.addVisionMeasurement(poseEstimates.pose.toPose2d(), poseEstimates.timestampSeconds, adjustedDeviations);
-                
+
                 if(bestDeviation > adjustedXYDeviation){
                     bestEstimate = poseEstimates;
                     bestDeviation = adjustedXYDeviation;
@@ -179,7 +179,7 @@ public class Vision extends SubsystemBase{
                 SmartDashboard.putNumber("angleToPass", turretAngle.getRotations());
             }
         }
-        return turretAngle.plus(shooterConstants.TURRET_ROTATIONS_OFFSET);        
+        return turretAngle.plus(shooterConstants.TURRET_ROTATIONS_OFFSET);
     }
 
     // public void checkVisibility() {
@@ -214,13 +214,6 @@ public class Vision extends SubsystemBase{
 
         Rotation2d angle = getTurretAngle();
         turret.setTargetAngle(angle);
-
-        SmartDashboard.putNumber("Hub X", Constants.HUB_LOCATION.getX());
-        SmartDashboard.putNumber("Hub Y", Constants.HUB_LOCATION.getY());
-        SmartDashboard.putNumber("Pass Left X", Constants.LEFT_PASS_LOCATION.getX());
-        SmartDashboard.putNumber("Pass Left Y", Constants.LEFT_PASS_LOCATION.getY());
-        SmartDashboard.putNumber("Pass Right X", Constants.RIGHT_PASS_LOCATION.getX());
-        SmartDashboard.putNumber("Pass Right Y", Constants.RIGHT_PASS_LOCATION.getY());
     }
 
     public void ResetPoseCommand() {
