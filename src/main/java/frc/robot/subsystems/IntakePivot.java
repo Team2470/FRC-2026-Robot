@@ -29,8 +29,8 @@ public class IntakePivot extends SubsystemBase {
     private ControlMode m_controlMode = ControlMode.kOpenLoop;
     private double uplimit = 50;
     private double upPosition = -0.12;
-    private double downPosition = 1.25;
-    private double midPosition = 0.5;
+    private double downPosition = 1.1;
+    private double midPosition = 0.4;
     private double targetPosition = downPosition;
     private final PositionVoltage m_positionRequest = new PositionVoltage(upPosition);
     
@@ -42,16 +42,21 @@ public class IntakePivot extends SubsystemBase {
         encoderconfigs.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         TalonFXConfiguration motorconfigs = new TalonFXConfiguration();
         motorconfigs.Feedback.RotorToSensorRatio = 1;
-        motorconfigs.Feedback.SensorToMechanismRatio = 0.5;
+        motorconfigs.Feedback.SensorToMechanismRatio = 0.5; // TODO: fix
         motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
         motorconfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         motorconfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;        
-        motorconfigs.Slot0.kP = 10;
-        motorconfigs.Slot0.kV = 50;
-        motorconfigs.Slot0.kG = -2;
+        // motorconfigs.Slot0.kP = 10;
+        // motorconfigs.Slot0.kV = 50;
+        // motorconfigs.Slot0.kG = -2;
+        motorconfigs.Slot0.kP = 1.67;
+        motorconfigs.Slot0.kD = 1.00;
+        motorconfigs.Slot0.kA = 1.24;
+        motorconfigs.Slot0.kV = 2.00;
+        motorconfigs.Slot0.kG = 1.12;
         motorconfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        // motorconfigs.Slot0.GravityArmPositionOffset = -0.5;
+        // motorconfigs.Slot0.GravityArmPositionOffset = -0.5; // TODO: fix
 
         m_motor.getConfigurator().apply(motorconfigs);
     }

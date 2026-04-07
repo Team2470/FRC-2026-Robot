@@ -104,7 +104,7 @@ public class Constants {
         public static final double MAX_PASS_DISTANCE = 12.6492;
         public static final double MIN_PASS_DISTANCE = 1.1176;
 
-        public static final double DISTANCE_OFFSET = 0.5334;
+        public static final double DISTANCE_OFFSET = 0.75334;
 
         public static InterpolatingDoubleTreeMap HUB_RPM_MAP    = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap PASS_RPM_MAP   = new InterpolatingDoubleTreeMap();
@@ -122,7 +122,11 @@ public class Constants {
             // when we are shooting into hub
             // Distance (meters), Hood Angle (degrees)
             HOOD_HUB_MAP.put(0.8128 + DISTANCE_OFFSET, 25.000);
+            HOOD_HUB_MAP.put(1.2192 + DISTANCE_OFFSET, 25.000);
+            HOOD_HUB_MAP.put(2.0574 + DISTANCE_OFFSET, 25.000);
+            HOOD_HUB_MAP.put(2.4384 + DISTANCE_OFFSET, 30.000);
             HOOD_HUB_MAP.put(2.997 + DISTANCE_OFFSET, 40.000);
+            HOOD_HUB_MAP.put(3.9624 + DISTANCE_OFFSET, 40.000);
             HOOD_HUB_MAP.put(6.477 + DISTANCE_OFFSET, 40.000);
 
             // This map is for the Hood angle
@@ -134,9 +138,13 @@ public class Constants {
             // This map is for the shooter flywheel
             // when we are shooting into hub
             // Distance (meters), Flywheel Speed (RPM)
-            HUB_RPM_MAP.put(0.8128, 1700.000);
-            HUB_RPM_MAP.put(2.997, 2100.000);
-            HUB_RPM_MAP.put(6.477, 2600.000);
+            HUB_RPM_MAP.put(0.8128 + DISTANCE_OFFSET, 1700.000);
+            HUB_RPM_MAP.put(1.2192 + DISTANCE_OFFSET, 1900.000);
+            HUB_RPM_MAP.put(2.0574 + DISTANCE_OFFSET, 2000.000);
+            HUB_RPM_MAP.put(2.4384 + DISTANCE_OFFSET, 2000.000);
+            HUB_RPM_MAP.put(2.997 + DISTANCE_OFFSET, 2100.000);
+            HUB_RPM_MAP.put(3.9624 + DISTANCE_OFFSET, 2300.000);
+            HUB_RPM_MAP.put(6.477 + DISTANCE_OFFSET, 2600.000);
 
             // This map is for the shooter flywheel
             // when we are passing into alliance zone

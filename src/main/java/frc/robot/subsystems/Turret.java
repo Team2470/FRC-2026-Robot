@@ -73,7 +73,8 @@ public class Turret extends SubsystemBase {
      * @param robotRelativeAngle Angle relative to the robot's front.
      */
     public void setTargetAngle(Rotation2d robotRelativeAngle) {
-        double clampedRelativeAngle = 0.0;
+        double clampedRelativeAngle = robotRelativeAngle.getRotations();
+        // double clampedRelativeAngle = robotRelativeAngle.plus(shooterConstants.TURRET_ROTATIONS_OFFSET).getRotations();
         if (robotRelativeAngle.getRotations() < MIN_TURRET_ROTATIONS) {
             clampedRelativeAngle = MIN_TURRET_ROTATIONS;
         } else if (robotRelativeAngle.getRotations() > MAX_TURRET_ROTATIONS) {
@@ -81,10 +82,11 @@ public class Turret extends SubsystemBase {
         } else {
             clampedRelativeAngle = robotRelativeAngle.getRotations();
         }
-        double rotations = clampedRelativeAngle + 0.05;
-        if (-robotRelativeAngle.getRotations() < getTurretAngle().getRotations()) {
-            rotations += 0.03;
-        }
+        // double rotations = clampedRelativeAngle + 0.05;
+        double rotations = clampedRelativeAngle;
+        // if (robotRelativeAngle.getRotations() < getTurretAngle().getRotations()) {
+        //     rotations += 0.03;
+        // }
 
         m_mmRequest.FeedForward = 0.8;
         if(overrideSet){
