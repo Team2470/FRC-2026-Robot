@@ -140,7 +140,8 @@ public class Vision extends SubsystemBase{
     }
 
     public void setHubDistance() {
-        distanceToHub = Constants.HUB_LOCATION.getDistance(poseSupplier.get().getTranslation());
+        Translation2d shooterPosition = getTurretPose();
+        distanceToHub = Constants.HUB_LOCATION.getDistance(shooterPosition);
         SmartDashboard.putNumber("preclampHubDist", distanceToHub);
         distanceToHub = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.min(shooterConstants.MAX_HUB_DISTANCE, distanceToHub));
         SmartDashboard.putNumber("distanceToHub", distanceToHub);
@@ -164,7 +165,7 @@ public class Vision extends SubsystemBase{
         if (inAllianceZone) {
             // Robot Angle is the angle of the robot on the field
             // angle to Hub is the angle of the center of the robot to the hub
-            angleToHub = Constants.HUB_LOCATION.minus(poseSupplier.get().getTranslation()).getAngle();
+            angleToHub = Constants.HUB_LOCATION.minus(getTurretPose()).getAngle();
             turretAngle = angleToHub.minus(robotAngle);
             SmartDashboard.putNumber("turretHubAngle", turretAngle.getRotations());
             SmartDashboard.putNumber("angleToHub", angleToHub.getRotations());
@@ -216,6 +217,13 @@ public class Vision extends SubsystemBase{
         turret.setTargetAngle(angle);
     }
 
+    private Translation2d getTurretPose(){
+        Translation2d shooterPosition = poseSupplier.get().getTranslation().plus(shooterConstants.ROBOT_TO_TURRET.rotateBy(poseSupplier.get().getRotation()));
+        SmartDashboard.putNumber("Shooter X", shooterPosition.getX());
+        SmartDashboard.putNumber("Shooter Y", shooterPosition.getY());
+        return shooterPosition;
+    }
+
     public void ResetPoseCommand() {
         // if (DriverStation.isDisabled()){
         //     if(Constants.isBlueAlliance()) {
@@ -226,6 +234,7 @@ public class Vision extends SubsystemBase{
         //         setQuestNavPose(new Pose2d(new Translation2d(12.100, 0.750), Rotation2d.k180deg));
         //     }
         // } else{
+            // LimelightHelpers.setCameraPose_RobotSpace("limelight-shooter", getLimelightRotationPose);
             LimelightHelpers.PoseEstimate resetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
             if(resetPose.tagCount < 2.0) {
                 LimelightHelpers.PoseEstimate intakePose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-intake");

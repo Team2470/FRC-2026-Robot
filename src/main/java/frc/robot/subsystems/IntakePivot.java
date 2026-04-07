@@ -28,7 +28,7 @@ public class IntakePivot extends SubsystemBase {
     private double m_demand;
     private ControlMode m_controlMode = ControlMode.kOpenLoop;
     private double uplimit = 50;
-    private double upPosition = 0;
+    private double upPosition = -0.12;
     private double downPosition = 1.25;
     private double midPosition = 0.5;
     private double targetPosition = downPosition;

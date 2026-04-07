@@ -38,17 +38,17 @@ public class Constants {
 
         public static final Translation2d RED_HUB_LOCATION = new Translation2d(12.000, 4.025);
         public static final Translation2d BLUE_HUB_LOCATION = new Translation2d(4.600, 4.025);
-        public static final Translation2d HUB_LOCATION = isBlueAlliance() ? RED_HUB_LOCATION : BLUE_HUB_LOCATION;
-        // public static final Translation2d HUB_LOCATION = isBlueAlliance() ? BLUE_HUB_LOCATION : RED_HUB_LOCATION;
+        // public static final Translation2d HUB_LOCATION = isBlueAlliance() ? RED_HUB_LOCATION : BLUE_HUB_LOCATION;
+        public static final Translation2d HUB_LOCATION = isBlueAlliance() ? BLUE_HUB_LOCATION : RED_HUB_LOCATION;
 
         public static final Translation2d RED_LEFT_PASS_LOCATION = new Translation2d(15.000, 6.000);
         public static final Translation2d RED_RIGHT_PASS_LOCATION = new Translation2d(15.000, 2.000);
         public static final Translation2d BLUE_LEFT_PASS_LOCATION = new Translation2d(2.000, 2.000);
         public static final Translation2d BLUE_RIGHT_PASS_LOCATION = new Translation2d(2.000, 6.000);
-        public static final Translation2d LEFT_PASS_LOCATION = isBlueAlliance() ? RED_LEFT_PASS_LOCATION : BLUE_LEFT_PASS_LOCATION;
-        // public static final Translation2d LEFT_PASS_LOCATION = isBlueAlliance() ? BLUE_LEFT_PASS_LOCATION : RED_LEFT_PASS_LOCATION;
-        public static final Translation2d RIGHT_PASS_LOCATION = isBlueAlliance() ? RED_RIGHT_PASS_LOCATION : BLUE_RIGHT_PASS_LOCATION;
-        // public static final Translation2d RIGHT_PASS_LOCATION = isBlueAlliance() ? BLUE_RIGHT_PASS_LOCATION : RED_RIGHT_PASS_LOCATION;
+        // public static final Translation2d LEFT_PASS_LOCATION = isBlueAlliance() ? RED_LEFT_PASS_LOCATION : BLUE_LEFT_PASS_LOCATION;
+        public static final Translation2d LEFT_PASS_LOCATION = isBlueAlliance() ? BLUE_LEFT_PASS_LOCATION : RED_LEFT_PASS_LOCATION;
+        // public static final Translation2d RIGHT_PASS_LOCATION = isBlueAlliance() ? RED_RIGHT_PASS_LOCATION : BLUE_RIGHT_PASS_LOCATION;
+        public static final Translation2d RIGHT_PASS_LOCATION = isBlueAlliance() ? BLUE_RIGHT_PASS_LOCATION : RED_RIGHT_PASS_LOCATION;
 
     public static class QuestNavConstants{
         public static final Transform2d ROBOT_TO_QUEST = new Transform2d(
@@ -104,6 +104,8 @@ public class Constants {
         public static final double MAX_PASS_DISTANCE = 12.6492;
         public static final double MIN_PASS_DISTANCE = 1.1176;
 
+        public static final double DISTANCE_OFFSET = 0.5334;
+
         public static InterpolatingDoubleTreeMap HUB_RPM_MAP    = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap PASS_RPM_MAP   = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap HOOD_HUB_MAP   = new InterpolatingDoubleTreeMap();
@@ -119,9 +121,9 @@ public class Constants {
             // This map is for the Hood angle
             // when we are shooting into hub
             // Distance (meters), Hood Angle (degrees)
-            HOOD_HUB_MAP.put(0.8128, 25.000);
-            HOOD_HUB_MAP.put(2.997, 40.000);
-            HOOD_HUB_MAP.put(6.477, 40.000);
+            HOOD_HUB_MAP.put(0.8128 + DISTANCE_OFFSET, 25.000);
+            HOOD_HUB_MAP.put(2.997 + DISTANCE_OFFSET, 40.000);
+            HOOD_HUB_MAP.put(6.477 + DISTANCE_OFFSET, 40.000);
 
             // This map is for the Hood angle
             // when we are passing into alliance zone
