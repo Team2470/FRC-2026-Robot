@@ -45,7 +45,7 @@ public class Intake extends SubsystemBase {
       return Commands.runEnd(
       ()-> this.intakePercent(volt),
       this::stop,
-      this);	
+      this);
   }
 
   @Override

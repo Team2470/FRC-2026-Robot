@@ -33,7 +33,7 @@ public class IntakePivot extends SubsystemBase {
     private double midPosition = 0.4;
     private double targetPosition = downPosition;
     private final PositionVoltage m_positionRequest = new PositionVoltage(upPosition);
-    
+
     public IntakePivot() {
         m_motor = new TalonFX(6);
         m_encoder = new CANcoder(13);
@@ -46,7 +46,7 @@ public class IntakePivot extends SubsystemBase {
         motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
         motorconfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        motorconfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;        
+        motorconfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         // motorconfigs.Slot0.kP = 10;
         // motorconfigs.Slot0.kV = 50;
         // motorconfigs.Slot0.kG = -2;
@@ -60,7 +60,7 @@ public class IntakePivot extends SubsystemBase {
 
         m_motor.getConfigurator().apply(motorconfigs);
     }
-    
+
     private enum ControlMode {
         kOpenLoop,
         kPID
@@ -69,24 +69,10 @@ public class IntakePivot extends SubsystemBase {
     public double getAngle() {
 	    return m_encoder.getAbsolutePosition().getValueAsDouble();
     }
-    
-    private Command openLoopCommand(double OutputVoltage) {
 
-
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
-        return Commands.runEnd(
-            () -> this.setOutputVoltage(OutputVoltage), this::stop, this);
-
-    }
-
-    // private Command openLoopCommand(double OutputVoltage) {
-    //     return openLoopCommand(()-> OutputVoltage);
-    // }
     public void intakeUp() {
         m_motor.setControl(m_positionRequest.withPosition(upPosition));
         targetPosition = upPosition;
-
     }
 
     public void intakeDown() {
@@ -100,12 +86,12 @@ public class IntakePivot extends SubsystemBase {
     }
 
     public void setOutputVoltage(double OutputVoltage) {
-	m_controlMode = ControlMode.kOpenLoop;
-	m_demand = OutputVoltage;
+	    m_controlMode = ControlMode.kOpenLoop;
+	    m_demand = OutputVoltage;
     }
 
     public void stop() {
-	setOutputVoltage(0);
+	    setOutputVoltage(0);
     }
 
     @Override
@@ -118,45 +104,6 @@ public class IntakePivot extends SubsystemBase {
         SmartDashboard.putNumber("Intake Pivot Angle Degrees", Angle*180);
         SmartDashboard.putNumber("Intake Pivot Target", targetPosition);
         m_motor.setControl(m_positionRequest.withPosition(targetPosition));
-        // switch (m_controlMode) {
-        //     case kOpenLoop:
-        //         // Do openloop stuff here
-        //         outputVoltage = m_demand;
-        //         break;
-
-        //     case kPID:
-        //         // Do PID stuff
-        //         // outputVoltage = m_pidController.calculate(getAngle(), m_demand);
-
-        //         break;
-        //     default:
-        //         // What happened!?
-        //         break;
-        // }
-
-        // if (Angle >= 0.4 && outputVoltage < 0 || Angle <= 0 && outputVoltage > 0 ){
-	    // outputVoltage = 0;
-	    // }
-        
-	    // m_motor.setVoltage(outputVoltage);
     }
-    // If we need:
 
-          // public boolean isAtRetractedLimit(){
-    //     return (getAngle() >= 90);
-    // }
-
-    // public boolean isAtExtentedLimit(){
-    //     return(getAngle() <= 1);
-    // }
-
-        
-    // public void setBrakeMode (boolean enabled) {
-    //     if(enabled) {
-    //         m_motor.setIdleMode(IdleMode.kBrake);
-            
-    //     } else {
-    //         m_motor.setIdleMode(IdleMode.kCoast);
-    //     }
-    // }
 }

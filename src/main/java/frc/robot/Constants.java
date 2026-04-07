@@ -9,17 +9,12 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
@@ -76,7 +71,7 @@ public class Constants {
         public static final int TURRET_DEVICE_ID                        = 0;
         public static final double TURRET_GEAR_RATIO                    = 45.0;
         public static final double TURRET_ENCODER_RATIO                 = 9.0;
-        public static final double TURRET_MOTOR_RATIO                  = 5.0;
+        public static final double TURRET_MOTOR_RATIO                   = 5.0;
         public static final double MIN_TURRET_ANGLE                     = 0.0;
         public static final double MAX_TURRET_ANGLE                     = 180.0;
         public static final double MIN_HOOD_ANGLE                       = 25.0;

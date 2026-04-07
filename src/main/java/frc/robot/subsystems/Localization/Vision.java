@@ -235,6 +235,17 @@ public class Vision extends SubsystemBase{
         //     }
         // } else{
             // LimelightHelpers.setCameraPose_RobotSpace("limelight-shooter", getLimelightRotationPose);
+
+        // Until we get the shooter limelight's position while turning the turret correct, only use the intake limelight for Pose Correction when enabled
+        if(DriverStation.isEnabled()) {
+            LimelightHelpers.PoseEstimate intakePose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-intake");
+            if(intakePose.tagCount < 2.0) {
+                return;
+            } else {
+                setQuestNavPose(intakePose.pose);
+                visionMeasurementConsumer.addVisionMeasurement(intakePose.pose.toPose2d(), intakePose.timestampSeconds, QUESTNAV_STD_DEVS);
+            }
+        } else {
             LimelightHelpers.PoseEstimate resetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
             if(resetPose.tagCount < 2.0) {
                 LimelightHelpers.PoseEstimate intakePose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-intake");
@@ -248,6 +259,7 @@ public class Vision extends SubsystemBase{
                 setQuestNavPose(resetPose.pose);
                 visionMeasurementConsumer.addVisionMeasurement(resetPose.pose.toPose2d(), resetPose.timestampSeconds, QUESTNAV_STD_DEVS);
             }
+        }
         // }
     }
 

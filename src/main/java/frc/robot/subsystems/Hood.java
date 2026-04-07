@@ -73,13 +73,6 @@ public class Hood extends SubsystemBase {
     public void decreaseAngle () {
         targetAngle = targetAngle - 5;
     }
-    /* public void extendActuator() {
-        setPosition(currentPosition + 0.05);
-    }
-
-    public void retractActuator() {
-        setPosition(currentPosition - 0.05);
-    } */
 
     /** Expects a position between 0.0 and 1.0 */
     public Command angleCommand(double angle) {
@@ -121,7 +114,6 @@ public class Hood extends SubsystemBase {
             ? Math.min(rightTargetPosition, rightCurrentPosition + maxPercentageTraveled)
             : Math.max(rightTargetPosition, rightCurrentPosition - maxPercentageTraveled);
     }
-
 
     @Override
     public void periodic() {
