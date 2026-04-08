@@ -55,18 +55,13 @@ public class ShooterCommand extends Command{
             distance = shooter.distance;
             // distance = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.min(shooterConstants.MAX_HUB_DISTANCE, distance));
             distance = MathUtil.clamp(distance, shooterConstants.MIN_HUB_DISTANCE, shooterConstants.MAX_HUB_DISTANCE);
-            if(DriverStation.isAutonomous()){
-                TargetHoodAngle = 40;
-                distance = 3.5;
-            } else {
-                TargetHoodAngle = shooter.getHoodHub(distance);
-            }
+            TargetHoodAngle = shooter.getHoodHub(distance);
             TargetRPM = shooter.getHubRPM(distance);
         }
         // TargetTurretAngle = vision.turretAngle;
 
         SmartDashboard.putNumber("ShootCommandDistance", distance);
-        
+
         hood.setAngle(TargetHoodAngle);
         shooter.setRPM(TargetRPM);
 
