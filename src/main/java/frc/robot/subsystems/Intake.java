@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,6 +12,11 @@ public class Intake extends SubsystemBase {
   private final TalonFX m_intake;
   public Intake() {
     m_intake = new TalonFX(5);
+    TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    motorConfig.CurrentLimits.StatorCurrentLimit = 40.0;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
+
+    m_intake.getConfigurator().apply(motorConfig);
   }
 
   public void postspeed () {
