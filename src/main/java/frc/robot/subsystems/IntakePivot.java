@@ -10,10 +10,12 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.Constants.IntakePivotConstants;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,9 +30,9 @@ public class IntakePivot extends SubsystemBase {
     private double m_demand;
     private ControlMode m_controlMode = ControlMode.kOpenLoop;
     private double uplimit = 50;
-    private double upPosition = -0.12;
-    private double downPosition = 1.1;
-    private double midPosition = 0.4;
+    private double upPosition = -0.05;
+    private double downPosition = 0.5;
+    private double midPosition = 0.15;
     private double targetPosition = downPosition;
     private final PositionVoltage m_positionRequest = new PositionVoltage(upPosition);
 
@@ -41,8 +43,8 @@ public class IntakePivot extends SubsystemBase {
         CANcoderConfiguration encoderconfigs = new CANcoderConfiguration();
         encoderconfigs.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         TalonFXConfiguration motorconfigs = new TalonFXConfiguration();
-        motorconfigs.Feedback.RotorToSensorRatio = 1;
-        motorconfigs.Feedback.SensorToMechanismRatio = 0.5; // TODO: fix
+        motorconfigs.Feedback.RotorToSensorRatio = 1.0;
+        motorconfigs.Feedback.SensorToMechanismRatio = 1.0; // TODO: fix
         motorconfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         motorconfigs.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
         motorconfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -50,11 +52,11 @@ public class IntakePivot extends SubsystemBase {
         // motorconfigs.Slot0.kP = 10;
         // motorconfigs.Slot0.kV = 50;
         // motorconfigs.Slot0.kG = -2;
-        motorconfigs.Slot0.kP = 1.67;
-        motorconfigs.Slot0.kD = 1.00;
+        motorconfigs.Slot0.kP = 6.0;
+        motorconfigs.Slot0.kD = 0.125;
         motorconfigs.Slot0.kA = 1.24;
-        motorconfigs.Slot0.kV = 2.00;
-        motorconfigs.Slot0.kG = 1.12;
+        motorconfigs.Slot0.kV = 6.00;
+        motorconfigs.Slot0.kG = -.5;
         motorconfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         // motorconfigs.Slot0.GravityArmPositionOffset = -0.5; // TODO: fix
 
@@ -67,7 +69,7 @@ public class IntakePivot extends SubsystemBase {
     }
 
     public double getAngle() {
-	    return m_encoder.getAbsolutePosition().getValueAsDouble();
+	    return m_encoder.getPosition().getValueAsDouble();
     }
 
     public void intakeUp() {
@@ -88,6 +90,7 @@ public class IntakePivot extends SubsystemBase {
     public void setOutputVoltage(double OutputVoltage) {
 	    m_controlMode = ControlMode.kOpenLoop;
 	    m_demand = OutputVoltage;
+        m_motor.setControl(new DutyCycleOut(m_demand));
     }
 
     public void stop() {
@@ -103,7 +106,20 @@ public class IntakePivot extends SubsystemBase {
         SmartDashboard.putNumber("Intake Pivot Angle From Motor", m_motor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake Pivot Angle Degrees", Angle*180);
         SmartDashboard.putNumber("Intake Pivot Target", targetPosition);
-        m_motor.setControl(m_positionRequest.withPosition(targetPosition));
+        if(!isOnTarget(targetPosition, .05)){
+            m_motor.setControl(m_positionRequest.withPosition(targetPosition));
+        } else {
+            stop();
+        }
+    }
+
+    public boolean isOnTarget(double target, double toleranceDegrees) {
+        double currentPosition = getAngle();
+        double error = Math.abs(currentPosition - target);
+        SmartDashboard.putBoolean("Pivot On Target", error < toleranceDegrees);
+        SmartDashboard.putNumber("Pivot isOnTarget Current Position", currentPosition);
+        SmartDashboard.putNumber("Pivot isOnTaget Error", error);
+        return error < toleranceDegrees;
     }
 
 }

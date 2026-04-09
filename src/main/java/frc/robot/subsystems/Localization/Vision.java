@@ -71,11 +71,11 @@ public class Vision extends SubsystemBase{
         PoseEstimate bestEstimate = null;
         double bestDeviation = Double.MAX_VALUE;
 
-        String[] limelights = {"limelight-shooter", "limelight-intake"};
+        // String[] limelights = {"limelight-shooter", "limelight-intake"};
         PoseEstimate poseEstimates = null;
 
-        for(int i = 0; i < limelights.length - 1; i++){
-            poseEstimates = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelights[i]);
+        // for(int i = 0; i < limelights.length - 1; i++){
+            poseEstimates = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-intake");
 
             if(isValidPoseEstimate(poseEstimates)){
                 double adjustedXYDeviation = 0.05 + (0.01 * Math.pow(poseEstimates.avgTagDist, 2));
@@ -91,7 +91,7 @@ public class Vision extends SubsystemBase{
                 bestLimelightPose = bestEstimate == null ? null: bestEstimate.pose;
                 return bestEstimate;
             }
-        }
+        // }
         return bestEstimate;
     }
 
