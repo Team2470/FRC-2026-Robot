@@ -225,15 +225,15 @@ public class Vision extends SubsystemBase{
     }
 
     public void ResetPoseCommand() {
-        // if (DriverStation.isDisabled()){
-        //     if(Constants.isBlueAlliance()) {
-        //         // Blue Alliance Pathplanner Start Position
-        //         setQuestNavPose(new Pose2d(new Translation2d(4.450, 7.350), Rotation2d.kZero));
-        //     } else {
-        //         // Red Alliance Pathplanner Start Position
-        //         setQuestNavPose(new Pose2d(new Translation2d(12.100, 0.750), Rotation2d.k180deg));
-        //     }
-        // } else{
+        if (DriverStation.isDisabled()){
+            if(Constants.isBlueAlliance()) {
+                // Blue Alliance Pathplanner Start Position
+                setQuestNavPose(new Pose2d(new Translation2d(4.450, 7.350), Rotation2d.kZero));
+            } else {
+                // Red Alliance Pathplanner Start Position
+                setQuestNavPose(new Pose2d(new Translation2d(12.100, 0.750), Rotation2d.k180deg));
+            }
+        }// else{
             // LimelightHelpers.setCameraPose_RobotSpace("limelight-shooter", getLimelightRotationPose);
 
         // Until we get the shooter limelight's position while turning the turret correct, only use the intake limelight for Pose Correction when enabled
