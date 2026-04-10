@@ -46,13 +46,21 @@ public class ShooterCommand extends Command{
         // Rotation2d TargetTurretAngle;
         double distance;
         if(isPassing){
-            distance = vision.distanceToPass;
+            if(turret.overrideSet){
+                distance = 12.00;
+            } else {
+                distance = vision.distanceToPass;
+            }
             // distance = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.min(shooterConstants.MAX_PASS_DISTANCE, distance));
             distance = MathUtil.clamp(distance, shooterConstants.MIN_PASS_DISTANCE, shooterConstants.MAX_PASS_DISTANCE);
             TargetRPM = shooter.getPassRPM(distance);
             TargetHoodAngle = shooter.getHoodPass(distance);
         } else {
-            distance = vision.distanceToHub;
+            if(turret.overrideSet) {
+                distance = 4.00;
+            } else {
+                distance = vision.distanceToHub;
+            }
             // distance = Math.max(shooterConstants.MIN_HUB_DISTANCE, Math.min(shooterConstants.MAX_HUB_DISTANCE, distance));
             distance = MathUtil.clamp(distance, shooterConstants.MIN_HUB_DISTANCE, shooterConstants.MAX_HUB_DISTANCE);
             TargetHoodAngle = shooter.getHoodHub(distance);
