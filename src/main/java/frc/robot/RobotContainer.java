@@ -105,8 +105,8 @@ public class RobotContainer {
         joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
         joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
         joystick.a().whileTrue(IntakeFeedCommand());
-        // joystick.leftBumper().onTrue(vision.turret.setTurretRotationCommand(0.1));
-        // joystick.rightBumper().onTrue(vision.turret.setTurretRotationCommand(-0.1));
+        joystick.leftBumper().onTrue(shooter.decreaseDistance());
+        joystick.rightBumper().onTrue(shooter.increaseDistance());
 
 
         // joystick.leftTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, vision, true));
@@ -134,6 +134,6 @@ public class RobotContainer {
 
     public Command IntakeFeedCommand() {
         return new ParallelCommandGroup(intakepivot.runOnce(() -> intakepivot.intakeMid()),
-                                        intake.test_forwardsCommand());
+                                        intake.test_feedCommand());
     }
 }

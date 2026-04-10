@@ -27,8 +27,12 @@ public class Intake extends SubsystemBase {
   }
   public void intake () {
   m_intake.setVoltage(-12);
-
   }
+  
+  public void intake_feed () {
+  m_intake.setVoltage(-6);
+  }
+
   public void intakePercent(double volt){
     m_intake.setVoltage(volt);
   }
@@ -44,6 +48,12 @@ public class Intake extends SubsystemBase {
     public Command test_forwardsCommand() {
       return Commands.runEnd(
       ()-> this.intake(),
+      this::stop,
+      this);
+  }
+    public Command test_feedCommand() {
+      return Commands.runEnd(
+      ()-> this.intake_feed(),
       this::stop,
       this);
   }

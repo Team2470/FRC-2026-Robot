@@ -52,6 +52,9 @@ public class IntakePivot extends SubsystemBase {
         // motorconfigs.Slot0.kP = 10;
         // motorconfigs.Slot0.kV = 50;
         // motorconfigs.Slot0.kG = -2;
+        
+        // config.CurrentLimits.StatorCurrentLimit = 40.0;
+        // config.CurrentLimits.SupplyCurrentLimit = 30.0;
         motorconfigs.Slot0.kP = 6.0;
         motorconfigs.Slot0.kD = 0.125;
         motorconfigs.Slot0.kA = 1.24;

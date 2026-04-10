@@ -149,9 +149,9 @@ public class Constants {
             PASS_RPM_MAP.put(4.699, 2000.0);
             PASS_RPM_MAP.put(7.3152, 2500.0);
             PASS_RPM_MAP.put(9.779, 3000.0);
-            PASS_RPM_MAP.put(12.6492, 3500.0);
-            PASS_RPM_MAP.put(15.500, 4000.0); // Approximate, not tested, added to pass across field
-            PASS_RPM_MAP.put(18.000, 4500.0); // Approximate, not tested, added to pass across field
+            PASS_RPM_MAP.put(12.6492, 4000.0);
+            PASS_RPM_MAP.put(15.500, 5000.0); // Approximate, not tested, added to pass across field
+            PASS_RPM_MAP.put(18.000, 5500.0); // Approximate, not tested, added to pass across field
 
             // This map is time of flight in seconds
             // when we are passing into alliance zone
