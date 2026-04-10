@@ -196,9 +196,9 @@ public class Vision extends SubsystemBase{
     // }
 
     @Override public void periodic() {
-        if (DriverStation.isDisabled()) {
+        // if (DriverStation.isDisabled()) {
             ResetPoseCommand();
-        }
+        // }
         PoseEstimate bestEstimate = findLLPose();
         if(bestEstimate != null){
             SmartDashboard.putNumber("LL Best Estimate X", bestEstimate.pose.getX());

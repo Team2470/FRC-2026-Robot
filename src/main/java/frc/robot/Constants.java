@@ -99,7 +99,7 @@ public class Constants {
         public static final double MAX_PASS_DISTANCE = 18.000;
         public static final double MIN_PASS_DISTANCE = 1.1176;
 
-        public static final double DISTANCE_OFFSET = 0.75334;
+        public static final double DISTANCE_OFFSET = 0.55334;
 
         public static InterpolatingDoubleTreeMap HUB_RPM_MAP    = new InterpolatingDoubleTreeMap();
         public static InterpolatingDoubleTreeMap PASS_RPM_MAP   = new InterpolatingDoubleTreeMap();
