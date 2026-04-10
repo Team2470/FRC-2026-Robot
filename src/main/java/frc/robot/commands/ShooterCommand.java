@@ -47,7 +47,7 @@ public class ShooterCommand extends Command{
         double distance;
         if(isPassing){
             if(turret.overrideSet){
-                distance = 12.00;
+                distance = 16.00;
             } else {
                 distance = vision.distanceToPass;
             }
@@ -57,7 +57,7 @@ public class ShooterCommand extends Command{
             TargetHoodAngle = shooter.getHoodPass(distance);
         } else {
             if(turret.overrideSet) {
-                distance = 4.00;
+                distance = 3.5;
             } else {
                 distance = vision.distanceToHub;
             }

@@ -86,6 +86,8 @@ public class Shooter extends SubsystemBase {
         config.Slot0.kV = shooterConstants.FLYWHEEL_KV;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        config.CurrentLimits.StatorCurrentLimit = 20.0;
+        config.CurrentLimits.SupplyCurrentLimit = 15.0;
         m_topMotor_1.getConfigurator().apply(config);
         m_topMotor_2.getConfigurator().apply(config);
         m_topMotor_2.optimizeBusUtilization();

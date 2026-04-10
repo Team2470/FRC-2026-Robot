@@ -13,8 +13,8 @@ public class Intake extends SubsystemBase {
   public Intake() {
     m_intake = new TalonFX(5);
     TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-    motorConfig.CurrentLimits.StatorCurrentLimit = 40.0;
-    motorConfig.CurrentLimits.SupplyCurrentLimit = 30.0;
+    motorConfig.CurrentLimits.StatorCurrentLimit = 30.0;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = 20.0;
 
     m_intake.getConfigurator().apply(motorConfig);
   }
