@@ -228,10 +228,10 @@ public class Vision extends SubsystemBase{
         if (DriverStation.isDisabled()){
             if(Constants.isBlueAlliance()) {
                 // Blue Alliance Pathplanner Start Position
-                setQuestNavPose(new Pose2d(new Translation2d(4.450, 7.350), Rotation2d.kZero));
+                setQuestNavPose(new Pose2d(new Translation2d(3.500, 4.150), Rotation2d.k180deg));
             } else {
                 // Red Alliance Pathplanner Start Position
-                setQuestNavPose(new Pose2d(new Translation2d(12.100, 0.750), Rotation2d.k180deg));
+                setQuestNavPose(new Pose2d(new Translation2d(13.000, 4.150), Rotation2d.kZero));
             }
         }// else{
             // LimelightHelpers.setCameraPose_RobotSpace("limelight-shooter", getLimelightRotationPose);
