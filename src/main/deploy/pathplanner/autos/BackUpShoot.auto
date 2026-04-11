@@ -11,9 +11,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "DeployIntake"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DeployIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -27,7 +40,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 15.0
+                        "waitTime": 5.0
                       }
                     },
                     {
@@ -46,6 +59,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DeployIntake"
           }
         }
       ]

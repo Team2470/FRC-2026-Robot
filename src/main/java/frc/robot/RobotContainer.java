@@ -117,8 +117,8 @@ public class RobotContainer {
         // joystick.x().whileTrue(shooter.hood.increaseAngleCommand());
         // joystick.y().whileTrue(shooter.hood.decreaseAngleCommand());
 
-        joystick.povRight().whileTrue(vision.runOnce(() -> vision.ResetPoseCommand()));
-        joystick.povLeft().whileTrue(vision.turret.setOverride());
+        // joystick.povRight().whileTrue(vision.runOnce(() -> vision.ResetPoseCommand()));
+        // joystick.povLeft().whileTrue(vision.turret.setOverride());
     }
 
     public Command getAutonomousCommand() {

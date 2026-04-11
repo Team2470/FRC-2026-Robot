@@ -197,24 +197,24 @@ public class Vision extends SubsystemBase{
 
     @Override public void periodic() {
         // if (DriverStation.isDisabled()) {
-            ResetPoseCommand();
+            // ResetPoseCommand();
         // }
-        PoseEstimate bestEstimate = findLLPose();
-        if(bestEstimate != null){
-            SmartDashboard.putNumber("LL Best Estimate X", bestEstimate.pose.getX());
-            SmartDashboard.putNumber("LL Best Estimate Y", bestEstimate.pose.getY());
-            SmartDashboard.putNumber("LL Best Estimate Rotation", bestEstimate.pose.getRotation().getAngle());
-        }
-        findQuestPose();
-        checkAllianceZone();
+        // PoseEstimate bestEstimate = findLLPose();
+        // if(bestEstimate != null){
+        //     SmartDashboard.putNumber("LL Best Estimate X", bestEstimate.pose.getX());
+        //     SmartDashboard.putNumber("LL Best Estimate Y", bestEstimate.pose.getY());
+        //     SmartDashboard.putNumber("LL Best Estimate Rotation", bestEstimate.pose.getRotation().getAngle());
+        // }
+        // findQuestPose();
+        // checkAllianceZone();
     //  checkVisibility();
         // if(inAllianceZone){
-            setHubDistance();
+            // setHubDistance();
         // } else {
-            setPassDistance();
+            // setPassDistance();
 
-        Rotation2d angle = getTurretAngle();
-        turret.setTargetAngle(angle);
+        // Rotation2d angle = getTurretAngle();
+        // turret.setTargetAngle(angle);
     }
 
     private Translation2d getTurretPose(){
