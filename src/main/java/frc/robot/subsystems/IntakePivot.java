@@ -33,8 +33,8 @@ public class IntakePivot extends SubsystemBase {
     private double upPosition = -0.05;
     private double downPosition = 0.5;
     private double midPosition = 0.15;
-    private double targetPosition = downPosition;
-    private final PositionVoltage m_positionRequest = new PositionVoltage(upPosition);
+    private double targetPosition = upPosition;
+    private final PositionVoltage m_positionRequest = new PositionVoltage(targetPosition);
 
     public IntakePivot() {
         m_motor = new TalonFX(6);

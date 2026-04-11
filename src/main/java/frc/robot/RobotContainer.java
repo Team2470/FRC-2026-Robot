@@ -122,7 +122,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("FirstAutoPlsWrk");
+        return new PathPlannerAuto("BackUpShoot");
     }
 
     public void configurePathPlannerCommands(){

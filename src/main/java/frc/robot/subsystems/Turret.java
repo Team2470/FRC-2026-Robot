@@ -30,7 +30,7 @@ public class Turret extends SubsystemBase {
     private final double MAX_TURRET_ROTATIONS = shooterConstants.MAX_TURRET_ROTATIONS.getRotations();
     private final double MIN_TURRET_ROTATIONS = shooterConstants.MIN_TURRET_ROTATIONS.getRotations();
     public Rotation2d turretAngle = Rotation2d.fromRadians(0);
-    public boolean overrideSet = false;
+    public boolean overrideSet = true;
 
     public Turret() {
         TalonFXConfiguration config                     = new TalonFXConfiguration();
