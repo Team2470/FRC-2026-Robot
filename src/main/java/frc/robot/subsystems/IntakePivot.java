@@ -31,8 +31,8 @@ public class IntakePivot extends SubsystemBase {
     private double upPosition = -0.12;
     private double downPosition = 1.1;
     private double midPosition = 0.4;
-    private double targetPosition = downPosition;
-    private final PositionVoltage m_positionRequest = new PositionVoltage(upPosition);
+    // private double targetPosition = downPosition;
+    // private final PositionVoltage m_positionRequest = new PositionVoltage(upPosition);
 
     public IntakePivot() {
         m_motor = new TalonFX(6);
@@ -70,20 +70,20 @@ public class IntakePivot extends SubsystemBase {
 	    return m_encoder.getAbsolutePosition().getValueAsDouble();
     }
 
-    public void intakeUp() {
-        m_motor.setControl(m_positionRequest.withPosition(upPosition));
-        targetPosition = upPosition;
-    }
+    // public void intakeUp() {
+    //     m_motor.setControl(m_positionRequest.withPosition(upPosition));
+    //     targetPosition = upPosition;
+    // }
 
-    public void intakeDown() {
-        m_motor.setControl(m_positionRequest.withPosition(downPosition));
-        targetPosition = downPosition;
-    }
+    // public void intakeDown() {
+    //     m_motor.setControl(m_positionRequest.withPosition(downPosition));
+    //     targetPosition = downPosition;
+    // }
 
-    public void intakeMid() {
-        m_motor.setControl(m_positionRequest.withPosition(midPosition));
-        targetPosition = midPosition;
-    }
+    // public void intakeMid() {
+    //     m_motor.setControl(m_positionRequest.withPosition(midPosition));
+    //     targetPosition = midPosition;
+    // }
 
     public void setOutputVoltage(double OutputVoltage) {
 	    m_controlMode = ControlMode.kOpenLoop;
@@ -102,8 +102,8 @@ public class IntakePivot extends SubsystemBase {
         SmartDashboard.putNumber("Intake Pivot Angle", Angle);
         SmartDashboard.putNumber("Intake Pivot Angle From Motor", m_motor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake Pivot Angle Degrees", Angle*180);
-        SmartDashboard.putNumber("Intake Pivot Target", targetPosition);
-        m_motor.setControl(m_positionRequest.withPosition(targetPosition));
+        // SmartDashboard.putNumber("Intake Pivot Target", targetPosition);
+        // m_motor.setControl(m_positionRequest.withPosition(targetPosition));
     }
 
 }

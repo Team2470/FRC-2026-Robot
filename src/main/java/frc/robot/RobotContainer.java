@@ -102,9 +102,12 @@ public class RobotContainer {
         joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)));
         joystick.rightTrigger().whileTrue(new ShooterCommand(shooter, shooter.hood, transfer, hopper, vision, vision.turret, !vision.inAllianceZone));
         joystick.leftTrigger().whileTrue(intake.test_forwardsCommand());
-        joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
-        joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
-        joystick.a().whileTrue(IntakeFeedCommand());
+        // joystick.rightTrigger().whileTrue(shooter.runShooterCommand());
+        // joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
+        // joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
+        // joystick.a().whileTrue(IntakeFeedCommand());
+        joystick.leftBumper().onTrue(shooter.decreaseRPM());
+        joystick.rightBumper().onTrue(shooter.increaseRPM());
         // joystick.leftBumper().onTrue(vision.turret.setTurretRotationCommand(0.1));
         // joystick.rightBumper().onTrue(vision.turret.setTurretRotationCommand(-0.1));
 
@@ -126,14 +129,14 @@ public class RobotContainer {
     }
 
     public void configurePathPlannerCommands(){
-        NamedCommands.registerCommand("DeployIntake", intakepivot.runOnce(() -> intakepivot.intakeDown()));
+        // NamedCommands.registerCommand("DeployIntake", intakepivot.runOnce(() -> intakepivot.intakeDown()));
         NamedCommands.registerCommand("RunIntake", intake.test_forwardsCommand());
         NamedCommands.registerCommand("RunShooter", new ShooterCommand(shooter, shooter.hood, transfer, hopper, vision, vision.turret, false));
-        NamedCommands.registerCommand("Feed", IntakeFeedCommand());
+        // NamedCommands.registerCommand("Feed", IntakeFeedCommand());
     }
 
-    public Command IntakeFeedCommand() {
-        return new ParallelCommandGroup(intakepivot.runOnce(() -> intakepivot.intakeMid()),
-                                        intake.test_forwardsCommand());
-    }
+    // public Command IntakeFeedCommand() {
+        // return new ParallelCommandGroup(intakepivot.runOnce(() -> intakepivot.intakeMid()),
+                                        // intake.test_forwardsCommand());
+    // }
 }

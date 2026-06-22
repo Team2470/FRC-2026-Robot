@@ -214,7 +214,7 @@ public class Vision extends SubsystemBase{
             setPassDistance();
 
         Rotation2d angle = getTurretAngle();
-        turret.setTargetAngle(angle);
+        // turret.setTargetAngle(angle);
     }
 
     private Translation2d getTurretPose(){

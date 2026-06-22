@@ -49,7 +49,7 @@ public class ShooterCommand extends Command{
             distance = shooter.distance;
             // distance = Math.max(shooterConstants.MIN_PASS_DISTANCE, Math.min(shooterConstants.MAX_PASS_DISTANCE, distance));
             distance = MathUtil.clamp(distance, shooterConstants.MIN_PASS_DISTANCE, shooterConstants.MAX_PASS_DISTANCE);
-            TargetRPM = shooter.getPassRPM(distance);
+            // TargetRPM = shooter.getPassRPM(distance);
             TargetHoodAngle = shooter.getHoodPass(distance);
         } else {
             distance = shooter.distance;
@@ -61,16 +61,16 @@ public class ShooterCommand extends Command{
             } else {
                 TargetHoodAngle = shooter.getHoodHub(distance);
             }
-            TargetRPM = shooter.getHubRPM(distance);
+            // TargetRPM = shooter.getHubRPM(distance);
         }
         // TargetTurretAngle = vision.turretAngle;
 
         SmartDashboard.putNumber("ShootCommandDistance", distance);
-        
-        hood.setAngle(TargetHoodAngle);
+        TargetRPM = shooter.targetRPM;
+        // hood.setAngle(TargetHoodAngle);
         shooter.setRPM(TargetRPM);
 
-        if(hood.isPositionWithinTolerance() && shooter.isAtSpeed(TargetRPM, 25)){
+        if(/*hood.isPositionWithinTolerance() &&*/ shooter.isAtSpeed(TargetRPM, 100)){
             transfer.transferPercent(12);
             hopper.hopperPercent(12);
         }

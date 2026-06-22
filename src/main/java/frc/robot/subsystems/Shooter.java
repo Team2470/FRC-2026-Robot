@@ -132,6 +132,7 @@ public class Shooter extends SubsystemBase {
     public boolean isAtSpeed(double targetRPM, double tolerance) {
         // Get actual speed (Phoenix gives RPS), convert to RPM
         double currentRPM = m_topMotor_1.getVelocity().getValueAsDouble() * Constants.MINUTE_TO_SECONDS;
+        SmartDashboard.putNumber("Current RPM", currentRPM);
 
         // Tolerance: Is Current RPM = Target RPM +/- Tolerance (measured in RPM)
         return Math.abs(currentRPM - targetRPM) < tolerance;
@@ -148,14 +149,14 @@ public class Shooter extends SubsystemBase {
     public Command increaseRPM(){
         return Commands.runOnce(
             () -> {
-                this.targetRPM += 500;
+                this.targetRPM += 50;
             }, this);
     }
 
     public Command decreaseRPM(){
         return Commands.runOnce(
             () -> {
-                this.targetRPM -= 500;
+                this.targetRPM -= 25;
             }, this);
     }
 
