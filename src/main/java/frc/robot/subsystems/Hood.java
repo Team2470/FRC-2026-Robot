@@ -31,8 +31,8 @@ public class Hood extends SubsystemBase {
     private final Servo rightServo;
     private double leftCurrentPosition = 0.0;
     private double rightCurrentPosition = 0.0;
-    private double currentAngle = 25;
-    private double targetAngle = 25;
+    private double currentAngle = 35;
+    private double targetAngle = 35;
     private double leftTargetPosition = 0.0;
     private double rightTargetPosition = 0.0;
     private Time lastUpdateTime = Seconds.of(0);
