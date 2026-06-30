@@ -57,7 +57,7 @@ public class Shooter extends SubsystemBase {
     // //placeholder constants for PID
     private double m_demand;
     // public shooterConstants.Targets targetNumber = shooterConstants.Targets.HUB;
-    public double targetRPM = 500;
+    public double targetRPM = 800;
     public double targetAngle = 25;
     public double distance = 3.5;
     public double angle = 1.3;
