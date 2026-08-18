@@ -33,8 +33,8 @@ import frc.robot.commands.ShooterCommand;
 
 import frc.robot.subsystems.IntakePivot;
 public class RobotContainer {
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1; // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.25; // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -106,8 +106,8 @@ public class RobotContainer {
         // joystick.x().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeUp()));
         // joystick.b().whileTrue(intakepivot.runOnce(() -> intakepivot.intakeDown()));
         // joystick.a().whileTrue(IntakeFeedCommand());
-        joystick.leftBumper().onTrue(shooter.decreaseRPM());
-        joystick.rightBumper().onTrue(shooter.increaseRPM());
+        // joystick.leftBumper().onTrue(shooter.decreaseRPM());
+        // joystick.rightBumper().onTrue(shooter.increaseRPM());
         // joystick.leftBumper().onTrue(vision.turret.setTurretRotationCommand(0.1));
         // joystick.rightBumper().onTrue(vision.turret.setTurretRotationCommand(-0.1));
 
